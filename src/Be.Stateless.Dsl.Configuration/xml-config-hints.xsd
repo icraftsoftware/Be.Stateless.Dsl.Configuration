@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="urn:schemas.stateless.be:dsl:configuration:annotations:2020"
+           elementFormDefault="qualified"
+           attributeFormDefault="qualified"
+           xmlns="urn:schemas.stateless.be:dsl:configuration:annotations:2020"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:attribute name="action" type="actionType"></xs:attribute>
+  <xs:attribute name="discriminant" type="discriminantType"></xs:attribute>
+  <xs:attribute name="files" type="xs:string"></xs:attribute>
+
+  <xs:simpleType name="actionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="insert" /> <xs:enumeration value="update" /> <xs:enumeration value="upsert" />
+      <xs:enumeration value="delete" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="discriminantType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(\w+\s?)+" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="file-list">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="((?&lt;file&gt;(global:|.+)\w+\.config)\|?)+" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

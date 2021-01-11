@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>Be.Stateless.Dsl.Configuration</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>Be.Stateless.Dsl.Configuration.Tests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\create-node-change-with-discriminant.config" />
+    <None Remove="Resources\create-node-change.config" />
+    <None Remove="Resources\delete-element-command.config" />
+    <None Remove="Resources\update-node-change-with-attribute-update.config" />
+    <None Remove="Resources\web-modified.config" />
+    <None Remove="Resources\web-original.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="Moq" Version="4.15.2" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Be.Stateless.Dsl.Configuration\Be.Stateless.Dsl.Configuration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\delete-element-command.config" />
+    <EmbeddedResource Include="Resources\create-node-change-with-discriminant.config" />
+    <EmbeddedResource Include="Resources\create-node-change.config" />
+    <EmbeddedResource Include="Resources\web-modified.config" />
+    <EmbeddedResource Include="Resources\update-node-change-with-attribute-update.config" />
+    <EmbeddedResource Include="Resources\web-original.config" />
+  </ItemGroup>
+
+</Project>

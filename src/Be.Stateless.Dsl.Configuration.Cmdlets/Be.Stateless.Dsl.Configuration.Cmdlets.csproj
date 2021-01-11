@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>Be.Stateless.Dsl.Configuration</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <NuspecFile>Be.Stateless.Dsl.Configurations.Cmdlets.nuspec</NuspecFile>
+    <NuspecProperties>configuration=$(Configuration)</NuspecProperties>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Be.Stateless.Dsl.Configuration\Be.Stateless.Dsl.Configuration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Dsl.Configuration.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,52 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	
+	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue">Copyright © 2012 - $CURRENT_YEAR$ François Chabot &amp; Emmanuel Benitez&#xD;
+&#xD;
+Licensed under the Apache License, Version 2.0 (the "License");&#xD;
+you may not use this file except in compliance with the License.&#xD;
+You may obtain a copy of the License at&#xD;
+&#xD;
+http://www.apache.org/licenses/LICENSE-2.0&#xD;
+&#xD;
+Unless required by applicable law or agreed to in writing, software&#xD;
+distributed under the License is distributed on an "AS IS" BASIS,&#xD;
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&#xD;
+See the License for the specific language governing permissions and&#xD;
+limitations under the License.</s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=5826118902490142B09279AF0AAC2157/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=5826118902490142B09279AF0AAC2157/AbsolutePath/@EntryValue">C:\Files\Projects\be.stateless\ApplyConfigChanges\.settings\PatternsAndTemplates.DotSettings</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=5826118902490142B09279AF0AAC2157/RelativePath/@EntryValue">..\.settings\PatternsAndTemplates.DotSettings</s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BA964262A0AF4383CA347F576B329E/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BA964262A0AF4383CA347F576B329E/AbsolutePath/@EntryValue">C:\Files\Projects\be.stateless\Be.Stateless.Dsl.Configurations\.settings\CodeEditing.FileHeader.DotSettings</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BA964262A0AF4383CA347F576B329E/RelativePath/@EntryValue">..\.settings\CodeEditing.FileHeader.DotSettings</s:String>
+	
+	
+	
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BE7D199CA1354A80B47EB3D1D3D762/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BE7D199CA1354A80B47EB3D1D3D762/AbsolutePath/@EntryValue">C:\Files\Projects\be.stateless\ApplyConfigChanges\.settings\CodeInspection.DotSettings</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BE7D199CA1354A80B47EB3D1D3D762/RelativePath/@EntryValue">..\.settings\CodeInspection.DotSettings</s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=AFA76DDA8BAA4442A379826AA69E7217/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=AFA76DDA8BAA4442A379826AA69E7217/AbsolutePath/@EntryValue">C:\Files\Projects\be.stateless\ApplyConfigChanges\.settings\Environment.DotSettings</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=AFA76DDA8BAA4442A379826AA69E7217/RelativePath/@EntryValue">..\.settings\Environment.DotSettings</s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=B721FBDA949C8D449D83E70EEFF5F842/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=B721FBDA949C8D449D83E70EEFF5F842/AbsolutePath/@EntryValue">C:\Files\Projects\be.stateless\ApplyConfigChanges\.settings\CodeEditing.DotSettings</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=B721FBDA949C8D449D83E70EEFF5F842/RelativePath/@EntryValue">..\.settings\CodeEditing.DotSettings</s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File5826118902490142B09279AF0AAC2157/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File5826118902490142B09279AF0AAC2157/RelativePriority/@EntryValue">5</s:Double>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File83BA964262A0AF4383CA347F576B329E/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File83BA964262A0AF4383CA347F576B329E/RelativePriority/@EntryValue">2</s:Double>
+	
+	
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File83BE7D199CA1354A80B47EB3D1D3D762/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File83BE7D199CA1354A80B47EB3D1D3D762/RelativePriority/@EntryValue">3</s:Double>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileAFA76DDA8BAA4442A379826AA69E7217/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileAFA76DDA8BAA4442A379826AA69E7217/RelativePriority/@EntryValue">4</s:Double>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileB721FBDA949C8D449D83E70EEFF5F842/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileB721FBDA949C8D449D83E70EEFF5F842/RelativePriority/@EntryValue">1</s:Double>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Benitez/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Bitness/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Chabot/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Cmdlets/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Fran_00E7ois/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=UPSERT/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Upsertion/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
