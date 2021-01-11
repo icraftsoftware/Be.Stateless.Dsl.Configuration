@@ -48,7 +48,7 @@ namespace Be.Stateless.Dsl.Configuration.Extensions
                     XmlAttributeNames.DISCRIMINANT,
                     Constants.NAMESPACE_URI,
                     Constants.NAMESPACE_URI_PREFIX,
-                    string.Join(Constants.DISCRIMINANT_SEPARATOR.ToString(), locationStep.AttributeSpecifications.Select(specification => specification.Value)));
+                    string.Join(Constants.DISCRIMINANT_SEPARATOR.ToString(), locationStep.AttributeSpecifications.Select(specification => specification.Name)));
             }
             return element;
         }
