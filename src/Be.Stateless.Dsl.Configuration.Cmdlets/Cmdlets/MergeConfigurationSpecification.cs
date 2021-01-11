@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2020 François Chabot & Emmanuel Benitez
+// Copyright © 2012 - 2021 François Chabot & Emmanuel Benitez
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlets
                     string.Empty))
                 {
                     if (SaveBeforeMerge) File.Copy(specification.TargetConfigurationFile.FullName, GenerateFilePath(specification.TargetConfigurationFile, "before"));
-                    using (var fileStream = specification.TargetConfigurationFile.OpenWrite()) result.ModifiedConfiguration.Save(fileStream);
+                    using (var fileStream = new FileStream(specification.TargetConfigurationFile.FullName, FileMode.Truncate)) result.ModifiedConfiguration.Save(fileStream);
                     WriteVerbose($"'{specification.TargetConfigurationFile.FullName}' has been updated.");
                     if (GenerateUndo)
                     {
