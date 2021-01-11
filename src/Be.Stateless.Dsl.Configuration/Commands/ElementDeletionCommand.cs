@@ -30,8 +30,8 @@ namespace Be.Stateless.Dsl.Configuration.Commands
 
         internal override ConfigurationCommand Execute(XmlElement configurationElement)
         {
-            if (!configurationElement.IsEmpty)
-                throw new InvalidOperationException($"The configuration element '{configurationElement.Name}' is not empty (Content: '{configurationElement.InnerXml}').");
+            if (configurationElement.HasChildNodes)
+                throw new InvalidOperationException($"The configuration element '{configurationElement.Name}' has child nodes (Content: '{configurationElement.InnerXml}').");
 
             var undoCommand = ConfigurationCommandFactory.CreateUndoCommandForDeletion(configurationElement);
             var parent = configurationElement.ParentNode
