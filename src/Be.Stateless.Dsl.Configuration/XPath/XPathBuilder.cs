@@ -36,7 +36,7 @@ namespace Be.Stateless.Dsl.Configuration.XPath
                     return navigator.Name;
                 case XPathFormat.LocalName:
                     var builder = new StringBuilder("*[");
-                    builder.AppendFormat($"{XpathFunctionNames.LOCAL_NAME}()='{0}'", navigator.LocalName);
+                    builder.Append($"{XpathFunctionNames.LOCAL_NAME}()='{navigator.LocalName}'");
                     if (!string.IsNullOrWhiteSpace(navigator.NamespaceURI)) builder.AppendFormat(" and namespace-uri()='{0}'", navigator.NamespaceURI);
                     var discriminants = navigator.GetDiscriminants().ToArray();
                     if (discriminants.Any()) builder.AppendFormat(" and ({0})", BuildDiscriminantsSelector(navigator, discriminants));
