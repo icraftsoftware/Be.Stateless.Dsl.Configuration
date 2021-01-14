@@ -24,40 +24,40 @@ using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public class ElementUpsertionCommandFixture
-	{
-		[Fact]
-		public void ExecuteSucceedsForInsert()
-		{
-			var command = new ElementUpsertionCommand(
-				"/configuration",
-				new ElementInsertionCommand(
-					"/configuration",
-					new ElementSpecification("test", null, null, "test")),
-				new ElementUpdateCommand(
-					"/configuration/test",
-					new List<AttributeSpecification>()));
-			var document = Files.Load("web-original.config").AsXmlDocument();
-			command.Execute(document);
-			document.SelectSingleNode("/configuration/test")
-				.Should().NotBeNull();
-		}
+    public class ElementUpsertionCommandFixture
+    {
+        [Fact]
+        public void ExecuteSucceedsForInsert()
+        {
+            var command = new ElementUpsertionCommand(
+                "/configuration",
+                new ElementInsertionCommand(
+                    "/configuration",
+                    new ElementSpecification("test", null, null, "test")),
+                new ElementUpdateCommand(
+                    "/configuration/test",
+                    new List<AttributeSpecification>()));
+            var document = Files.Load("web-original.config").AsXmlDocument();
+            command.Execute(document);
+            document.SelectSingleNode("/configuration/test")
+                .Should().NotBeNull();
+        }
 
-		[Fact]
-		public void ExecuteSucceedsForUpdate()
-		{
-			var command = new ElementUpsertionCommand(
-				"/configuration",
-				new ElementInsertionCommand(
-					"/configuration",
-					new ElementSpecification("appSettings", null, null, "appSettings")),
-				new ElementUpdateCommand(
-					"/configuration/appSettings",
-					new[] { new AttributeSpecification { Name = "test", Value = "value" } }));
-			var document = Files.Load("web-original.config").AsXmlDocument();
-			command.Execute(document);
-			document.SelectSingleNode("/configuration/appSettings[@test='value']")
-				.Should().NotBeNull();
-		}
-	}
+        [Fact]
+        public void ExecuteSucceedsForUpdate()
+        {
+            var command = new ElementUpsertionCommand(
+                "/configuration",
+                new ElementInsertionCommand(
+                    "/configuration",
+                    new ElementSpecification("appSettings", null, null, "appSettings")),
+                new ElementUpdateCommand(
+                    "/configuration/appSettings",
+                    new[] { new AttributeSpecification { Name = "test", Value = "value" } }));
+            var document = Files.Load("web-original.config").AsXmlDocument();
+            command.Execute(document);
+            document.SelectSingleNode("/configuration/appSettings[@test='value']")
+                .Should().NotBeNull();
+        }
+    }
 }

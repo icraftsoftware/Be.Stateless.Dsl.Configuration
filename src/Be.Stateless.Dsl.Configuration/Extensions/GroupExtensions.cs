@@ -21,40 +21,35 @@ using System.Text.RegularExpressions;
 
 namespace Be.Stateless.Dsl.Configuration.Extensions
 {
-	internal static class GroupExtensions
-	{
-		public static Version AsVersion(this Group value)
-		{
-			if (!value.Success) return null;
+    internal static class GroupExtensions
+    {
+        public static Version AsVersion(this Group value)
+        {
+            if (!value.Success) return null;
 
-			var result = _dotNetFrameworkMonikerPattern.Match(value.Value);
+            var result = _dotNetFrameworkMonikerPattern.Match(value.Value);
 
-			if (!result.Success) return null;
-			return result.Groups["build"].Success
-				? new Version(
-					Convert.ToInt32(result.Groups["major"].Value),
-					Convert.ToInt32(result.Groups["minor"].Value),
-					Convert.ToInt32(result.Groups["build"].Value))
-				: new Version(
-					Convert.ToInt32(result.Groups["major"].Value),
-					Convert.ToInt32(result.Groups["minor"].Value));
-		}
+            if (!result.Success) return null;
+            return new Version(
+                Convert.ToInt32(result.Groups["major"].Value),
+                0);
+        }
 
-		public static FrameworkArchitecture? AsFrameworkArchitecture(this Group value)
-		{
-			if (!value.Success) return null;
+        public static ClrBitness? AsFrameworkArchitecture(this Group value)
+        {
+            if (!value.Success) return null;
 
-			switch (value.Value)
-			{
-				case "32bits":
-					return FrameworkArchitecture.Bitness32;
-				case "64bits":
-					return FrameworkArchitecture.Bitness64;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(value), value.Value, "The framework architecture is not supported.");
-			}
-		}
+            switch (value.Value)
+            {
+                case "32bits":
+                    return ClrBitness.Bitness32;
+                case "64bits":
+                    return ClrBitness.Bitness64;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), value.Value, "The architecture is not supported.");
+            }
+        }
 
-		private static readonly Regex _dotNetFrameworkMonikerPattern = new Regex(@"^net(?<major>\d)(?<minor>\d)(?<build>\d)?$");
-	}
+        private static readonly Regex _dotNetFrameworkMonikerPattern = new Regex(@"^clr(?<major>\d)");
+    }
 }

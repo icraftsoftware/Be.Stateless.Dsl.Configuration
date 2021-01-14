@@ -26,30 +26,31 @@ using Be.Stateless.Dsl.Configuration.XPath;
 
 namespace Be.Stateless.Dsl.Configuration.Extensions
 {
-	public static class XmlDocumentExtensions
-	{
-		public static XmlElement CreatePath(this XmlDocument document, string xpath)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrWhiteSpace(xpath, nameof(xpath))
-				.Check();
-			var locationSteps = new XPathExpression(xpath).GetLocationSteps();
-			XmlNode node = document;
-			foreach (var locationStep in locationSteps) node = node.SelectOrAppendElement(locationStep);
-			return (XmlElement) node;
-		}
+    public static class XmlDocumentExtensions
+    {
+        public static XmlElement CreatePath(this XmlDocument document, string xpath)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNullOrWhiteSpace(xpath, nameof(xpath))
+                .Check();
+            var locationSteps = new XPathExpression(xpath).GetLocationSteps();
+            XmlNode node = document;
+            foreach (var locationStep in locationSteps) node = node.SelectOrAppendElement(locationStep);
+            return (XmlElement) node;
+        }
 
-		public static IEnumerable<FileInfo> GetTargetConfigurationFiles(this XmlDocument document, IEnumerable<IConfigurationFileResolver> configurationFileResolvers)
-		{
-			var monikerExtractor = new ConfigurationFileMonikersExtractor(document);
+        public static IEnumerable<FileInfo> GetTargetConfigurationFiles(this XmlDocument document, IEnumerable<IConfigurationFilesResolverStrategy> configurationFileResolvers)
+        {
+            var monikerExtractor = new ConfigurationFileMonikersExtractor(document);
 
-			var configurationFileResolver = new ConfigurationFileResolver(
-				configurationFileResolvers ?? new IConfigurationFileResolver[] { new DotNetFrameworkConfigurationFileResolver(), new FileConfigurationFileResolver() });
+            var configurationFileResolver = new ConfigurationFilesResolver(
+                configurationFileResolvers ?? new IConfigurationFilesResolverStrategy[]
+                    { new ClrConfigurationFilesResolverStrategy(), new FilesConfigurationFilesResolverStrategy() });
 
-			return monikerExtractor.Extract()
-				.SelectMany(configurationFileResolver.Resolve)
-				.Distinct()
-				.Select(path => new FileInfo(path));
-		}
-	}
+            return monikerExtractor.Extract()
+                .SelectMany(configurationFileResolver.Resolve)
+                .Distinct()
+                .Select(path => new FileInfo(path));
+        }
+    }
 }

@@ -23,18 +23,18 @@ using Be.Stateless.Argument.Validation;
 
 namespace Be.Stateless.Dsl.Configuration.Constraints
 {
-	internal static class XPathNavigatorConstraint
-	{
-		[Pure]
-		public static TV IsXmlAttribute<TV>(this TV validator, XPathNavigator parameter, string parameterName)
-			where TV : IArgumentConstraint
-		{
-			return parameter?.NodeType == XPathNodeType.Attribute
-				? validator
-				: validator.AddException(
-					new ArgumentException(
-						$"The navigator must be an attribute (navigator type:'{parameter?.NodeType}')",
-						parameterName));
-		}
-	}
+    internal static class XPathNavigatorConstraint
+    {
+        [Pure]
+        public static TV IsXmlAttribute<TV>(this TV validator, XPathNavigator parameter, string parameterName)
+            where TV : IArgumentConstraint
+        {
+            return parameter?.NodeType == XPathNodeType.Attribute
+                ? validator
+                : validator.AddException(
+                    new ArgumentException(
+                        $"The navigator must be an attribute (navigator type:'{parameter?.NodeType}')",
+                        parameterName));
+        }
+    }
 }

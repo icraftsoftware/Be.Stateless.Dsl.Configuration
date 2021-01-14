@@ -18,11 +18,11 @@
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	internal static class Constants
-	{
-		public const char DISCRIMINANT_SEPARATOR = ' ';
-		public const char FILE_MONIKER_SEPARATOR = '|';
-		public const string NAMESPACE_URI = "urn:schemas.stateless.be:dsl:configuration:annotations:2020";
-		public const string NAMESPACE_URI_PREFIX = "config";
-	}
+    internal static class Constants
+    {
+        public const char DISCRIMINANT_SEPARATOR = ' ';
+        public const char FILE_MONIKER_SEPARATOR = '|';
+        public const string NAMESPACE_URI = "urn:schemas.stateless.be:dsl:configuration:annotations:2020";
+        public const string NAMESPACE_URI_PREFIX = "config";
+    }
 }

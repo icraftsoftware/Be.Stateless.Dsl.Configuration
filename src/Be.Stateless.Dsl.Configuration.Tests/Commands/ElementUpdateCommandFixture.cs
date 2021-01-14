@@ -23,43 +23,43 @@ using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public class ElementUpdateCommandFixture
-	{
-		[Fact]
-		public void ExecuteSucceeds()
-		{
-			var document = Files.Load("web-original.config").AsXmlDocument();
-			var command = new ElementUpdateCommand(
-				"/configuration",
-				new[] {
-					new AttributeSpecification {
-						Name = "test",
-						NamespaceUri = "urn:test",
-						Value = "value"
-					}
-				});
-			command.Execute(document);
-			document.SelectSingleNode("/configuration/@*[local-name() = 'test' and namespace-uri()='urn:test']")
-				.Should().NotBeNull()
-				.And.Subject.Value.Should().Be("value");
-		}
+    public class ElementUpdateCommandFixture
+    {
+        [Fact]
+        public void ExecuteSucceeds()
+        {
+            var document = Files.Load("web-original.config").AsXmlDocument();
+            var command = new ElementUpdateCommand(
+                "/configuration",
+                new[] {
+                    new AttributeSpecification {
+                        Name = "test",
+                        NamespaceUri = "urn:test",
+                        Value = "value"
+                    }
+                });
+            command.Execute(document);
+            document.SelectSingleNode("/configuration/@*[local-name() = 'test' and namespace-uri()='urn:test']")
+                .Should().NotBeNull()
+                .And.Subject.Value.Should().Be("value");
+        }
 
-		[Fact]
-		public void ExecuteSucceedsWithDiscriminants()
-		{
-			var document = Files.Load("web-original.config").AsXmlDocument();
-			var command = new ElementUpdateCommand(
-				"/configuration/appSettings/add[@key='first_setting']",
-				new[] {
-					new AttributeSpecification {
-						Name = "value",
-						Value = "updated-value"
-					}
-				});
-			command.Execute(document);
-			document.SelectSingleNode("/configuration/appSettings/add[@key='first_setting']/@value")
-				.Should().NotBeNull()
-				.And.Subject.Value.Should().Be("updated-value");
-		}
-	}
+        [Fact]
+        public void ExecuteSucceedsWithDiscriminants()
+        {
+            var document = Files.Load("web-original.config").AsXmlDocument();
+            var command = new ElementUpdateCommand(
+                "/configuration/appSettings/add[@key='first_setting']",
+                new[] {
+                    new AttributeSpecification {
+                        Name = "value",
+                        Value = "updated-value"
+                    }
+                });
+            command.Execute(document);
+            document.SelectSingleNode("/configuration/appSettings/add[@key='first_setting']/@value")
+                .Should().NotBeNull()
+                .And.Subject.Value.Should().Be("updated-value");
+        }
+    }
 }

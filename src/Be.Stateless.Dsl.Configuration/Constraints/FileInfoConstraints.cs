@@ -23,15 +23,15 @@ using Be.Stateless.Argument.Validation;
 
 namespace Be.Stateless.Dsl.Configuration.Constraints
 {
-	internal static class FileInfoConstraints
-	{
-		[Pure]
-		public static TV Exists<TV>(this TV validator, FileInfo parameter, string parameterName)
-			where TV : IArgumentConstraint
-		{
-			return parameter?.Exists ?? true
-				? validator
-				: validator.AddException(new ArgumentException($"The file '{parameter.FullName}' does not exist.", parameterName));
-		}
-	}
+    internal static class FileInfoConstraints
+    {
+        [Pure]
+        public static TV Exists<TV>(this TV validator, FileInfo parameter, string parameterName)
+            where TV : IArgumentConstraint
+        {
+            return parameter?.Exists ?? true
+                ? validator
+                : validator.AddException(new ArgumentException($"The file '{parameter.FullName}' does not exist.", parameterName));
+        }
+    }
 }

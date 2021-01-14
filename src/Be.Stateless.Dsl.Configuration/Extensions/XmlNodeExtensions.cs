@@ -25,32 +25,32 @@ using Be.Stateless.Dsl.Configuration.XPath;
 
 namespace Be.Stateless.Dsl.Configuration.Extensions
 {
-	public static class XmlNodeExtensions
-	{
-		public static XmlElement SelectOrAppendElement(this XmlNode parentNode, XPathLocationStep locationStep)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(parentNode, nameof(parentNode))
-				.Check();
+    public static class XmlNodeExtensions
+    {
+        public static XmlElement SelectOrAppendElement(this XmlNode parentNode, XPathLocationStep locationStep)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(parentNode, nameof(parentNode))
+                .Check();
 
-			return (XmlElement) parentNode.SelectSingleNode(locationStep.Value) ?? parentNode.AppendElement(locationStep);
-		}
+            return (XmlElement) parentNode.SelectSingleNode(locationStep.Value) ?? parentNode.AppendElement(locationStep);
+        }
 
-		private static XmlElement AppendElement(this XmlNode parentNode, XPathLocationStep locationStep)
-		{
-			if (!locationStep.IsValid) throw new InvalidOperationException($"The XPath location step '{locationStep.Value}' is not valid.");
-			var element = (parentNode.OwnerDocument ?? (XmlDocument) parentNode).CreateElement(locationStep.ElementName);
-			parentNode.AppendChild(element);
-			if (locationStep.AttributeSpecifications.Any())
-			{
-				foreach (var attributeSpecification in locationStep.AttributeSpecifications) attributeSpecification.Execute(element);
-				element.AppendAttribute(
-					XmlAttributeNames.DISCRIMINANT,
-					Constants.NAMESPACE_URI,
-					Constants.NAMESPACE_URI_PREFIX,
-					string.Join(Constants.DISCRIMINANT_SEPARATOR.ToString(), locationStep.AttributeSpecifications.Select(specification => specification.Name)));
-			}
-			return element;
-		}
-	}
+        private static XmlElement AppendElement(this XmlNode parentNode, XPathLocationStep locationStep)
+        {
+            if (!locationStep.IsValid) throw new InvalidOperationException($"The XPath location step '{locationStep.Value}' is not valid.");
+            var element = (parentNode.OwnerDocument ?? (XmlDocument) parentNode).CreateElement(locationStep.ElementName);
+            parentNode.AppendChild(element);
+            if (locationStep.AttributeSpecifications.Any())
+            {
+                foreach (var attributeSpecification in locationStep.AttributeSpecifications) attributeSpecification.Execute(element);
+                element.AppendAttribute(
+                    XmlAttributeNames.DISCRIMINANT,
+                    Constants.NAMESPACE_URI,
+                    Constants.NAMESPACE_URI_PREFIX,
+                    string.Join(Constants.DISCRIMINANT_SEPARATOR.ToString(), locationStep.AttributeSpecifications.Select(specification => specification.Name)));
+            }
+            return element;
+        }
+    }
 }

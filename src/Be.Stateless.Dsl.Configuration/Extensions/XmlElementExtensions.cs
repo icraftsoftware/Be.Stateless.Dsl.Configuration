@@ -21,14 +21,14 @@ using System.Xml;
 
 namespace Be.Stateless.Dsl.Configuration.Extensions
 {
-	public static class XmlElementExtensions
-	{
-		public static XmlAttribute AppendAttribute(this XmlElement element, string attributeName, string namespaceUri = null, string prefix = null, string value = null)
-		{
-			var attribute = (element.OwnerDocument ?? throw new InvalidOperationException("The owner document is null.")).CreateAttribute(prefix, attributeName, namespaceUri);
-			element.Attributes.Append(attribute);
-			attribute.Value = value;
-			return attribute;
-		}
-	}
+    public static class XmlElementExtensions
+    {
+        public static XmlAttribute AppendAttribute(this XmlElement element, string attributeName, string namespaceUri = null, string prefix = null, string value = null)
+        {
+            var attribute = (element.OwnerDocument ?? throw new InvalidOperationException("The owner document is null.")).CreateAttribute(prefix, attributeName, namespaceUri);
+            element.Attributes.Append(attribute);
+            attribute.Value = value;
+            return attribute;
+        }
+    }
 }

@@ -22,12 +22,12 @@ using System.Linq;
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	internal static class EnumHelper
-	{
-		public static List<TEnum> GetValues<TEnum>()
-			where TEnum : Enum
-		{
-			return Enum.GetValues(typeof(TEnum)).OfType<TEnum>().ToList();
-		}
-	}
+    internal static class EnumHelper
+    {
+        public static List<TEnum> GetValues<TEnum>()
+            where TEnum : Enum
+        {
+            return Enum.GetValues(typeof(TEnum)).OfType<TEnum>().ToList();
+        }
+    }
 }

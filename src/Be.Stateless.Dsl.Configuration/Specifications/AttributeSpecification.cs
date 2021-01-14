@@ -21,24 +21,24 @@ using Be.Stateless.Dsl.Configuration.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Specifications
 {
-	public sealed class AttributeSpecification
-	{
-		public string Name { get; set; }
+    public sealed class AttributeSpecification
+    {
+        public string Name { get; set; }
 
-		public string NamespaceUri { get; set; }
+        public string NamespaceUri { get; set; }
 
-		public string Value { get; set; }
+        public string Value { get; set; }
 
-		public void Execute(XmlElement configurationElement)
-		{
-			var attribute = configurationElement.Attributes[Name, NamespaceUri];
-			if (attribute == null)
-			{
-				attribute = configurationElement.AppendAttribute(Name, NamespaceUri);
-				configurationElement.Attributes.Append(attribute);
-			}
+        public void Execute(XmlElement configurationElement)
+        {
+            var attribute = configurationElement.Attributes[Name, NamespaceUri];
+            if (attribute == null)
+            {
+                attribute = configurationElement.AppendAttribute(Name, NamespaceUri);
+                configurationElement.Attributes.Append(attribute);
+            }
 
-			attribute.Value = Value;
-		}
-	}
+            attribute.Value = Value;
+        }
+    }
 }

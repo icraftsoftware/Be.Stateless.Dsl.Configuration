@@ -18,9 +18,9 @@
 
 namespace Be.Stateless.Dsl.Configuration.XPath
 {
-	public enum XPathFormat
-	{
-		Name,
-		LocalName
-	}
+    public enum XPathFormat
+    {
+        Name,
+        LocalName
+    }
 }

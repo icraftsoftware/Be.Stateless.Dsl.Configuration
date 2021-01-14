@@ -18,8 +18,8 @@
 
 namespace Be.Stateless.Dsl.Configuration.XPath
 {
-	internal static class XpathFunctionNames
-	{
-		public const string LOCAL_NAME = "local-name";
-	}
+    internal static class XpathFunctionNames
+    {
+        public const string LOCAL_NAME = "local-name";
+    }
 }

@@ -31,41 +31,41 @@ using Be.Stateless.Dsl.Configuration.Xml;
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	public sealed class ConfigurationSpecificationReader
-	{
-		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-		public ConfigurationSpecificationReader(XmlDocument configurationSpecificationDocument, IEnumerable<IConfigurationFileResolver> configurationFileResolvers)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationSpecificationDocument, nameof(configurationSpecificationDocument))
-				.Check();
+    public sealed class ConfigurationSpecificationReader
+    {
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public ConfigurationSpecificationReader(XmlDocument configurationSpecificationDocument, IEnumerable<IConfigurationFilesResolverStrategy> configurationFileResolvers)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(configurationSpecificationDocument, nameof(configurationSpecificationDocument))
+                .Check();
 
-			_configurationFileResolvers = configurationFileResolvers.ToList();
-			_configurationSpecificationDocument = configurationSpecificationDocument;
-		}
+            _configurationFileResolvers = configurationFileResolvers.ToList();
+            _configurationSpecificationDocument = configurationSpecificationDocument;
+        }
 
-		public IEnumerable<ConfigurationSpecification> Read()
-		{
-			return _configurationSpecificationDocument.GetTargetConfigurationFiles(_configurationFileResolvers)
-				.Select(targetFile => new ConfigurationSpecification(targetFile, ReadCommands(), ReadUndo()));
-		}
+        public IEnumerable<ConfigurationSpecification> Read()
+        {
+            return _configurationSpecificationDocument.GetTargetConfigurationFiles(_configurationFileResolvers)
+                .Select(targetFile => new ConfigurationSpecification(targetFile, ReadCommands(), ReadUndo()));
+        }
 
-		private IEnumerable<ConfigurationCommand> ReadCommands()
-		{
-			return _configurationSpecificationDocument.CreateNavigator()
-				.AsNamespaceScopedNavigator()
-				.Select($"//*[@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.ACTION}]")
-				.Cast<XPathNavigator>()
-				.Select(ConfigurationCommandFactory.Create);
-		}
+        private IEnumerable<ConfigurationCommand> ReadCommands()
+        {
+            return _configurationSpecificationDocument.CreateNavigator()
+                .AsNamespaceScopedNavigator()
+                .Select($"//*[@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.ACTION}]")
+                .Cast<XPathNavigator>()
+                .Select(ConfigurationCommandFactory.Create);
+        }
 
-		private bool ReadUndo()
-		{
-			return _configurationSpecificationDocument.CreateNavigator().AsNamespaceScopedNavigator()
-				.SelectSingleNode($"/*/@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.UNDO}")?.ValueAsBoolean ?? false;
-		}
+        private bool ReadUndo()
+        {
+            return _configurationSpecificationDocument.CreateNavigator().AsNamespaceScopedNavigator()
+                .SelectSingleNode($"/*/@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.UNDO}")?.ValueAsBoolean ?? false;
+        }
 
-		private readonly List<IConfigurationFileResolver> _configurationFileResolvers;
-		private readonly XmlDocument _configurationSpecificationDocument;
-	}
+        private readonly List<IConfigurationFilesResolverStrategy> _configurationFileResolvers;
+        private readonly XmlDocument _configurationSpecificationDocument;
+    }
 }

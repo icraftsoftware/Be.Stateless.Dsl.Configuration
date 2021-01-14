@@ -27,77 +27,77 @@ using Be.Stateless.Dsl.Configuration.Xml;
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	public class ConfigurationSpecificationWriter
-	{
-		public ConfigurationSpecificationWriter(XmlDocument configurationSpecificationDocument)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationSpecificationDocument, nameof(configurationSpecificationDocument))
-				.Check();
+    public class ConfigurationSpecificationWriter
+    {
+        public ConfigurationSpecificationWriter(XmlDocument configurationSpecificationDocument)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(configurationSpecificationDocument, nameof(configurationSpecificationDocument))
+                .Check();
 
-			_configurationSpecificationDocument = configurationSpecificationDocument;
-		}
+            _configurationSpecificationDocument = configurationSpecificationDocument;
+        }
 
-		public string XmlContent => _configurationSpecificationDocument.OuterXml;
+        public string XmlContent => _configurationSpecificationDocument.OuterXml;
 
-		public void Write(ConfigurationSpecification configurationSpecification)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationSpecification, nameof(configurationSpecification))
-				.Check();
+        public void Write(ConfigurationSpecification configurationSpecification)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(configurationSpecification, nameof(configurationSpecification))
+                .Check();
 
-			foreach (dynamic command in configurationSpecification.Commands) Write(command);
-			_configurationSpecificationDocument.DocumentElement.AppendAttribute(
-				XmlAttributeNames.FILES,
-				Constants.NAMESPACE_URI,
-				Constants.NAMESPACE_URI_PREFIX,
-				$"file://{configurationSpecification.TargetConfigurationFile.FullName}");
-			_configurationSpecificationDocument.DocumentElement.AppendAttribute(
-				XmlAttributeNames.UNDO,
-				Constants.NAMESPACE_URI,
-				Constants.NAMESPACE_URI_PREFIX,
-				XmlConvert.ToString(configurationSpecification.IsUndo));
-		}
+            foreach (dynamic command in configurationSpecification.Commands) Write(command);
+            _configurationSpecificationDocument.DocumentElement.AppendAttribute(
+                XmlAttributeNames.FILES,
+                Constants.NAMESPACE_URI,
+                Constants.NAMESPACE_URI_PREFIX,
+                $"file://{configurationSpecification.TargetConfigurationFile.FullName}");
+            _configurationSpecificationDocument.DocumentElement.AppendAttribute(
+                XmlAttributeNames.UNDO,
+                Constants.NAMESPACE_URI,
+                Constants.NAMESPACE_URI_PREFIX,
+                XmlConvert.ToString(configurationSpecification.IsUndo));
+        }
 
-		private void Write(ElementInsertionCommand command)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(command, nameof(command))
-				.Check();
+        private void Write(ElementInsertionCommand command)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(command, nameof(command))
+                .Check();
 
-			Write(CommandTypeNames.INSERT, $"{command.ConfigurationElementSelector}/{command.ElementSpecification.Selector}", command.ElementSpecification.AttributeUpdates);
-		}
+            Write(CommandTypeNames.INSERT, $"{command.ConfigurationElementSelector}/{command.ElementSpecification.Selector}", command.ElementSpecification.AttributeUpdates);
+        }
 
-		private void Write(ElementUpdateCommand command)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(command, nameof(command))
-				.Check();
+        private void Write(ElementUpdateCommand command)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(command, nameof(command))
+                .Check();
 
-			Write(CommandTypeNames.UPDATE, $"{command.ConfigurationElementSelector}", command.AttributeSpecifications);
-		}
+            Write(CommandTypeNames.UPDATE, $"{command.ConfigurationElementSelector}", command.AttributeSpecifications);
+        }
 
-		private void Write(ElementDeletionCommand command)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(command, nameof(command))
-				.Check();
+        private void Write(ElementDeletionCommand command)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(command, nameof(command))
+                .Check();
 
-			Write(CommandTypeNames.DELETE, $"{command.ConfigurationElementSelector}");
-		}
+            Write(CommandTypeNames.DELETE, $"{command.ConfigurationElementSelector}");
+        }
 
-		private void Write(string action, string xpath, IEnumerable<AttributeSpecification> attributeUpdates = null)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrWhiteSpace(action, nameof(action))
-				.IsNotNullOrWhiteSpace(xpath, nameof(xpath))
-				.Check();
+        private void Write(string action, string xpath, IEnumerable<AttributeSpecification> attributeUpdates = null)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNullOrWhiteSpace(action, nameof(action))
+                .IsNotNullOrWhiteSpace(xpath, nameof(xpath))
+                .Check();
 
-			var element = _configurationSpecificationDocument.CreatePath(xpath);
-			element.AppendAttribute(XmlAttributeNames.ACTION, Constants.NAMESPACE_URI, Constants.NAMESPACE_URI_PREFIX, action);
-			foreach (var attributeUpdate in attributeUpdates ?? Enumerable.Empty<AttributeSpecification>()) attributeUpdate.Execute(element);
-		}
+            var element = _configurationSpecificationDocument.CreatePath(xpath);
+            element.AppendAttribute(XmlAttributeNames.ACTION, Constants.NAMESPACE_URI, Constants.NAMESPACE_URI_PREFIX, action);
+            foreach (var attributeUpdate in attributeUpdates ?? Enumerable.Empty<AttributeSpecification>()) attributeUpdate.Execute(element);
+        }
 
-		private readonly XmlDocument _configurationSpecificationDocument;
-	}
+        private readonly XmlDocument _configurationSpecificationDocument;
+    }
 }

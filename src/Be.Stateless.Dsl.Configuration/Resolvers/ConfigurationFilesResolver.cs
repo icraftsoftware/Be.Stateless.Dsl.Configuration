@@ -16,27 +16,27 @@
 
 #endregion
 
-using System.Xml.XPath;
+using System.Collections.Generic;
+using System.Linq;
 using Be.Stateless.Argument.Validation;
-using Be.Stateless.Dsl.Configuration.Constraints;
-using Be.Stateless.Dsl.Configuration.Specifications;
 
-namespace Be.Stateless.Dsl.Configuration.Factories
+namespace Be.Stateless.Dsl.Configuration.Resolvers
 {
-    public static class AttributeSpecificationFactory
+    public sealed class ConfigurationFilesResolver
     {
-        public static AttributeSpecification Create(XPathNavigator navigator)
+        public ConfigurationFilesResolver(IEnumerable<IConfigurationFilesResolverStrategy> resolverStrategies)
+        {
+            _resolverStrategies = resolverStrategies?.ToList() ?? new List<IConfigurationFilesResolverStrategy>();
+        }
+
+        public IEnumerable<string> Resolve(string moniker)
         {
             Arguments.Validation.Constraints
-                .IsNotNull(navigator, nameof(navigator))
-                .IsXmlAttribute(navigator, nameof(navigator))
+                .IsNotNullOrWhiteSpace(moniker, nameof(moniker))
                 .Check();
-
-            return new AttributeSpecification {
-                Name = navigator.LocalName,
-                NamespaceUri = navigator.NamespaceURI,
-                Value = navigator.Value
-            };
+            return _resolverStrategies.Single(resolverStrategy => resolverStrategy.CanResolve(moniker)).Resolve(moniker);
         }
+
+        private readonly List<IConfigurationFilesResolverStrategy> _resolverStrategies;
     }
 }

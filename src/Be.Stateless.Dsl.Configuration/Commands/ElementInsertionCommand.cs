@@ -24,32 +24,32 @@ using Be.Stateless.Dsl.Configuration.Specifications;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public sealed class ElementInsertionCommand : ConfigurationCommand
-	{
-		public ElementInsertionCommand(string configurationElementSelector, ElementSpecification elementSpecification)
-			: base(configurationElementSelector)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(elementSpecification, nameof(elementSpecification))
-				.Check();
+    public sealed class ElementInsertionCommand : ConfigurationCommand
+    {
+        public ElementInsertionCommand(string configurationElementSelector, ElementSpecification elementSpecification)
+            : base(configurationElementSelector)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(elementSpecification, nameof(elementSpecification))
+                .Check();
 
-			ElementSpecification = elementSpecification;
-		}
+            ElementSpecification = elementSpecification;
+        }
 
-		#region Base Class Member Overrides
+        #region Base Class Member Overrides
 
-		internal override ConfigurationCommand Execute(XmlElement configurationElement)
-		{
-			if (ElementSpecification.Exists(configurationElement))
-				throw new InvalidOperationException(
-					$"The configuration element already exists at '{string.Join("/", ConfigurationElementSelector, ElementSpecification.Selector)}'.");
-			var undoCommand = ConfigurationCommandFactory.CreateUndoCommandForInsertion(this);
-			configurationElement.AppendChild(ElementSpecification.Execute(configurationElement.OwnerDocument));
-			return undoCommand;
-		}
+        internal override ConfigurationCommand Execute(XmlElement configurationElement)
+        {
+            if (ElementSpecification.Exists(configurationElement))
+                throw new InvalidOperationException(
+                    $"The configuration element already exists at '{string.Join("/", ConfigurationElementSelector, ElementSpecification.Selector)}'.");
+            var undoCommand = ConfigurationCommandFactory.CreateUndoCommandForInsertion(this);
+            configurationElement.AppendChild(ElementSpecification.Execute(configurationElement.OwnerDocument));
+            return undoCommand;
+        }
 
-		#endregion
+        #endregion
 
-		public ElementSpecification ElementSpecification { get; }
-	}
+        public ElementSpecification ElementSpecification { get; }
+    }
 }

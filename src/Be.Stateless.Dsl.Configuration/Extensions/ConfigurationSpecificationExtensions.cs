@@ -20,12 +20,12 @@ using Be.Stateless.Dsl.Configuration.Specifications;
 
 namespace Be.Stateless.Dsl.Configuration.Extensions
 {
-	public static class ConfigurationSpecificationExtensions
-	{
-		public static ConfigurationSpecificationProcessor.Result Apply(this ConfigurationSpecification specification)
-		{
-			var processor = new ConfigurationSpecificationProcessor(specification);
-			return processor.Process();
-		}
-	}
+    public static class ConfigurationSpecificationExtensions
+    {
+        public static ConfigurationSpecificationProcessor.Result Apply(this ConfigurationSpecification specification)
+        {
+            var processor = new ConfigurationSpecificationProcessor(specification);
+            return processor.Process();
+        }
+    }
 }

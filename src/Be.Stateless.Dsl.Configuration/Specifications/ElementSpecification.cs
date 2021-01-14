@@ -23,52 +23,52 @@ using Be.Stateless.Argument.Validation;
 
 namespace Be.Stateless.Dsl.Configuration.Specifications
 {
-	public class ElementSpecification
-	{
-		public ElementSpecification(
-			string name,
-			string namespaceUri,
-			IEnumerable<AttributeSpecification> attributeUpdates,
-			string selector)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrEmpty(name, nameof(name))
-				.Check()
-				.IsNotNullOrWhiteSpace(selector, nameof(selector))
-				.Check();
+    public class ElementSpecification
+    {
+        public ElementSpecification(
+            string name,
+            string namespaceUri,
+            IEnumerable<AttributeSpecification> attributeUpdates,
+            string selector)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNullOrEmpty(name, nameof(name))
+                .Check()
+                .IsNotNullOrWhiteSpace(selector, nameof(selector))
+                .Check();
 
-			Name = name;
-			NamespaceUri = namespaceUri;
-			Selector = selector;
-			AttributeUpdates = attributeUpdates ?? Enumerable.Empty<AttributeSpecification>();
-		}
+            Name = name;
+            NamespaceUri = namespaceUri;
+            Selector = selector;
+            AttributeUpdates = attributeUpdates ?? Enumerable.Empty<AttributeSpecification>();
+        }
 
-		public IEnumerable<AttributeSpecification> AttributeUpdates { get; }
+        public IEnumerable<AttributeSpecification> AttributeUpdates { get; }
 
-		public string Name { get; }
+        public string Name { get; }
 
-		public string NamespaceUri { get; }
+        public string NamespaceUri { get; }
 
-		public string Selector { get; }
+        public string Selector { get; }
 
-		public XmlElement Execute(XmlDocument configurationDocument)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationDocument, nameof(configurationDocument))
-				.Check();
+        public XmlElement Execute(XmlDocument configurationDocument)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(configurationDocument, nameof(configurationDocument))
+                .Check();
 
-			var element = configurationDocument.CreateElement(null, Name, NamespaceUri);
-			foreach (var attributeUpdate in AttributeUpdates) attributeUpdate.Execute(element);
-			return element;
-		}
+            var element = configurationDocument.CreateElement(null, Name, NamespaceUri);
+            foreach (var attributeUpdate in AttributeUpdates) attributeUpdate.Execute(element);
+            return element;
+        }
 
-		public bool Exists(XmlElement parentElement)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(parentElement, nameof(parentElement))
-				.Check();
+        public bool Exists(XmlElement parentElement)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(parentElement, nameof(parentElement))
+                .Check();
 
-			return parentElement.SelectSingleNode(Selector) != null;
-		}
-	}
+            return parentElement.SelectSingleNode(Selector) != null;
+        }
+    }
 }

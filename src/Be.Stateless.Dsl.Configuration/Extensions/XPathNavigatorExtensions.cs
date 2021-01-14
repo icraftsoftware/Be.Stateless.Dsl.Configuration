@@ -29,41 +29,41 @@ using Be.Stateless.Xml.XPath.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Extensions
 {
-	internal static class XPathNavigatorExtensions
-	{
-		internal static NamespaceScopedXPathNavigator AsNamespaceScopedNavigator(this XPathNavigator navigator)
-		{
-			if (navigator is NamespaceScopedXPathNavigator namespaceManagedXPathNavigator) return namespaceManagedXPathNavigator;
+    internal static class XPathNavigatorExtensions
+    {
+        internal static NamespaceScopedXPathNavigator AsNamespaceScopedNavigator(this XPathNavigator navigator)
+        {
+            if (navigator is NamespaceScopedXPathNavigator namespaceManagedXPathNavigator) return namespaceManagedXPathNavigator;
 
-			return new NamespaceScopedXPathNavigator(navigator, navigator.BuildNamespaceManager());
-		}
+            return new NamespaceScopedXPathNavigator(navigator, navigator.BuildNamespaceManager());
+        }
 
-		private static XmlNamespaceManager BuildNamespaceManager(this XPathNavigator navigator)
-		{
-			var namespaceManager = navigator.GetNamespaceManager();
-			namespaceManager.AddNamespace(Constants.NAMESPACE_URI_PREFIX, Constants.NAMESPACE_URI);
-			return namespaceManager;
-		}
+        private static XmlNamespaceManager BuildNamespaceManager(this XPathNavigator navigator)
+        {
+            var namespaceManager = navigator.GetNamespaceManager();
+            namespaceManager.AddNamespace(Constants.NAMESPACE_URI_PREFIX, Constants.NAMESPACE_URI);
+            return namespaceManager;
+        }
 
-		public static string GetCommandType(this XPathNavigator navigator)
-		{
-			return navigator.AsNamespaceScopedNavigator().SelectSingleNode($"@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.ACTION}")?.Value;
-		}
+        public static string GetCommandType(this XPathNavigator navigator)
+        {
+            return navigator.AsNamespaceScopedNavigator().SelectSingleNode($"@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.ACTION}")?.Value;
+        }
 
-		public static IEnumerable<string> GetDiscriminants(this XPathNavigator navigator)
-		{
-			return navigator.AsNamespaceScopedNavigator()
-					.SelectSingleNode($"@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.DISCRIMINANT}")?.Value
-					.Split(new[] { Constants.DISCRIMINANT_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries)
-				?? Enumerable.Empty<string>();
-		}
+        public static IEnumerable<string> GetDiscriminants(this XPathNavigator navigator)
+        {
+            return navigator.AsNamespaceScopedNavigator()
+                    .SelectSingleNode($"@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.DISCRIMINANT}")?.Value
+                    .Split(new[] { Constants.DISCRIMINANT_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries)
+                ?? Enumerable.Empty<string>();
+        }
 
-		public static IEnumerable<AttributeSpecification> GetAttributeUpdates(this XPathNavigator navigator)
-		{
-			return navigator.AsNamespaceScopedNavigator()
-				.Select($"@*[namespace-uri()!='{Constants.NAMESPACE_URI}']")
-				.Cast<XPathNavigator>()
-				.Select(AttributeSpecificationFactory.Create);
-		}
-	}
+        public static IEnumerable<AttributeSpecification> GetAttributeUpdates(this XPathNavigator navigator)
+        {
+            return navigator.AsNamespaceScopedNavigator()
+                .Select($"@*[namespace-uri()!='{Constants.NAMESPACE_URI}']")
+                .Cast<XPathNavigator>()
+                .Select(AttributeSpecificationFactory.Create);
+        }
+    }
 }

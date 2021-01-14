@@ -23,22 +23,22 @@ using System.Text.RegularExpressions;
 
 namespace Be.Stateless.Dsl.Configuration.XPath
 {
-	public class XPathExpression
-	{
-		public XPathExpression(string value)
-		{
-			_value = value;
-		}
+    public class XPathExpression
+    {
+        public XPathExpression(string value)
+        {
+            _value = value;
+        }
 
-		public IEnumerable<XPathLocationStep> GetLocationSteps()
-		{
-			var result = _xpathPattern.Match(_value);
-			if (!result.Success) throw new InvalidOperationException($"The XPath '{_value}' is not valid.");
-			return result.Groups[SEGMENT_GROUP_NAME].Captures.Cast<Capture>().Select(capture => new XPathLocationStep(capture.Value));
-		}
+        public IEnumerable<XPathLocationStep> GetLocationSteps()
+        {
+            var result = _xpathPattern.Match(_value);
+            if (!result.Success) throw new InvalidOperationException($"The XPath '{_value}' is not valid.");
+            return result.Groups[SEGMENT_GROUP_NAME].Captures.Cast<Capture>().Select(capture => new XPathLocationStep(capture.Value));
+        }
 
-		private const string SEGMENT_GROUP_NAME = "segment";
-		private static readonly Regex _xpathPattern = new Regex(@"^(?:\/(?<segment>(?:\*|\w+)(?:\[[^/]+\])?))+$");
-		private readonly string _value;
-	}
+        private const string SEGMENT_GROUP_NAME = "segment";
+        private static readonly Regex _xpathPattern = new Regex(@"^(?:\/(?<segment>(?:\*|\w+)(?:\[[^/]+\])?))+$");
+        private readonly string _value;
+    }
 }

@@ -24,62 +24,62 @@ using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public class ElementInsertionCommandFixture
-	{
-		[Fact]
-		public void ExecuteSucceeds()
-		{
-			var command = new ElementInsertionCommand(
-				"/configuration",
-				new ElementSpecification("test", null, null, "test"));
-			var document = Files.Load("web-original.config").AsXmlDocument();
-			command.Execute(document);
-			document.SelectSingleNode("/configuration/test")
-				.Should().NotBeNull();
-		}
+    public class ElementInsertionCommandFixture
+    {
+        [Fact]
+        public void ExecuteSucceeds()
+        {
+            var command = new ElementInsertionCommand(
+                "/configuration",
+                new ElementSpecification("test", null, null, "test"));
+            var document = Files.Load("web-original.config").AsXmlDocument();
+            command.Execute(document);
+            document.SelectSingleNode("/configuration/test")
+                .Should().NotBeNull();
+        }
 
-		[Fact]
-		public void ExecuteSucceedsWithAttributeUpdate()
-		{
-			var command = new ElementInsertionCommand(
-				"/configuration",
-				new ElementSpecification(
-					"test",
-					null,
-					new[] {
-						new AttributeSpecification {
-							Name = "test",
-							NamespaceUri = "urn:test",
-							Value = "value"
-						},
-						new AttributeSpecification {
-							Name = "test",
-							Value = "value"
-						}
-					},
-					"test"));
+        [Fact]
+        public void ExecuteSucceedsWithAttributeUpdate()
+        {
+            var command = new ElementInsertionCommand(
+                "/configuration",
+                new ElementSpecification(
+                    "test",
+                    null,
+                    new[] {
+                        new AttributeSpecification {
+                            Name = "test",
+                            NamespaceUri = "urn:test",
+                            Value = "value"
+                        },
+                        new AttributeSpecification {
+                            Name = "test",
+                            Value = "value"
+                        }
+                    },
+                    "test"));
 
-			var document = Files.Load("web-original.config").AsXmlDocument();
-			command.Execute(document);
-			document.SelectSingleNode("/configuration/test")
-				.Should().NotBeNull();
-			document.SelectSingleNode("/configuration/test/@*[local-name() = 'test' and namespace-uri()='urn:test']")
-				.Should().NotBeNull()
-				.And.Subject.Value.Should().Be("value");
-			document.SelectSingleNode("/configuration/test/@test")
-				.Should().NotBeNull()
-				.And.Subject.Value.Should().Be("value");
-		}
+            var document = Files.Load("web-original.config").AsXmlDocument();
+            command.Execute(document);
+            document.SelectSingleNode("/configuration/test")
+                .Should().NotBeNull();
+            document.SelectSingleNode("/configuration/test/@*[local-name() = 'test' and namespace-uri()='urn:test']")
+                .Should().NotBeNull()
+                .And.Subject.Value.Should().Be("value");
+            document.SelectSingleNode("/configuration/test/@test")
+                .Should().NotBeNull()
+                .And.Subject.Value.Should().Be("value");
+        }
 
-		[Fact]
-		public void ExecuteThrowsWhenElementAlreadyExists()
-		{
-			var command = new ElementInsertionCommand(
-				"/configuration",
-				new ElementSpecification("appSettings", null, null, "appSettings"));
-			Action act = () => command.Execute(Files.Load("web-original.config").AsXmlDocument());
-			act.Should().ThrowExactly<InvalidOperationException>()
-				.WithMessage("The configuration element already exists at '/configuration/appSettings'.");
-		}
-	}
+        [Fact]
+        public void ExecuteThrowsWhenElementAlreadyExists()
+        {
+            var command = new ElementInsertionCommand(
+                "/configuration",
+                new ElementSpecification("appSettings", null, null, "appSettings"));
+            Action act = () => command.Execute(Files.Load("web-original.config").AsXmlDocument());
+            act.Should().ThrowExactly<InvalidOperationException>()
+                .WithMessage("The configuration element already exists at '/configuration/appSettings'.");
+        }
+    }
 }

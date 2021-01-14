@@ -26,34 +26,34 @@ using Be.Stateless.Dsl.Configuration.Specifications;
 
 namespace Be.Stateless.Dsl.Configuration.Extensions
 {
-	public static class FileInfoExtensions
-	{
-		public static XmlDocument AsXmlDocument(this FileInfo fileInfo)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(fileInfo, nameof(fileInfo))
-				.Check();
+    public static class FileInfoExtensions
+    {
+        public static XmlDocument AsXmlDocument(this FileInfo fileInfo)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(fileInfo, nameof(fileInfo))
+                .Check();
 
-			var document = new XmlDocument();
-			document.Load(fileInfo.FullName);
-			return document;
-		}
+            var document = new XmlDocument();
+            document.Load(fileInfo.FullName);
+            return document;
+        }
 
-		public static IEnumerable<ConfigurationSpecification> AsConfigurationSpecifications(
-			this FileInfo configurationSpecificationFile,
-			IEnumerable<IConfigurationFileResolver> configurationFileResolvers)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationSpecificationFile, nameof(configurationSpecificationFile))
-				.Exists(configurationSpecificationFile, nameof(configurationSpecificationFile))
-				.Check();
+        public static IEnumerable<ConfigurationSpecification> AsConfigurationSpecifications(
+            this FileInfo configurationSpecificationFile,
+            IEnumerable<IConfigurationFilesResolverStrategy> configurationFileResolverStrategies)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(configurationSpecificationFile, nameof(configurationSpecificationFile))
+                .Exists(configurationSpecificationFile, nameof(configurationSpecificationFile))
+                .Check();
 
-			var configurationSpecifications = new ConfigurationSpecificationReader(configurationSpecificationFile.AsXmlDocument(), configurationFileResolvers).Read();
-			foreach (var configurationSpecification in configurationSpecifications)
-			{
-				configurationSpecification.SpecificationSourceFile = configurationSpecificationFile;
-				yield return configurationSpecification;
-			}
-		}
-	}
+            var configurationSpecifications = new ConfigurationSpecificationReader(configurationSpecificationFile.AsXmlDocument(), configurationFileResolverStrategies).Read();
+            foreach (var configurationSpecification in configurationSpecifications)
+            {
+                configurationSpecification.SpecificationSourceFile = configurationSpecificationFile;
+                yield return configurationSpecification;
+            }
+        }
+    }
 }
