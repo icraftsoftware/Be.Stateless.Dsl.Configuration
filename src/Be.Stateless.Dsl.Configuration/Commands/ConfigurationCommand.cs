@@ -25,37 +25,37 @@ using Be.Stateless.Dsl.Configuration.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public abstract class ConfigurationCommand
-	{
-		protected ConfigurationCommand(string configurationElementSelector)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrEmpty(configurationElementSelector, nameof(configurationElementSelector))
-				.Check();
-			ConfigurationElementSelector = configurationElementSelector;
-		}
+    public abstract class ConfigurationCommand
+    {
+        protected ConfigurationCommand(string configurationElementSelector)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNullOrEmpty(configurationElementSelector, nameof(configurationElementSelector))
+                .Check();
+            ConfigurationElementSelector = configurationElementSelector;
+        }
 
-		public string ConfigurationElementSelector { get; }
+        public string ConfigurationElementSelector { get; }
 
-		public ConfigurationCommand Execute(XmlDocument configurationDocument)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationDocument, nameof(configurationDocument))
-				.Check();
-			var configurationElement = FindConfigurationElement(configurationDocument);
-			return Execute(configurationElement);
-		}
+        public ConfigurationCommand Execute(XmlDocument configurationDocument)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(configurationDocument, nameof(configurationDocument))
+                .Check();
+            var configurationElement = FindConfigurationElement(configurationDocument);
+            return Execute(configurationElement);
+        }
 
-		[SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
-		private XmlElement FindConfigurationElement(XmlDocument configurationDocument)
-		{
-			var configurationElements = (configurationDocument.SelectNodes(ConfigurationElementSelector) ?? throw new InvalidOperationException())
-				.OfType<XmlElement>()
-				.ToArray();
-			if (configurationElements.IsMultiple()) throw new InvalidOperationException($"Found multiple configuration elements at '{ConfigurationElementSelector}'.");
-			return configurationElements.SingleOrDefault() ?? throw new InvalidOperationException($"Cannot find configuration element at '{ConfigurationElementSelector}'.");
-		}
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+        private XmlElement FindConfigurationElement(XmlDocument configurationDocument)
+        {
+            var configurationElements = (configurationDocument.SelectNodes(ConfigurationElementSelector) ?? throw new InvalidOperationException())
+                .OfType<XmlElement>()
+                .ToArray();
+            if (configurationElements.IsMultiple()) throw new InvalidOperationException($"Found multiple configuration elements at '{ConfigurationElementSelector}'.");
+            return configurationElements.SingleOrDefault() ?? throw new InvalidOperationException($"Cannot find configuration element at '{ConfigurationElementSelector}'.");
+        }
 
-		internal abstract ConfigurationCommand Execute(XmlElement configurationElement);
-	}
+        internal abstract ConfigurationCommand Execute(XmlElement configurationElement);
+    }
 }

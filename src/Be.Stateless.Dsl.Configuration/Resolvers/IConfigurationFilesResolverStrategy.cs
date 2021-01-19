@@ -20,10 +20,10 @@ using System.Collections.Generic;
 
 namespace Be.Stateless.Dsl.Configuration.Resolvers
 {
-	public interface IConfigurationFileResolver
-	{
-		bool CanResolve(string moniker);
+    public interface IConfigurationFilesResolverStrategy
+    {
+        bool CanResolve(string moniker);
 
-		IEnumerable<string> Resolve(string moniker);
-	}
+        IEnumerable<string> Resolve(string moniker);
+    }
 }

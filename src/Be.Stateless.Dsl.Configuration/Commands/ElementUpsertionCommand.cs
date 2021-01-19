@@ -22,36 +22,36 @@ using Be.Stateless.Argument.Validation;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public class ElementUpsertionCommand : ConfigurationCommand
-	{
-		public ElementUpsertionCommand(string configurationElementSelector, ElementInsertionCommand insertionCommand, ElementUpdateCommand updateCommand) :
-			base(configurationElementSelector)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(insertionCommand, nameof(insertionCommand))
-				.Check()
-				.IsNotNull(updateCommand, nameof(updateCommand))
-				.Check();
+    public class ElementUpsertionCommand : ConfigurationCommand
+    {
+        public ElementUpsertionCommand(string configurationElementSelector, ElementInsertionCommand insertionCommand, ElementUpdateCommand updateCommand) :
+            base(configurationElementSelector)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(insertionCommand, nameof(insertionCommand))
+                .Check()
+                .IsNotNull(updateCommand, nameof(updateCommand))
+                .Check();
 
-			InsertionCommand = insertionCommand;
-			UpdateCommand = updateCommand;
-		}
+            InsertionCommand = insertionCommand;
+            UpdateCommand = updateCommand;
+        }
 
-		#region Base Class Member Overrides
+        #region Base Class Member Overrides
 
-		internal override ConfigurationCommand Execute(XmlElement configurationElement)
-		{
-			return InsertionCommand.ElementSpecification.Exists(configurationElement)
-				? UpdateCommand.Execute((XmlElement) configurationElement.SelectSingleNode(InsertionCommand.ElementSpecification.Selector))
-				: InsertionCommand.Execute(configurationElement);
-		}
+        internal override ConfigurationCommand Execute(XmlElement configurationElement)
+        {
+            return InsertionCommand.ElementSpecification.Exists(configurationElement)
+                ? UpdateCommand.Execute((XmlElement) configurationElement.SelectSingleNode(InsertionCommand.ElementSpecification.Selector))
+                : InsertionCommand.Execute(configurationElement);
+        }
 
-		#endregion
+        #endregion
 
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-		public ElementInsertionCommand InsertionCommand { get; }
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public ElementInsertionCommand InsertionCommand { get; }
 
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-		public ElementUpdateCommand UpdateCommand { get; }
-	}
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public ElementUpdateCommand UpdateCommand { get; }
+    }
 }

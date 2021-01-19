@@ -24,42 +24,42 @@ using Be.Stateless.Dsl.Configuration.Specifications;
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	public class ConfigurationSpecificationProcessor
-	{
-		#region Nested Type: Result
+    public class ConfigurationSpecificationProcessor
+    {
+        #region Nested Type: Result
 
-		public class Result
-		{
-			internal Result(XmlDocument modifiedConfiguration, ConfigurationSpecification undoConfigurationSpecification)
-			{
-				ModifiedConfiguration = modifiedConfiguration;
-				UndoConfigurationSpecification = undoConfigurationSpecification;
-			}
+        public class Result
+        {
+            internal Result(XmlDocument modifiedConfiguration, ConfigurationSpecification undoConfigurationSpecification)
+            {
+                ModifiedConfiguration = modifiedConfiguration;
+                UndoConfigurationSpecification = undoConfigurationSpecification;
+            }
 
-			public XmlDocument ModifiedConfiguration { get; }
+            public XmlDocument ModifiedConfiguration { get; }
 
-			public ConfigurationSpecification UndoConfigurationSpecification { get; }
-		}
+            public ConfigurationSpecification UndoConfigurationSpecification { get; }
+        }
 
-		#endregion
+        #endregion
 
-		public ConfigurationSpecificationProcessor(ConfigurationSpecification configurationSpecification)
-		{
-			_configurationSpecification = configurationSpecification;
-		}
+        public ConfigurationSpecificationProcessor(ConfigurationSpecification configurationSpecification)
+        {
+            _configurationSpecification = configurationSpecification;
+        }
 
-		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Assert that the enumeration is not null.")]
-		public Result Process()
-		{
-			var modifiedConfiguration = _configurationSpecification.TargetConfigurationFile.AsXmlDocument();
-			var commands = _configurationSpecification.IsUndo ? _configurationSpecification.Commands.Reverse() : _configurationSpecification.Commands;
-			var undoConfigurationSpecification = new ConfigurationSpecification(
-				_configurationSpecification.TargetConfigurationFile,
-				commands.Select(command => command.Execute(modifiedConfiguration)).ToList(),
-				true);
-			return new Result(modifiedConfiguration, undoConfigurationSpecification);
-		}
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Assert that the enumeration is not null.")]
+        public Result Process()
+        {
+            var modifiedConfiguration = _configurationSpecification.TargetConfigurationFile.AsXmlDocument();
+            var commands = _configurationSpecification.IsUndo ? _configurationSpecification.Commands.Reverse() : _configurationSpecification.Commands;
+            var undoConfigurationSpecification = new ConfigurationSpecification(
+                _configurationSpecification.TargetConfigurationFile,
+                commands.Select(command => command.Execute(modifiedConfiguration)).ToList(),
+                true);
+            return new Result(modifiedConfiguration, undoConfigurationSpecification);
+        }
 
-		private readonly ConfigurationSpecification _configurationSpecification;
-	}
+        private readonly ConfigurationSpecification _configurationSpecification;
+    }
 }

@@ -24,25 +24,25 @@ using Be.Stateless.Dsl.Configuration.Specifications;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public sealed class ElementUpdateCommand : ConfigurationCommand
-	{
-		public ElementUpdateCommand(string configurationElementSelector, IEnumerable<AttributeSpecification> attributeUpdates)
-			: base(configurationElementSelector)
-		{
-			AttributeSpecifications = attributeUpdates ?? Enumerable.Empty<AttributeSpecification>();
-		}
+    public sealed class ElementUpdateCommand : ConfigurationCommand
+    {
+        public ElementUpdateCommand(string configurationElementSelector, IEnumerable<AttributeSpecification> attributeUpdates)
+            : base(configurationElementSelector)
+        {
+            AttributeSpecifications = attributeUpdates ?? Enumerable.Empty<AttributeSpecification>();
+        }
 
-		#region Base Class Member Overrides
+        #region Base Class Member Overrides
 
-		internal override ConfigurationCommand Execute(XmlElement configurationElement)
-		{
-			var undoCommand = ConfigurationCommandFactory.CreateUndoCommandForUpdate(this, configurationElement);
-			foreach (var attributeSpecification in AttributeSpecifications) attributeSpecification.Execute(configurationElement);
-			return undoCommand;
-		}
+        internal override ConfigurationCommand Execute(XmlElement configurationElement)
+        {
+            var undoCommand = ConfigurationCommandFactory.CreateUndoCommandForUpdate(this, configurationElement);
+            foreach (var attributeSpecification in AttributeSpecifications) attributeSpecification.Execute(configurationElement);
+            return undoCommand;
+        }
 
-		#endregion
+        #endregion
 
-		public IEnumerable<AttributeSpecification> AttributeSpecifications { get; }
-	}
+        public IEnumerable<AttributeSpecification> AttributeSpecifications { get; }
+    }
 }

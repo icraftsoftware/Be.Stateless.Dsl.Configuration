@@ -27,26 +27,26 @@ using Be.Stateless.Dsl.Configuration.Xml;
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	public class ConfigurationFileMonikersExtractor
-	{
-		public ConfigurationFileMonikersExtractor(XmlDocument document)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(document, nameof(document))
-				.Check();
+    public class ConfigurationFileMonikersExtractor
+    {
+        public ConfigurationFileMonikersExtractor(XmlDocument document)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(document, nameof(document))
+                .Check();
 
-			_document = document;
-		}
+            _document = document;
+        }
 
-		public IEnumerable<string> Extract()
-		{
-			return _document.CreateNavigator().AsNamespaceScopedNavigator()
-				.Select($"/*/@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.FILES}")
-				.Cast<XPathNavigator>()
-				.Single()
-				.Value.Split(new[] { Constants.FILE_MONIKER_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
-		}
+        public IEnumerable<string> Extract()
+        {
+            return _document.CreateNavigator().AsNamespaceScopedNavigator()
+                .Select($"/*/@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.FILES}")
+                .Cast<XPathNavigator>()
+                .Single()
+                .Value.Split(new[] { Constants.FILE_MONIKER_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
+        }
 
-		private readonly XmlDocument _document;
-	}
+        private readonly XmlDocument _document;
+    }
 }

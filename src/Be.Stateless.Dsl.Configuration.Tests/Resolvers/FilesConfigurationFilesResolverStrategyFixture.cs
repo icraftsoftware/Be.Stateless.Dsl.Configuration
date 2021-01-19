@@ -21,21 +21,21 @@ using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration.Resolvers
 {
-	public class FileConfigurationFileResolverFixture
-	{
-		[Theory]
-		[InlineData(@"file:\\c:\web.config")]
-		[InlineData(@"file:/c:\web.config")]
-		[InlineData(@"file://")]
-		public void CannotResolve(string moniker)
-		{
-			new FileConfigurationFileResolver().CanResolve(moniker).Should().BeFalse();
-		}
+    public class FilesConfigurationFilesResolverStrategyFixture
+    {
+        [Theory]
+        [InlineData(@"file:\\c:\web.config")]
+        [InlineData(@"file:/c:\web.config")]
+        [InlineData(@"file://")]
+        public void CannotResolve(string moniker)
+        {
+            new FilesConfigurationFilesResolverStrategy().CanResolve(moniker).Should().BeFalse();
+        }
 
-		[Fact]
-		public void CanResolve()
-		{
-			new FileConfigurationFileResolver().CanResolve(@"file://c:\web.config").Should().BeTrue();
-		}
-	}
+        [Fact]
+        public void CanResolve()
+        {
+            new FilesConfigurationFilesResolverStrategy().CanResolve(@"file://c:\web.config").Should().BeTrue();
+        }
+    }
 }

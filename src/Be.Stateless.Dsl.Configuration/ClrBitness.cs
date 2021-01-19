@@ -18,16 +18,16 @@
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	public enum FrameworkArchitecture
-	{
-		/// <summary>
-		/// Indicates the 32-bit .NET Framework
-		/// </summary>
-		Bitness32 = 1,
+    public enum ClrBitness
+    {
+        /// <summary>
+        /// Indicates the CLR bitness 32.
+        /// </summary>
+        Bitness32,
 
-		/// <summary>
-		/// Indicates the 64-bit .NET Framework
-		/// </summary>
-		Bitness64 = 2
-	}
+        /// <summary>
+        /// Indicates the CLR bitness 64.
+        /// </summary>
+        Bitness64
+    }
 }

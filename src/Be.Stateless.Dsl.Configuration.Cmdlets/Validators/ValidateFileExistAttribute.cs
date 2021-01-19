@@ -24,27 +24,27 @@ using System.Management.Automation;
 
 namespace Be.Stateless.Dsl.Configuration.Validators
 {
-	public sealed class ValidateFileExistAttribute : ValidateArgumentsAttribute
-	{
-		#region Base Class Member Overrides
+    public sealed class ValidateFileExistAttribute : ValidateArgumentsAttribute
+    {
+        #region Base Class Member Overrides
 
-		protected override void Validate(object arguments, EngineIntrinsics engineIntrinsics)
-		{
-			if (arguments == null) return;
-			var files = new List<FileInfo>();
-			if (arguments is FileInfo file) files.Add(file);
-			else
-			{
-				if (!(arguments is IEnumerable<FileInfo> filesToProcess)) throw new InvalidOperationException("The parameter is not valid.");
-				files.AddRange(filesToProcess);
-			}
+        protected override void Validate(object arguments, EngineIntrinsics engineIntrinsics)
+        {
+            if (arguments == null) return;
+            var files = new List<FileInfo>();
+            if (arguments is FileInfo file) files.Add(file);
+            else
+            {
+                if (!(arguments is IEnumerable<FileInfo> filesToProcess)) throw new InvalidOperationException("The parameter is not valid.");
+                files.AddRange(filesToProcess);
+            }
 
-			foreach (var fileInfo in files.Where(fileInfo => !fileInfo.Exists))
-			{
-				throw new FileNotFoundException("The file is not found", fileInfo.FullName);
-			}
-		}
+            foreach (var fileInfo in files.Where(fileInfo => !fileInfo.Exists))
+            {
+                throw new FileNotFoundException("The file is not found", fileInfo.FullName);
+            }
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -24,49 +24,49 @@ using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	public class ConfigurationSpecificationProcessorFixture
-	{
-		[Fact]
-		public void ProcessSucceeds()
-		{
-			using (var scope = new TemporaryFileScope("web-original.config"))
-			{
-				var result = new ConfigurationSpecificationProcessor(
-						new ConfigurationSpecification(
-							new FileInfo(scope.FilePath),
-							new[] {
-								new ElementInsertionCommand(
-									"/configuration",
-									new ElementSpecification(
-										"system.net",
-										string.Empty,
-										new AttributeSpecification[0],
-										"system.net")),
-							},
-							false))
-					.Process();
-				result.ModifiedConfiguration.SelectSingleNode("/configuration/system.net").Should().NotBeNull();
-			}
-		}
+    public class ConfigurationSpecificationProcessorFixture
+    {
+        [Fact]
+        public void ProcessSucceeds()
+        {
+            using (var scope = new TemporaryFileScope("web-original.config"))
+            {
+                var result = new ConfigurationSpecificationProcessor(
+                        new ConfigurationSpecification(
+                            new FileInfo(scope.FilePath),
+                            new[] {
+                                new ElementInsertionCommand(
+                                    "/configuration",
+                                    new ElementSpecification(
+                                        "system.net",
+                                        string.Empty,
+                                        new AttributeSpecification[0],
+                                        "system.net")),
+                            },
+                            false))
+                    .Process();
+                result.ModifiedConfiguration.SelectSingleNode("/configuration/system.net").Should().NotBeNull();
+            }
+        }
 
-		[Fact]
-		public void ProcessSucceedsForUndo()
-		{
-			using (var scope = new TemporaryFileScope("web-modified.config"))
-			{
-				var result = new ConfigurationSpecificationProcessor(
-						new ConfigurationSpecification(
-							new FileInfo(scope.FilePath),
-							new[] {
-								new ElementDeletionCommand("/configuration/system.net"),
-								new ElementDeletionCommand("/configuration/system.net/settings"),
-								new ElementDeletionCommand("/configuration/system.web"),
-								new ElementDeletionCommand("/configuration/system.web/authorization")
-							},
-							true))
-					.Process();
-				result.ModifiedConfiguration.SelectNodes("/configuration/*").Should().BeEmpty();
-			}
-		}
-	}
+        [Fact]
+        public void ProcessSucceedsForUndo()
+        {
+            using (var scope = new TemporaryFileScope("web-modified.config"))
+            {
+                var result = new ConfigurationSpecificationProcessor(
+                        new ConfigurationSpecification(
+                            new FileInfo(scope.FilePath),
+                            new[] {
+                                new ElementDeletionCommand("/configuration/system.net"),
+                                new ElementDeletionCommand("/configuration/system.net/settings"),
+                                new ElementDeletionCommand("/configuration/system.web"),
+                                new ElementDeletionCommand("/configuration/system.web/authorization")
+                            },
+                            true))
+                    .Process();
+                result.ModifiedConfiguration.SelectNodes("/configuration/*").Should().BeEmpty();
+            }
+        }
+    }
 }

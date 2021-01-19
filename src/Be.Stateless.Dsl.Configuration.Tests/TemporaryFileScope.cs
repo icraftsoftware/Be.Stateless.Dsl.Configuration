@@ -22,23 +22,23 @@ using Be.Stateless.Dsl.Configuration.Resources;
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	internal sealed class TemporaryFileScope : IDisposable
-	{
-		public TemporaryFileScope(string resourceName)
-		{
-			FilePath = Path.GetTempFileName();
-			using (var fileStream = File.OpenWrite(FilePath)) Files.Load(resourceName).AsXmlDocument().Save(fileStream);
-		}
+    internal sealed class TemporaryFileScope : IDisposable
+    {
+        public TemporaryFileScope(string resourceName)
+        {
+            FilePath = Path.GetTempFileName();
+            using (var fileStream = File.OpenWrite(FilePath)) Files.Load(resourceName).AsXmlDocument().Save(fileStream);
+        }
 
-		#region IDisposable Members
+        #region IDisposable Members
 
-		public void Dispose()
-		{
-			File.Delete(FilePath);
-		}
+        public void Dispose()
+        {
+            File.Delete(FilePath);
+        }
 
-		#endregion
+        #endregion
 
-		public string FilePath { get; }
-	}
+        public string FilePath { get; }
+    }
 }

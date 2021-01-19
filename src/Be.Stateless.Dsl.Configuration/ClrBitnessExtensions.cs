@@ -16,29 +16,24 @@
 
 #endregion
 
-using System.IO;
-using System.Xml;
-using System.Xml.XPath;
-using Be.Stateless.Argument.Validation;
+using System;
+using Microsoft.Win32;
 
 namespace Be.Stateless.Dsl.Configuration
 {
-    public static class StreamExtensions
+    internal static class ClrBitnessExtensions
     {
-        internal static XmlDocument AsXmlDocument(this Stream stream)
+        public static RegistryView ToRegistryView(this ClrBitness bitness)
         {
-            Arguments.Validation.Constraints
-                .IsNotNull(stream, nameof(stream));
-
-            var document = new XmlDocument();
-            document.Load(stream);
-            return document;
-        }
-
-        public static XPathNavigator AsXPathNavigator(this Stream stream)
-        {
-            return stream.AsXmlDocument()
-                .CreateNavigator();
+            switch (bitness)
+            {
+                case ClrBitness.Bitness32:
+                    return RegistryView.Registry32;
+                case ClrBitness.Bitness64:
+                    return RegistryView.Registry64;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(bitness), bitness, null);
+            }
         }
     }
 }

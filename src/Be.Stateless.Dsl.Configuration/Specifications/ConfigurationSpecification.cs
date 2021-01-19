@@ -24,27 +24,27 @@ using Be.Stateless.Dsl.Configuration.Commands;
 
 namespace Be.Stateless.Dsl.Configuration.Specifications
 {
-	public class ConfigurationSpecification
-	{
-		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-		public ConfigurationSpecification(FileInfo targetConfigurationFile, IEnumerable<ConfigurationCommand> commands, bool isUndo)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(targetConfigurationFile, nameof(targetConfigurationFile))
-				.IsNotNull(commands, nameof(commands))
-				.Check();
+    public class ConfigurationSpecification
+    {
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public ConfigurationSpecification(FileInfo targetConfigurationFile, IEnumerable<ConfigurationCommand> commands, bool isUndo)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(targetConfigurationFile, nameof(targetConfigurationFile))
+                .IsNotNull(commands, nameof(commands))
+                .Check();
 
-			TargetConfigurationFile = targetConfigurationFile;
-			Commands = commands;
-			IsUndo = isUndo;
-		}
+            TargetConfigurationFile = targetConfigurationFile;
+            Commands = commands;
+            IsUndo = isUndo;
+        }
 
-		public IEnumerable<ConfigurationCommand> Commands { get; }
+        public IEnumerable<ConfigurationCommand> Commands { get; }
 
-		public bool IsUndo { get; }
+        public bool IsUndo { get; }
 
-		public FileInfo SpecificationSourceFile { get; internal set; }
+        public FileInfo SpecificationSourceFile { get; internal set; }
 
-		public FileInfo TargetConfigurationFile { get; }
-	}
+        public FileInfo TargetConfigurationFile { get; }
+    }
 }

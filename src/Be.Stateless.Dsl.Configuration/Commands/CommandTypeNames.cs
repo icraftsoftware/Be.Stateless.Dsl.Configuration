@@ -18,11 +18,11 @@
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	internal static class CommandTypeNames
-	{
-		public const string DELETE = "delete";
-		public const string INSERT = "insert";
-		public const string UPDATE = "update";
-		public const string UPSERT = "upsert";
-	}
+    internal static class CommandTypeNames
+    {
+        public const string DELETE = "delete";
+        public const string INSERT = "insert";
+        public const string UPDATE = "update";
+        public const string UPSERT = "upsert";
+    }
 }

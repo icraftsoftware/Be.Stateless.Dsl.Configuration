@@ -28,33 +28,33 @@ using Be.Stateless.Dsl.Configuration.Validators;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlets
 {
-	[Cmdlet(VerbsCommon.Get, nameof(ConfigurationSpecification))]
-	[OutputType(typeof(ConfigurationSpecification[]))]
-	public class GetConfigurationSpecification : Cmdlet
-	{
-		#region Base Class Member Overrides
+    [Cmdlet(VerbsCommon.Get, nameof(ConfigurationSpecification))]
+    [OutputType(typeof(ConfigurationSpecification[]))]
+    public class GetConfigurationSpecification : Cmdlet
+    {
+        #region Base Class Member Overrides
 
-		protected override void ProcessRecord()
-		{
-			var resolvers = _defaultConfigurationFileResolvers.Concat(ConfigurationFileResolvers ?? new List<IConfigurationFileResolver>());
-			WriteObject(Path.SelectMany(file => file.AsConfigurationSpecifications(resolvers)), true);
-		}
+        protected override void ProcessRecord()
+        {
+            var resolverStrategies = _defaultConfigurationFileResolverStrategies.Concat(ConfigurationFileResolvers ?? new List<IConfigurationFilesResolverStrategy>());
+            WriteObject(Path.SelectMany(file => file.AsConfigurationSpecifications(resolverStrategies)), true);
+        }
 
-		#endregion
+        #endregion
 
-		[Parameter(Mandatory = false)]
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
-		public IEnumerable<IConfigurationFileResolver> ConfigurationFileResolvers { get; set; }
+        [Parameter(Mandatory = false)]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
+        public IEnumerable<IConfigurationFilesResolverStrategy> ConfigurationFileResolvers { get; set; }
 
-		[Parameter(Mandatory = true, ValueFromPipeline = true)]
-		[ValidateNotNullOrEmpty]
-		[ValidateFileExist]
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
-		public FileInfo[] Path { get; set; }
+        [Parameter(Mandatory = true, ValueFromPipeline = true)]
+        [ValidateNotNullOrEmpty]
+        [ValidateFileExist]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
+        public FileInfo[] Path { get; set; }
 
-		private static readonly List<IConfigurationFileResolver> _defaultConfigurationFileResolvers = new List<IConfigurationFileResolver>
-			{ new DotNetFrameworkConfigurationFileResolver(), new FileConfigurationFileResolver() };
-	}
+        private static readonly List<IConfigurationFilesResolverStrategy> _defaultConfigurationFileResolverStrategies = new List<IConfigurationFilesResolverStrategy>
+            { new ClrConfigurationFilesResolverStrategy(), new FilesConfigurationFilesResolverStrategy() };
+    }
 }

@@ -18,11 +18,11 @@
 
 namespace Be.Stateless.Dsl.Configuration.Xml
 {
-	internal static class XmlAttributeNames
-	{
-		public const string ACTION = "action";
-		public const string DISCRIMINANT = "discriminant";
-		public const string FILES = "files";
-		public const string UNDO = "undo";
-	}
+    internal static class XmlAttributeNames
+    {
+        public const string ACTION = "action";
+        public const string DISCRIMINANT = "discriminant";
+        public const string FILES = "files";
+        public const string UNDO = "undo";
+    }
 }

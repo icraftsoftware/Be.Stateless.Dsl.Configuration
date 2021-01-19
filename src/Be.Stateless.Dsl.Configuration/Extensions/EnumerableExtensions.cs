@@ -21,11 +21,11 @@ using System.Linq;
 
 namespace Be.Stateless.Dsl.Configuration.Extensions
 {
-	internal static class EnumerableExtensions
-	{
-		public static bool IsMultiple<T>(this IEnumerable<T> collection)
-		{
-			return collection?.Skip(1).Any() ?? false;
-		}
-	}
+    internal static class EnumerableExtensions
+    {
+        public static bool IsMultiple<T>(this IEnumerable<T> collection)
+        {
+            return collection?.Skip(1).Any() ?? false;
+        }
+    }
 }

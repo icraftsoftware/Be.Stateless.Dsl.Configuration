@@ -26,75 +26,75 @@ using Be.Stateless.Dsl.Configuration.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.XPath
 {
-	public sealed class XPathBuilder
-	{
-		private static string BuildNodePath(XPathNavigator navigator, XPathFormat format)
-		{
-			switch (format)
-			{
-				case XPathFormat.Name:
-					return navigator.Name;
-				case XPathFormat.LocalName:
-					var builder = new StringBuilder("*[");
-					builder.Append($"{XpathFunctionNames.LOCAL_NAME}()='{navigator.LocalName}'");
-					if (!string.IsNullOrWhiteSpace(navigator.NamespaceURI)) builder.AppendFormat(" and namespace-uri()='{0}'", navigator.NamespaceURI);
-					var discriminants = navigator.GetDiscriminants().ToArray();
-					if (discriminants.Any()) builder.AppendFormat(" and ({0})", BuildDiscriminantsSelector(navigator, discriminants));
-					builder.Append("]");
-					return builder.ToString();
-				default:
-					throw new ArgumentOutOfRangeException(nameof(format), format, null);
-			}
-		}
+    public sealed class XPathBuilder
+    {
+        private static string BuildNodePath(XPathNavigator navigator, XPathFormat format)
+        {
+            switch (format)
+            {
+                case XPathFormat.Name:
+                    return navigator.Name;
+                case XPathFormat.LocalName:
+                    var builder = new StringBuilder("*[");
+                    builder.Append($"{XpathFunctionNames.LOCAL_NAME}()='{navigator.LocalName}'");
+                    if (!string.IsNullOrWhiteSpace(navigator.NamespaceURI)) builder.AppendFormat(" and namespace-uri()='{0}'", navigator.NamespaceURI);
+                    var discriminants = navigator.GetDiscriminants().ToArray();
+                    if (discriminants.Any()) builder.AppendFormat(" and ({0})", BuildDiscriminantsSelector(navigator, discriminants));
+                    builder.Append("]");
+                    return builder.ToString();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(format), format, null);
+            }
+        }
 
-		private static string BuildDiscriminantsSelector(XPathNavigator navigator, IEnumerable<string> discriminants)
-		{
-			return string.Join(
-				" and ",
-				discriminants.Select(d => $"@{d} = '{navigator.SelectSingleNode($"@{d}")?.Value}'"));
-		}
+        private static string BuildDiscriminantsSelector(XPathNavigator navigator, IEnumerable<string> discriminants)
+        {
+            return string.Join(
+                " and ",
+                discriminants.Select(d => $"@{d} = '{navigator.SelectSingleNode($"@{d}")?.Value}'"));
+        }
 
-		private static IEnumerable<XPathNavigator> BuildHierarchy(XPathNavigator navigator)
-		{
-			var hierarchy = new List<XPathNavigator>();
+        private static IEnumerable<XPathNavigator> BuildHierarchy(XPathNavigator navigator)
+        {
+            var hierarchy = new List<XPathNavigator>();
 
-			while (true)
-			{
-				hierarchy.Add(navigator);
-				var parent = navigator.SelectSingleNode("..");
-				if (parent != null && parent.NodeType != XPathNodeType.Root)
-				{
-					navigator = parent;
-					continue;
-				}
+            while (true)
+            {
+                hierarchy.Add(navigator);
+                var parent = navigator.SelectSingleNode("..");
+                if (parent != null && parent.NodeType != XPathNodeType.Root)
+                {
+                    navigator = parent;
+                    continue;
+                }
 
-				break;
-			}
+                break;
+            }
 
-			hierarchy.Reverse();
-			return hierarchy;
-		}
+            hierarchy.Reverse();
+            return hierarchy;
+        }
 
-		public XPathBuilder(XPathNavigator navigator)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(navigator, nameof(navigator))
-				.Check();
+        public XPathBuilder(XPathNavigator navigator)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(navigator, nameof(navigator))
+                .Check();
 
-			_navigator = navigator;
-		}
+            _navigator = navigator;
+        }
 
-		public string BuildAbsolutePath(XPathFormat format = XPathFormat.LocalName)
-		{
-			var hierarchy = BuildHierarchy(_navigator);
-			return $"/{string.Join("/", hierarchy.Select(navigator => BuildNodePath(navigator, format)))}";
-		}
+        public string BuildAbsolutePath(XPathFormat format = XPathFormat.LocalName)
+        {
+            var hierarchy = BuildHierarchy(_navigator);
+            return $"/{string.Join("/", hierarchy.Select(navigator => BuildNodePath(navigator, format)))}";
+        }
 
-		public string BuildCurrentNodePath(XPathFormat format = XPathFormat.LocalName)
-		{
-			return BuildNodePath(_navigator, format);
-		}
+        public string BuildCurrentNodePath(XPathFormat format = XPathFormat.LocalName)
+        {
+            return BuildNodePath(_navigator, format);
+        }
 
-		private readonly XPathNavigator _navigator;
-	}
+        private readonly XPathNavigator _navigator;
+    }
 }

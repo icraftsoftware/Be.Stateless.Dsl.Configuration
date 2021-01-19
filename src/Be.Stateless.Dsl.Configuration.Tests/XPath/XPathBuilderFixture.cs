@@ -22,50 +22,50 @@ using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration.XPath
 {
-	public class XPathBuilderFixture
-	{
-		[Fact]
-		public void BuildAbsolutePathSucceedsWithDiscriminants()
-		{
-			new XPathBuilder(
-					Files.Load("create-node-change-with-discriminant.config")
-						.AsXPathNavigator()
-						.SelectSingleNode("/configuration/system.net/connectionManagement/add"))
-				.BuildAbsolutePath().Should()
-				.Be(
-					"/*[local-name()='configuration']/*[local-name()='system.net']/*[local-name()='connectionManagement']/*[local-name()='add' and (@address = '*')]");
-		}
+    public class XPathBuilderFixture
+    {
+        [Fact]
+        public void BuildAbsolutePathSucceedsWithDiscriminants()
+        {
+            new XPathBuilder(
+                    Files.Load("create-node-change-with-discriminant.config")
+                        .AsXPathNavigator()
+                        .SelectSingleNode("/configuration/system.net/connectionManagement/add"))
+                .BuildAbsolutePath().Should()
+                .Be(
+                    "/*[local-name()='configuration']/*[local-name()='system.net']/*[local-name()='connectionManagement']/*[local-name()='add' and (@address = '*')]");
+        }
 
-		[Fact]
-		public void BuildAbsolutePathSucceedsWithoutDiscriminants()
-		{
-			new XPathBuilder(
-					Files.Load("create-node-change-with-discriminant.config")
-						.AsXPathNavigator()
-						.SelectSingleNode("/configuration/system.net/connectionManagement"))
-				.BuildAbsolutePath().Should()
-				.Be(
-					"/*[local-name()='configuration']/*[local-name()='system.net']/*[local-name()='connectionManagement']");
-		}
+        [Fact]
+        public void BuildAbsolutePathSucceedsWithoutDiscriminants()
+        {
+            new XPathBuilder(
+                    Files.Load("create-node-change-with-discriminant.config")
+                        .AsXPathNavigator()
+                        .SelectSingleNode("/configuration/system.net/connectionManagement"))
+                .BuildAbsolutePath().Should()
+                .Be(
+                    "/*[local-name()='configuration']/*[local-name()='system.net']/*[local-name()='connectionManagement']");
+        }
 
-		[Fact]
-		public void BuildCurrentNodePathSucceedsWithDiscriminants()
-		{
-			new XPathBuilder(
-					Files.Load("create-node-change-with-discriminant.config")
-						.AsXPathNavigator()
-						.SelectSingleNode("/configuration/system.net/connectionManagement/add"))
-				.BuildCurrentNodePath().Should().Be("*[local-name()='add' and (@address = '*')]");
-		}
+        [Fact]
+        public void BuildCurrentNodePathSucceedsWithDiscriminants()
+        {
+            new XPathBuilder(
+                    Files.Load("create-node-change-with-discriminant.config")
+                        .AsXPathNavigator()
+                        .SelectSingleNode("/configuration/system.net/connectionManagement/add"))
+                .BuildCurrentNodePath().Should().Be("*[local-name()='add' and (@address = '*')]");
+        }
 
-		[Fact]
-		public void BuildCurrentNodePathSucceedsWithoutDiscriminants()
-		{
-			new XPathBuilder(
-					Files.Load("create-node-change-with-discriminant.config")
-						.AsXPathNavigator()
-						.SelectSingleNode("/configuration/system.net/connectionManagement"))
-				.BuildCurrentNodePath().Should().Be("*[local-name()='connectionManagement']");
-		}
-	}
+        [Fact]
+        public void BuildCurrentNodePathSucceedsWithoutDiscriminants()
+        {
+            new XPathBuilder(
+                    Files.Load("create-node-change-with-discriminant.config")
+                        .AsXPathNavigator()
+                        .SelectSingleNode("/configuration/system.net/connectionManagement"))
+                .BuildCurrentNodePath().Should().Be("*[local-name()='connectionManagement']");
+        }
+    }
 }

@@ -23,23 +23,23 @@ using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public class AttributeUpdateFixture
-	{
-		[Theory]
-		[InlineData("<configuration/>")]
-		[InlineData("<configuration value=''/>")]
-		public void ApplySucceeds(string xmlContent)
-		{
-			var attributeUpdate = new AttributeSpecification {
-				Name = "value",
-				Value = "test"
-			};
-			var document = new XmlDocument();
-			document.LoadXml(xmlContent);
+    public class AttributeUpdateFixture
+    {
+        [Theory]
+        [InlineData("<configuration/>")]
+        [InlineData("<configuration value=''/>")]
+        public void ApplySucceeds(string xmlContent)
+        {
+            var attributeUpdate = new AttributeSpecification {
+                Name = "value",
+                Value = "test"
+            };
+            var document = new XmlDocument();
+            document.LoadXml(xmlContent);
 
-			attributeUpdate.Execute(document.DocumentElement);
+            attributeUpdate.Execute(document.DocumentElement);
 
-			document.SelectSingleNode("/configuration[@value='test']").Should().NotBeNull();
-		}
-	}
+            document.SelectSingleNode("/configuration[@value='test']").Should().NotBeNull();
+        }
+    }
 }

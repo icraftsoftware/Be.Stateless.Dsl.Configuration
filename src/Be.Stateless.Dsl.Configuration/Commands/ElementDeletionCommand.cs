@@ -22,24 +22,24 @@ using Be.Stateless.Dsl.Configuration.Factories;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public class ElementDeletionCommand : ConfigurationCommand
-	{
-		public ElementDeletionCommand(string configurationElementSelector) : base(configurationElementSelector) { }
+    public class ElementDeletionCommand : ConfigurationCommand
+    {
+        public ElementDeletionCommand(string configurationElementSelector) : base(configurationElementSelector) { }
 
-		#region Base Class Member Overrides
+        #region Base Class Member Overrides
 
-		internal override ConfigurationCommand Execute(XmlElement configurationElement)
-		{
-			if (configurationElement.HasChildNodes)
-				throw new InvalidOperationException($"The configuration element '{configurationElement.Name}' has child nodes (Content: '{configurationElement.InnerXml}').");
+        internal override ConfigurationCommand Execute(XmlElement configurationElement)
+        {
+            if (configurationElement.HasChildNodes)
+                throw new InvalidOperationException($"The configuration element '{configurationElement.Name}' has child nodes (Content: '{configurationElement.InnerXml}').");
 
-			var undoCommand = ConfigurationCommandFactory.CreateUndoCommandForDeletion(configurationElement);
-			var parent = configurationElement.ParentNode
-				?? throw new InvalidOperationException($"The configuration element '{configurationElement.Name}' does not have a parent.");
-			parent.RemoveChild(configurationElement);
-			return undoCommand;
-		}
+            var undoCommand = ConfigurationCommandFactory.CreateUndoCommandForDeletion(configurationElement);
+            var parent = configurationElement.ParentNode
+                ?? throw new InvalidOperationException($"The configuration element '{configurationElement.Name}' does not have a parent.");
+            parent.RemoveChild(configurationElement);
+            return undoCommand;
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

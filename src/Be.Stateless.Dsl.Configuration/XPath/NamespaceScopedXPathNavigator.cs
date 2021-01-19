@@ -23,53 +23,53 @@ using Be.Stateless.Xml;
 
 namespace Be.Stateless.Dsl.Configuration.XPath
 {
-	internal sealed class NamespaceScopedXPathNavigator : XPathNavigatorDecorator
-	{
-		public NamespaceScopedXPathNavigator(
-			XPathNavigator decoratedNavigator,
-			XmlNamespaceManager xmlNamespaceManager) :
-			base(decoratedNavigator)
-		{
-			Arguments.Validation.Constraints
-				.IsNotNull(xmlNamespaceManager, nameof(xmlNamespaceManager))
-				.Check();
+    internal sealed class NamespaceScopedXPathNavigator : XPathNavigatorDecorator
+    {
+        public NamespaceScopedXPathNavigator(
+            XPathNavigator decoratedNavigator,
+            XmlNamespaceManager xmlNamespaceManager) :
+            base(decoratedNavigator)
+        {
+            Arguments.Validation.Constraints
+                .IsNotNull(xmlNamespaceManager, nameof(xmlNamespaceManager))
+                .Check();
 
-			XmlNamespaceManager = xmlNamespaceManager;
-		}
+            XmlNamespaceManager = xmlNamespaceManager;
+        }
 
-		#region Base Class Member Overrides
+        #region Base Class Member Overrides
 
-		protected override XPathNavigator CreateXPathNavigatorDecorator(XPathNavigator decoratedNavigator)
-		{
-			return decoratedNavigator == null ? null : new NamespaceScopedXPathNavigator(decoratedNavigator, XmlNamespaceManager);
-		}
+        protected override XPathNavigator CreateXPathNavigatorDecorator(XPathNavigator decoratedNavigator)
+        {
+            return decoratedNavigator == null ? null : new NamespaceScopedXPathNavigator(decoratedNavigator, XmlNamespaceManager);
+        }
 
-		public override object Evaluate(string xpath)
-		{
-			return base.Evaluate(xpath, XmlNamespaceManager);
-		}
+        public override object Evaluate(string xpath)
+        {
+            return base.Evaluate(xpath, XmlNamespaceManager);
+        }
 
-		public override XPathNodeIterator Select(string xpath)
-		{
-			return base.Select(xpath, XmlNamespaceManager);
-		}
+        public override XPathNodeIterator Select(string xpath)
+        {
+            return base.Select(xpath, XmlNamespaceManager);
+        }
 
-		public override XPathNavigator SelectSingleNode(string xpath)
-		{
-			return base.SelectSingleNode(xpath, XmlNamespaceManager);
-		}
+        public override XPathNavigator SelectSingleNode(string xpath)
+        {
+            return base.SelectSingleNode(xpath, XmlNamespaceManager);
+        }
 
-		#endregion
+        #endregion
 
-		#region Base Class Member Overrides
+        #region Base Class Member Overrides
 
-		public override bool Matches(string xpath)
-		{
-			return base.Matches(System.Xml.XPath.XPathExpression.Compile(xpath, XmlNamespaceManager));
-		}
+        public override bool Matches(string xpath)
+        {
+            return base.Matches(System.Xml.XPath.XPathExpression.Compile(xpath, XmlNamespaceManager));
+        }
 
-		#endregion
+        #endregion
 
-		private XmlNamespaceManager XmlNamespaceManager { get; }
-	}
+        private XmlNamespaceManager XmlNamespaceManager { get; }
+    }
 }

@@ -29,45 +29,45 @@ using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration
 {
-	public class ConfigurationSpecificationWriterFixture
-	{
-		[Fact]
-		public void WriteSucceeds()
-		{
-			var targetConfigurationFile = new FileInfo("c:\\web.config");
-			var configurationSpecification = new ConfigurationSpecification(
-				targetConfigurationFile,
-				new ConfigurationCommand[] {
-					new ElementInsertionCommand(
-						"/*[local-name()='configuration']",
-						new ElementSpecification("appSettings", string.Empty, Enumerable.Empty<AttributeSpecification>(), "*[local-name()='appSettings']")),
-					new ElementUpdateCommand(
-						"/*[local-name()='configuration']/*[local-name()='appSettings']/*[local-name()='add' and (@key = 'first_setting')]",
-						new[] {
-							new AttributeSpecification {
-								Name = "key",
-								Value = "first_setting",
-								NamespaceUri = string.Empty
-							},
-							new AttributeSpecification {
-								Name = "value",
-								Value = "updated-value",
-								NamespaceUri = string.Empty
-							}
-						}),
-					new ElementDeletionCommand("/*[local-name()='configuration']/*[local-name()='appSettings']/*[local-name()='add' and (@key = 'second_setting')]")
-				},
-				false);
-			var document = new XmlDocument();
-			new ConfigurationSpecificationWriter(document).Write(configurationSpecification);
+    public class ConfigurationSpecificationWriterFixture
+    {
+        [Fact]
+        public void WriteSucceeds()
+        {
+            var targetConfigurationFile = new FileInfo("c:\\web.config");
+            var configurationSpecification = new ConfigurationSpecification(
+                targetConfigurationFile,
+                new ConfigurationCommand[] {
+                    new ElementInsertionCommand(
+                        "/*[local-name()='configuration']",
+                        new ElementSpecification("appSettings", string.Empty, Enumerable.Empty<AttributeSpecification>(), "*[local-name()='appSettings']")),
+                    new ElementUpdateCommand(
+                        "/*[local-name()='configuration']/*[local-name()='appSettings']/*[local-name()='add' and (@key = 'first_setting')]",
+                        new[] {
+                            new AttributeSpecification {
+                                Name = "key",
+                                Value = "first_setting",
+                                NamespaceUri = string.Empty
+                            },
+                            new AttributeSpecification {
+                                Name = "value",
+                                Value = "updated-value",
+                                NamespaceUri = string.Empty
+                            }
+                        }),
+                    new ElementDeletionCommand("/*[local-name()='configuration']/*[local-name()='appSettings']/*[local-name()='add' and (@key = 'second_setting')]")
+                },
+                false);
+            var document = new XmlDocument();
+            new ConfigurationSpecificationWriter(document).Write(configurationSpecification);
 
-			var mockedResolver = new Mock<IConfigurationFileResolver>();
-			mockedResolver.Setup(resolver => resolver.CanResolve(It.IsAny<string>())).Returns(true);
-			mockedResolver.Setup(resolver => resolver.Resolve(It.IsAny<string>())).Returns(new List<string> { targetConfigurationFile.FullName });
-			var specification = new ConfigurationSpecificationReader(document, new[] { mockedResolver.Object }).Read().Should().ContainSingle().Subject;
-			specification.SpecificationSourceFile.Should().BeNull();
-			specification.TargetConfigurationFile.FullName.Should().Be(configurationSpecification.TargetConfigurationFile.FullName);
-			specification.Commands.Should().BeEquivalentTo(configurationSpecification.Commands);
-		}
-	}
+            var mockedResolver = new Mock<IConfigurationFilesResolverStrategy>();
+            mockedResolver.Setup(resolver => resolver.CanResolve(It.IsAny<string>())).Returns(true);
+            mockedResolver.Setup(resolver => resolver.Resolve(It.IsAny<string>())).Returns(new List<string> { targetConfigurationFile.FullName });
+            var specification = new ConfigurationSpecificationReader(document, new[] { mockedResolver.Object }).Read().Should().ContainSingle().Subject;
+            specification.SpecificationSourceFile.Should().BeNull();
+            specification.TargetConfigurationFile.FullName.Should().Be(configurationSpecification.TargetConfigurationFile.FullName);
+            specification.Commands.Should().BeEquivalentTo(configurationSpecification.Commands);
+        }
+    }
 }

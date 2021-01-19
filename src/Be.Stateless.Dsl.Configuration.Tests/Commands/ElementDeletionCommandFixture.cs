@@ -21,15 +21,15 @@ using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration.Commands
 {
-	public class ElementDeletionCommandFixture
-	{
-		[Fact]
-		public void ExecuteSucceeds()
-		{
-			var document = Resources.Files.Load("web-original.config").AsXmlDocument();
-			var command = new ElementDeletionCommand("/configuration/appSettings/add[@key='first_setting']");
-			command.Execute(document).Should().BeOfType<ElementInsertionCommand>();
-			document.SelectSingleNode("/configuration/appSettings/add[@key='first_setting']").Should().BeNull();
-		}
-	}
+    public class ElementDeletionCommandFixture
+    {
+        [Fact]
+        public void ExecuteSucceeds()
+        {
+            var document = Resources.Files.Load("web-original.config").AsXmlDocument();
+            var command = new ElementDeletionCommand("/configuration/appSettings/add[@key='first_setting']");
+            command.Execute(document).Should().BeOfType<ElementInsertionCommand>();
+            document.SelectSingleNode("/configuration/appSettings/add[@key='first_setting']").Should().BeNull();
+        }
+    }
 }
