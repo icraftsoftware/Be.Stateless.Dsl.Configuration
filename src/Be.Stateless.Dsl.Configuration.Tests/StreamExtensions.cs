@@ -21,24 +21,24 @@ using System.Xml;
 using System.Xml.XPath;
 using Be.Stateless.Argument.Validation;
 
-namespace Be.Stateless.Dsl.Configuration
+namespace Be.Stateless
 {
-    public static class StreamExtensions
-    {
-        internal static XmlDocument AsXmlDocument(this Stream stream)
-        {
-            Arguments.Validation.Constraints
-                .IsNotNull(stream, nameof(stream));
+	public static class StreamExtensions
+	{
+		internal static XmlDocument AsXmlDocument(this Stream stream)
+		{
+			Arguments.Validation.Constraints
+				.IsNotNull(stream, nameof(stream));
 
-            var document = new XmlDocument();
-            document.Load(stream);
-            return document;
-        }
+			var document = new XmlDocument();
+			document.Load(stream);
+			return document;
+		}
 
-        public static XPathNavigator AsXPathNavigator(this Stream stream)
-        {
-            return stream.AsXmlDocument()
-                .CreateNavigator();
-        }
-    }
+		public static XPathNavigator AsXPathNavigator(this Stream stream)
+		{
+			return stream.AsXmlDocument()
+				.CreateNavigator();
+		}
+	}
 }

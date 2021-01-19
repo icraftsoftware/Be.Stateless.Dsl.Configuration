@@ -18,32 +18,33 @@
 
 using System;
 using System.Collections.Generic;
+using Be.Stateless.Dsl.Configuration;
 using FluentAssertions;
 using Xunit;
 
-namespace Be.Stateless.Dsl.Configuration
+namespace Be.Stateless
 {
-    public class ClrLocationHelperFixture
-    {
-        [Theory]
-        [MemberData(nameof(ValidFrameworkVersions))]
-        public void GetPathSucceedsFor32Bits(Version version)
-        {
-            ClrLocationHelper.GetPath(version, ClrBitness.Bitness32).Should()
-                .MatchRegex(@"C:\\Windows\\Microsoft.NET\\Framework\\v4\.0\.\d*");
-        }
+	public class ClrLocationHelperFixture
+	{
+		[Theory]
+		[MemberData(nameof(ValidFrameworkVersions))]
+		public void GetPathSucceedsFor32Bits(Version version)
+		{
+			ClrLocationHelper.GetPath(version, ClrBitness.Bitness32).Should()
+				.MatchRegex(@"C:\\Windows\\Microsoft.NET\\Framework\\v4\.0\.\d*");
+		}
 
-        [Theory]
-        [MemberData(nameof(ValidFrameworkVersions))]
-        public void GetPathSucceedsFor64Bits(Version version)
-        {
-            ClrLocationHelper.GetPath(version, ClrBitness.Bitness64).Should()
-                .MatchRegex(@"C:\\Windows\\Microsoft.NET\\Framework64\\v4\.0\.\d*");
-        }
+		[Theory]
+		[MemberData(nameof(ValidFrameworkVersions))]
+		public void GetPathSucceedsFor64Bits(Version version)
+		{
+			ClrLocationHelper.GetPath(version, ClrBitness.Bitness64).Should()
+				.MatchRegex(@"C:\\Windows\\Microsoft.NET\\Framework64\\v4\.0\.\d*");
+		}
 
-        public static IEnumerable<object[]> ValidFrameworkVersions
-        {
-            get { yield return new object[] { new Version(4, 0) }; }
-        }
-    }
+		public static IEnumerable<object[]> ValidFrameworkVersions
+		{
+			get { yield return new object[] { new Version(4, 0) }; }
+		}
+	}
 }

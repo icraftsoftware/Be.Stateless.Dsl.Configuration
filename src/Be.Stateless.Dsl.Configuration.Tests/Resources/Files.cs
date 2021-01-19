@@ -19,7 +19,7 @@
 using System.IO;
 using Be.Stateless.Argument.Validation;
 
-namespace Be.Stateless.Dsl.Configuration.Resources
+namespace Be.Stateless.Resources
 {
 	public static class Files
 	{

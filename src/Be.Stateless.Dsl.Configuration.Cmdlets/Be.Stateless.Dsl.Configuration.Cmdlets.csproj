@@ -1,9 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net472</TargetFramework>
-    <RootNamespace>Be.Stateless.Dsl.Configuration</RootNamespace>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>Be.Stateless</RootNamespace>
+    <AssemblyName>Be.Stateless.Dsl.Configuration.CmdLets</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/icraftsoftware/Be.Stateless.Dsl.Configuration</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -13,6 +25,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\.settings\.editorconfig" Link=".editorconfig" />
+    <None Include="..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
   </ItemGroup>
 
