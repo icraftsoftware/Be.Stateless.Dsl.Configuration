@@ -43,13 +43,14 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 					string.Empty))
 				{
 					WriteVerbose($"Merging configuration '{specification.SpecificationSourceFile.FullName}' into '{specification.TargetConfigurationFile.FullName}'");
-					var token = DateTime.UtcNow.ToString("O");
-					if (CreateBackup) File.Copy(specification.TargetConfigurationFile.FullName, $"specification.TargetConfigurationFile.{token}.bak");
+					// ReSharper disable once StringLiteralTypo
+					var token = DateTime.UtcNow.ToString("yyyyMMddHHmmssfffffff");
+					if (CreateBackup) File.Copy(specification.TargetConfigurationFile.FullName, $"{specification.TargetConfigurationFile.FullName}.{token}.bak");
 					using (var fileStream = new FileStream(specification.TargetConfigurationFile.FullName, FileMode.Truncate))
 					{
 						result.ModifiedConfiguration.Save(fileStream);
 					}
-					if (CreateUndo) result.UndoConfigurationSpecification.AsXmlDocument().Save($"specification.TargetConfigurationFile.{token}.undo");
+					if (CreateUndo) result.UndoConfigurationSpecification.AsXmlDocument().Save($"{specification.SpecificationSourceFile.FullName}.{token}.undo");
 					WriteVerbose($"'{specification.TargetConfigurationFile.FullName}' has been updated.");
 				}
 			}
