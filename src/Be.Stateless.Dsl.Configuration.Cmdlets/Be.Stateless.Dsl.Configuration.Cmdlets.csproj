@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <RootNamespace>Be.Stateless</RootNamespace>
-    <AssemblyName>Be.Stateless.Dsl.Configuration.CmdLets</AssemblyName>
+    <AssemblyName>Be.Stateless.Dsl.Configuration.Cmdlets</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
