@@ -16,8 +16,9 @@
 
 #endregion
 
+using System;
 using System.IO;
-using Be.Stateless.Argument.Validation;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.Resources
 {
@@ -25,10 +26,7 @@ namespace Be.Stateless.Resources
 	{
 		public static Stream Load(string name)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrWhiteSpace(name, nameof(name))
-				.Check();
-
+			if (name.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(name), $"'{nameof(name)}' cannot be null or empty.");
 			return typeof(Files).Assembly.GetManifestResourceStream(typeof(Files), name) ??
 				throw new FileNotFoundException($"The resource '{name}' is not found", name);
 		}

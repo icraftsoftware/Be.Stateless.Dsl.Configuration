@@ -20,7 +20,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Command
@@ -29,9 +28,8 @@ namespace Be.Stateless.Dsl.Configuration.Command
 	{
 		protected ConfigurationCommand(string configurationElementSelector)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrEmpty(configurationElementSelector, nameof(configurationElementSelector))
-				.Check();
+			if (configurationElementSelector.IsNullOrWhiteSpace())
+				throw new ArgumentNullException(nameof(configurationElementSelector), $"'{nameof(configurationElementSelector)}' cannot be null or empty.");
 			ConfigurationElementSelector = configurationElementSelector;
 		}
 
@@ -39,9 +37,6 @@ namespace Be.Stateless.Dsl.Configuration.Command
 
 		public ConfigurationCommand Execute(XmlDocument configurationDocument)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationDocument, nameof(configurationDocument))
-				.Check();
 			var configurationElement = FindConfigurationElement(configurationDocument);
 			return Execute(configurationElement);
 		}
@@ -49,6 +44,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		[SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
 		private XmlElement FindConfigurationElement(XmlDocument configurationDocument)
 		{
+			if (configurationDocument == null) throw new ArgumentNullException(nameof(configurationDocument));
 			var configurationElements = (configurationDocument.SelectNodes(ConfigurationElementSelector) ?? throw new InvalidOperationException())
 				.OfType<XmlElement>()
 				.ToArray();

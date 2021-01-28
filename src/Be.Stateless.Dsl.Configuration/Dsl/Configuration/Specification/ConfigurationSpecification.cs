@@ -16,10 +16,11 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Be.Stateless.Argument.Validation;
+using System.Linq;
 using Be.Stateless.Dsl.Configuration.Command;
 
 namespace Be.Stateless.Dsl.Configuration.Specification
@@ -29,17 +30,12 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
 		public ConfigurationSpecification(FileInfo targetConfigurationFile, IEnumerable<ConfigurationCommand> commands, bool isUndo)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(targetConfigurationFile, nameof(targetConfigurationFile))
-				.IsNotNull(commands, nameof(commands))
-				.Check();
-
-			TargetConfigurationFile = targetConfigurationFile;
-			Commands = commands;
+			TargetConfigurationFile = targetConfigurationFile ?? throw new ArgumentNullException(nameof(targetConfigurationFile));
+			Commands = commands?.ToArray() ?? Array.Empty<ConfigurationCommand>();
 			IsUndo = isUndo;
 		}
 
-		public IEnumerable<ConfigurationCommand> Commands { get; }
+		public ConfigurationCommand[] Commands { get; }
 
 		public bool IsUndo { get; }
 

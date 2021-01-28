@@ -20,7 +20,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Dsl.Configuration;
 using Be.Stateless.Dsl.Configuration.Xml;
 using Be.Stateless.Dsl.Configuration.Xml.XPath;
@@ -31,17 +30,14 @@ namespace Be.Stateless.Xml.Extensions
 	{
 		public static XmlElement SelectOrAppendElement(this XmlNode parentNode, XPathLocationStep locationStep)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(parentNode, nameof(parentNode))
-				.Check();
-
+			if (parentNode == null) throw new ArgumentNullException(nameof(parentNode));
 			return (XmlElement) parentNode.SelectSingleNode(locationStep.Value) ?? parentNode.AppendElement(locationStep);
 		}
 
 		[SuppressMessage("ReSharper", "InvertIf")]
 		private static XmlElement AppendElement(this XmlNode parentNode, XPathLocationStep locationStep)
 		{
-			if (!locationStep.IsValid) throw new InvalidOperationException($"The XPath location step '{locationStep.Value}' is not valid.");
+			if (!locationStep.IsValid) throw new ArgumentException($"The XPath location step '{locationStep.Value}' is not valid.", nameof(locationStep));
 			var element = (parentNode.OwnerDocument ?? (XmlDocument) parentNode).CreateElement(locationStep.ElementName);
 			parentNode.AppendChild(element);
 			if (locationStep.AttributeSpecifications.Any())

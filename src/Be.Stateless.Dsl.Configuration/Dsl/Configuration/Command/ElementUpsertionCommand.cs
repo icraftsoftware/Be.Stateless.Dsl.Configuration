@@ -16,9 +16,9 @@
 
 #endregion
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
-using Be.Stateless.Argument.Validation;
 
 namespace Be.Stateless.Dsl.Configuration.Command
 {
@@ -27,14 +27,8 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		public ElementUpsertionCommand(string configurationElementSelector, ElementInsertionCommand insertionCommand, ElementUpdateCommand updateCommand) :
 			base(configurationElementSelector)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(insertionCommand, nameof(insertionCommand))
-				.Check()
-				.IsNotNull(updateCommand, nameof(updateCommand))
-				.Check();
-
-			InsertionCommand = insertionCommand;
-			UpdateCommand = updateCommand;
+			InsertionCommand = insertionCommand ?? throw new ArgumentNullException(nameof(insertionCommand));
+			UpdateCommand = updateCommand ?? throw new ArgumentNullException(nameof(updateCommand));
 		}
 
 		#region Base Class Member Overrides

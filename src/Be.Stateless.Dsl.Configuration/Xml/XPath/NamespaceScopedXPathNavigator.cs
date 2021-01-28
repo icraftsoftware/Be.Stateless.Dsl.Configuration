@@ -16,9 +16,9 @@
 
 #endregion
 
+using System;
 using System.Xml;
 using System.Xml.XPath;
-using Be.Stateless.Argument.Validation;
 
 namespace Be.Stateless.Xml.XPath
 {
@@ -29,11 +29,7 @@ namespace Be.Stateless.Xml.XPath
 			XmlNamespaceManager xmlNamespaceManager) :
 			base(decoratedNavigator)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(xmlNamespaceManager, nameof(xmlNamespaceManager))
-				.Check();
-
-			XmlNamespaceManager = xmlNamespaceManager;
+			XmlNamespaceManager = xmlNamespaceManager ?? throw new ArgumentNullException(nameof(xmlNamespaceManager));
 		}
 
 		#region Base Class Member Overrides

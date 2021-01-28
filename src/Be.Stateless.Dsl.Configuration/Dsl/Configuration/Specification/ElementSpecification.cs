@@ -16,10 +16,11 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Be.Stateless.Argument.Validation;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Specification
 {
@@ -31,19 +32,16 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 			IEnumerable<AttributeSpecification> attributeUpdates,
 			string selector)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrEmpty(name, nameof(name))
-				.Check()
-				.IsNotNullOrWhiteSpace(selector, nameof(selector))
-				.Check();
+			if (name.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(name), $"'{nameof(name)}' cannot be null or empty.");
+			if (selector.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(selector), $"'{nameof(selector)}' cannot be null or empty.");
 
 			Name = name;
 			NamespaceUri = namespaceUri;
 			Selector = selector;
-			AttributeUpdates = attributeUpdates ?? Enumerable.Empty<AttributeSpecification>();
+			AttributeUpdates = attributeUpdates?.ToArray() ?? Array.Empty<AttributeSpecification>();
 		}
 
-		public IEnumerable<AttributeSpecification> AttributeUpdates { get; }
+		public AttributeSpecification[] AttributeUpdates { get; }
 
 		public string Name { get; }
 
@@ -53,10 +51,7 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 
 		public XmlElement Execute(XmlDocument configurationDocument)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationDocument, nameof(configurationDocument))
-				.Check();
-
+			if (configurationDocument == null) throw new ArgumentNullException(nameof(configurationDocument));
 			var element = configurationDocument.CreateElement(null, Name, NamespaceUri);
 			foreach (var attributeUpdate in AttributeUpdates) attributeUpdate.Execute(element);
 			return element;
@@ -64,10 +59,7 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 
 		public bool Exists(XmlElement parentElement)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(parentElement, nameof(parentElement))
-				.Check();
-
+			if (parentElement == null) throw new ArgumentNullException(nameof(parentElement));
 			return parentElement.SelectSingleNode(Selector) != null;
 		}
 	}

@@ -16,10 +16,11 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Dsl.Configuration.Command;
 using Be.Stateless.Dsl.Configuration.Specification;
 using Be.Stateless.Dsl.Configuration.Xml;
@@ -31,19 +32,12 @@ namespace Be.Stateless.Dsl.Configuration
 	{
 		public ConfigurationSpecificationWriter(XmlDocument configurationSpecificationDocument)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationSpecificationDocument, nameof(configurationSpecificationDocument))
-				.Check();
-
-			_configurationSpecificationDocument = configurationSpecificationDocument;
+			_configurationSpecificationDocument = configurationSpecificationDocument ?? throw new ArgumentNullException(nameof(configurationSpecificationDocument));
 		}
 
 		public void Write(ConfigurationSpecification configurationSpecification)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationSpecification, nameof(configurationSpecification))
-				.Check();
-
+			if (configurationSpecification == null) throw new ArgumentNullException(nameof(configurationSpecification));
 			foreach (dynamic command in configurationSpecification.Commands) Write(command);
 			_configurationSpecificationDocument.DocumentElement.AppendAttribute(
 				XmlAttributeNames.FILES,
@@ -59,38 +53,22 @@ namespace Be.Stateless.Dsl.Configuration
 
 		private void Write(ElementInsertionCommand command)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(command, nameof(command))
-				.Check();
-
 			Write(CommandTypeNames.INSERT, $"{command.ConfigurationElementSelector}/{command.ElementSpecification.Selector}", command.ElementSpecification.AttributeUpdates);
 		}
 
 		private void Write(ElementUpdateCommand command)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(command, nameof(command))
-				.Check();
-
 			Write(CommandTypeNames.UPDATE, $"{command.ConfigurationElementSelector}", command.AttributeSpecifications);
 		}
 
+		[SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
 		private void Write(ElementDeletionCommand command)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(command, nameof(command))
-				.Check();
-
 			Write(CommandTypeNames.DELETE, $"{command.ConfigurationElementSelector}");
 		}
 
 		private void Write(string action, string xpath, IEnumerable<AttributeSpecification> attributeUpdates = null)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrWhiteSpace(action, nameof(action))
-				.IsNotNullOrWhiteSpace(xpath, nameof(xpath))
-				.Check();
-
 			var element = _configurationSpecificationDocument.CreatePath(xpath);
 			element.AppendAttribute(XmlAttributeNames.ACTION, Constants.NAMESPACE_URI, Constants.NAMESPACE_URI_PREFIX, action);
 			foreach (var attributeUpdate in attributeUpdates ?? Enumerable.Empty<AttributeSpecification>()) attributeUpdate.Execute(element);

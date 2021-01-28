@@ -16,10 +16,9 @@
 
 #endregion
 
+using System;
 using System.Xml.XPath;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Dsl.Configuration.Specification;
-using Be.Stateless.Xml.XPath.Argument.Validation;
 
 namespace Be.Stateless.Dsl.Configuration.Factory
 {
@@ -27,10 +26,11 @@ namespace Be.Stateless.Dsl.Configuration.Factory
 	{
 		public static AttributeSpecification Create(XPathNavigator navigator)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(navigator, nameof(navigator))
-				.IsXmlAttribute(navigator, nameof(navigator))
-				.Check();
+			if (navigator == null) throw new ArgumentNullException(nameof(navigator));
+			if (navigator.NodeType != XPathNodeType.Attribute)
+				throw new ArgumentException(
+					$"The navigator's current node must be an attribute (navigator type:'{(navigator != null ? navigator.NodeType : (XPathNodeType?) null)}')",
+					nameof(navigator));
 
 			return new AttributeSpecification {
 				Name = navigator.LocalName,

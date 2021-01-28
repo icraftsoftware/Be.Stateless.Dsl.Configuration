@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.XPath;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Xml.XPath.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Xml.XPath
@@ -30,11 +29,7 @@ namespace Be.Stateless.Dsl.Configuration.Xml.XPath
 	{
 		public XPathBuilder(XPathNavigator navigator)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(navigator, nameof(navigator))
-				.Check();
-
-			_navigator = navigator;
+			_navigator = navigator ?? throw new ArgumentNullException(nameof(navigator));
 		}
 
 		public string BuildAbsolutePath(XPathFormat format = XPathFormat.LocalName)

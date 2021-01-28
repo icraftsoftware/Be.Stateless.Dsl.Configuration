@@ -30,8 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Be.Stateless.Argument.Validation" Version="2.0.20196.38882" />
-    <PackageReference Include="Be.Stateless.Xml" Version="2.0.21005.41353" />
+    <PackageReference Include="Be.Stateless.Xml" Version="2.0.21005.41353"/>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -41,6 +40,10 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="IO\Argument\Validation\" />
   </ItemGroup>
 
 </Project>

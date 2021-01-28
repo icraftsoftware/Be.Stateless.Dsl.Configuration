@@ -16,14 +16,15 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Dsl.Configuration;
 using Be.Stateless.Dsl.Configuration.Resolver;
 using Be.Stateless.Dsl.Configuration.Xml.XPath;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.Xml.Extensions
 {
@@ -31,9 +32,7 @@ namespace Be.Stateless.Xml.Extensions
 	{
 		public static XmlElement CreatePath(this XmlDocument document, string xpath)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrWhiteSpace(xpath, nameof(xpath))
-				.Check();
+			if (xpath.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(xpath), $"'{nameof(xpath)}' cannot be null or empty.");
 			return (XmlElement) new XPathExpression(xpath)
 				.GetLocationSteps()
 				.Aggregate<XPathLocationStep, XmlNode>(document, (current, locationStep) => current.SelectOrAppendElement(locationStep));

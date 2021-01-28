@@ -4,6 +4,7 @@
     <TargetFramework>net48</TargetFramework>
     <RootNamespace>Be.Stateless</RootNamespace>
     <AssemblyName>Be.Stateless.Dsl.Configuration.Cmdlets</AssemblyName>
+    <Description>Configuration DSL library and PowerShell commands for general purpose dotnet configuration file edition.</Description>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -18,11 +19,10 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <IncludeBuildOutput>true</IncludeBuildOutput>
-    <NuspecFile>Be.Stateless.Dsl.Configurations.Cmdlets.nuspec</NuspecFile>
-    <NuspecProperties>configuration=$(Configuration)</NuspecProperties>
-  </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>
+      <NoWarn>1701;1702</NoWarn>
+   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\.settings\.editorconfig" Link=".editorconfig" />
@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Be.Stateless.Dsl.Configuration\Be.Stateless.Dsl.Configuration.csproj" />
+    <ProjectReference Include="..\Be.Stateless.Dsl.Configuration\Be.Stateless.Dsl.Configuration.csproj"/>
   </ItemGroup>
 
   <ItemGroup>

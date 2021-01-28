@@ -16,9 +16,10 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Be.Stateless.Argument.Validation;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Resolver
 {
@@ -31,9 +32,7 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 
 		public IEnumerable<string> Resolve(string moniker)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrWhiteSpace(moniker, nameof(moniker))
-				.Check();
+			if (moniker.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(moniker), $"'{nameof(moniker)}' cannot be null or empty.");
 			return _resolverStrategies.Single(resolverStrategy => resolverStrategy.CanResolve(moniker)).Resolve(moniker);
 		}
 

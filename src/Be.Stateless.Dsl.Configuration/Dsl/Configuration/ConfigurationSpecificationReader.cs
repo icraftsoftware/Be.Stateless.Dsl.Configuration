@@ -16,12 +16,12 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Dsl.Configuration.Command;
 using Be.Stateless.Dsl.Configuration.Factory;
 using Be.Stateless.Dsl.Configuration.Resolver;
@@ -37,12 +37,8 @@ namespace Be.Stateless.Dsl.Configuration
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
 		public ConfigurationSpecificationReader(XmlDocument configurationSpecificationDocument, IEnumerable<IConfigurationFilesResolverStrategy> configurationFileResolvers)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationSpecificationDocument, nameof(configurationSpecificationDocument))
-				.Check();
-
-			_configurationFileResolvers = configurationFileResolvers.ToList();
-			_configurationSpecificationDocument = configurationSpecificationDocument;
+			_configurationSpecificationDocument = configurationSpecificationDocument ?? throw new ArgumentNullException(nameof(configurationSpecificationDocument));
+			_configurationFileResolvers = configurationFileResolvers?.ToArray() ?? Array.Empty<IConfigurationFilesResolverStrategy>();
 		}
 
 		public IEnumerable<ConfigurationSpecification> Read()
@@ -66,7 +62,7 @@ namespace Be.Stateless.Dsl.Configuration
 				.SelectSingleNode($"/*/@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.UNDO}")?.ValueAsBoolean ?? false;
 		}
 
-		private readonly List<IConfigurationFilesResolverStrategy> _configurationFileResolvers;
+		private readonly IConfigurationFilesResolverStrategy[] _configurationFileResolvers;
 		private readonly XmlDocument _configurationSpecificationDocument;
 	}
 }

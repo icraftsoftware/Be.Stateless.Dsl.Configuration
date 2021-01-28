@@ -16,10 +16,10 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
-using Be.Stateless.Argument.Validation;
 
 namespace Be.Stateless
 {
@@ -27,11 +27,8 @@ namespace Be.Stateless
 	{
 		internal static XmlDocument AsXmlDocument(this Stream stream)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(stream, nameof(stream));
-
 			var document = new XmlDocument();
-			document.Load(stream);
+			document.Load(stream ?? throw new ArgumentNullException(nameof(stream)));
 			return document;
 		}
 

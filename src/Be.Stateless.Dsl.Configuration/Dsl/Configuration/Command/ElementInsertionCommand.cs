@@ -18,7 +18,6 @@
 
 using System;
 using System.Xml;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Dsl.Configuration.Factory;
 using Be.Stateless.Dsl.Configuration.Specification;
 
@@ -29,11 +28,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		public ElementInsertionCommand(string configurationElementSelector, ElementSpecification elementSpecification)
 			: base(configurationElementSelector)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(elementSpecification, nameof(elementSpecification))
-				.Check();
-
-			ElementSpecification = elementSpecification;
+			ElementSpecification = elementSpecification ?? throw new ArgumentNullException(nameof(elementSpecification));
 		}
 
 		#region Base Class Member Overrides

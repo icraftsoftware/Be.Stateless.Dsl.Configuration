@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Dsl.Configuration.Xml;
 using Be.Stateless.Xml.XPath.Extensions;
 
@@ -31,11 +30,7 @@ namespace Be.Stateless.Dsl.Configuration
 	{
 		public ConfigurationFileMonikersExtractor(XmlDocument document)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(document, nameof(document))
-				.Check();
-
-			_document = document;
+			_document = document ?? throw new ArgumentNullException(nameof(document));
 		}
 
 		public IEnumerable<string> Extract()

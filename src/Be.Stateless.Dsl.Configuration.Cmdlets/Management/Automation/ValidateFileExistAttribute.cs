@@ -36,10 +36,10 @@ namespace Be.Stateless.Management.Automation
 				case null:
 					throw new ArgumentNullException(nameof(arguments));
 				case FileInfo file:
-					if (!file.Exists) throw new FileNotFoundException("Unable to find the specified file.", file.FullName);
+					if (!file.Exists) throw new FileNotFoundException("Toto Unable to find the specified file.", file.FullName);
 					break;
 				case IEnumerable<FileInfo> files:
-					files.FirstOrDefault(f => !f.Exists).IfNotNull(f => throw new FileNotFoundException("Unable to find the specified file.", f.FullName));
+					files.FirstOrDefault(f => !f.Exists).IfNotNull(f => throw new FileNotFoundException("Tutu Unable to find the specified file.", f.FullName));
 					break;
 				default:
 					throw new ArgumentException($"The parameter type '{arguments.GetType().Name}' is not supported.", nameof(arguments));

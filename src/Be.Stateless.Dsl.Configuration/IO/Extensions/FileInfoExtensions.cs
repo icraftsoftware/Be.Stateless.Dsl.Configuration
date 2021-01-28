@@ -16,14 +16,13 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Dsl.Configuration;
 using Be.Stateless.Dsl.Configuration.Resolver;
 using Be.Stateless.Dsl.Configuration.Specification;
-using Be.Stateless.IO.Argument.Validation;
 
 namespace Be.Stateless.IO.Extensions
 {
@@ -31,9 +30,8 @@ namespace Be.Stateless.IO.Extensions
 	{
 		public static XmlDocument AsXmlDocument(this FileInfo fileInfo)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(fileInfo, nameof(fileInfo))
-				.Check();
+			if (fileInfo == null) throw new ArgumentNullException(nameof(fileInfo));
+			if (!fileInfo.Exists) throw new FileNotFoundException("The file does not exist.", fileInfo.FullName);
 
 			var document = new XmlDocument();
 			document.Load(fileInfo.FullName);
@@ -44,11 +42,6 @@ namespace Be.Stateless.IO.Extensions
 			this FileInfo configurationSpecificationFile,
 			IEnumerable<IConfigurationFilesResolverStrategy> configurationFileResolverStrategies)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNull(configurationSpecificationFile, nameof(configurationSpecificationFile))
-				.Exists(configurationSpecificationFile, nameof(configurationSpecificationFile))
-				.Check();
-
 			var configurationSpecifications = new ConfigurationSpecificationReader(configurationSpecificationFile.AsXmlDocument(), configurationFileResolverStrategies).Read();
 			foreach (var configurationSpecification in configurationSpecifications)
 			{

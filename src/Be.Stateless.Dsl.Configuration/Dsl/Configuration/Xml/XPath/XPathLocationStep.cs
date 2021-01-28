@@ -19,8 +19,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Be.Stateless.Argument.Validation;
 using Be.Stateless.Dsl.Configuration.Specification;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Xml.XPath
 {
@@ -49,10 +49,7 @@ namespace Be.Stateless.Dsl.Configuration.Xml.XPath
 
 		public XPathLocationStep(string value)
 		{
-			Arguments.Validation.Constraints
-				.IsNotNullOrWhiteSpace(value, nameof(value))
-				.Check();
-
+			if (value.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(value), $"'{nameof(value)}' cannot be null or empty.");
 			Value = value;
 			var result = _xpathLocationStepPattern.Match(Value);
 			IsValid = result.Success;
