@@ -1,11 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-    <RootNamespace>Be.Stateless.Dsl.Configuration</RootNamespace>
-    <IsPackable>false</IsPackable>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>Be.Stateless</RootNamespace>
     <AssemblyName>Be.Stateless.Dsl.Configuration.Tests</AssemblyName>
+    <Description>Unit tests for configuration DSL library for general purpose configuration file edition.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\.settings\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Resources\create-node-change-with-discriminant.config" />
@@ -17,6 +21,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\delete-element-command.config" />
+    <EmbeddedResource Include="Resources\create-node-change-with-discriminant.config" />
+    <EmbeddedResource Include="Resources\create-node-change.config" />
+    <EmbeddedResource Include="Resources\web-modified.config" />
+    <EmbeddedResource Include="Resources\update-node-change-with-attribute-update.config" />
+    <EmbeddedResource Include="Resources\web-original.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Be.Stateless.Common" Version="2.0.21005.39505" />
+    <PackageReference Include="Be.Stateless.Common.Unit" Version="2.0.21005.39505" />
+    <PackageReference Include="coverlet.msbuild" Version="2.9.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Moq" Version="4.15.2" />
@@ -25,23 +44,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Be.Stateless.Dsl.Configuration\Be.Stateless.Dsl.Configuration.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\delete-element-command.config" />
-    <EmbeddedResource Include="Resources\create-node-change-with-discriminant.config" />
-    <EmbeddedResource Include="Resources\create-node-change.config" />
-    <EmbeddedResource Include="Resources\web-modified.config" />
-    <EmbeddedResource Include="Resources\update-node-change-with-attribute-update.config" />
-    <EmbeddedResource Include="Resources\web-original.config" />
   </ItemGroup>
 
 </Project>
