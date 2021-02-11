@@ -16,6 +16,7 @@
     <None Remove="Resources\create-node-change.config" />
     <None Remove="Resources\delete-element-command.config" />
     <None Remove="Resources\update-node-change-with-attribute-update.config" />
+    <None Remove="Resources\upsert-node-change.config" />
     <None Remove="Resources\web-modified.config" />
     <None Remove="Resources\web-original.config" />
   </ItemGroup>
@@ -24,6 +25,7 @@
     <EmbeddedResource Include="Resources\delete-element-command.config" />
     <EmbeddedResource Include="Resources\create-node-change-with-discriminant.config" />
     <EmbeddedResource Include="Resources\create-node-change.config" />
+    <EmbeddedResource Include="Resources\upsert-node-change.config" />
     <EmbeddedResource Include="Resources\web-modified.config" />
     <EmbeddedResource Include="Resources\update-node-change-with-attribute-update.config" />
     <EmbeddedResource Include="Resources\web-original.config" />

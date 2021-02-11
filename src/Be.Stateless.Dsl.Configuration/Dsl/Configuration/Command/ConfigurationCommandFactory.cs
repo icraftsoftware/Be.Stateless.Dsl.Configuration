@@ -101,8 +101,10 @@ namespace Be.Stateless.Dsl.Configuration.Command
 
 		private static ElementUpsertionCommand CreateElementUpsertionCommand(XPathNavigator navigator)
 		{
+			var parentNavigator = navigator.Clone();
+			parentNavigator.MoveToParent();
 			return new ElementUpsertionCommand(
-				new XPathBuilder(navigator).BuildAbsolutePath(),
+				new XPathBuilder(parentNavigator).BuildAbsolutePath(),
 				CreateElementInsertionCommand(navigator),
 				CreateElementUpdateCommand(navigator));
 		}
