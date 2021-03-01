@@ -93,18 +93,44 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		[Fact]
 		public void CreateSucceedsForNodeUpdateChangeWithAttributeUpdate()
 		{
+			var elementToUpdate = ResourceManager
+				.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.update-node-change-with-attribute-update.config", stream => stream.AsXmlDocument().CreateNavigator())
+				.SelectSingleNode("/configuration/system.net");
 			ConfigurationCommandFactory
-				.Create(
-					ResourceManager
-						.Load(
-							Assembly.GetExecutingAssembly(),
-							"Be.Stateless.Resources.update-node-change-with-attribute-update.config",
-							stream => stream.AsXmlDocument().CreateNavigator())
-						.SelectSingleNode("/configuration/system.net"))
+				.Create(elementToUpdate)
 				.Should().NotBeNull()
 				.And.BeOfType<ElementUpdateCommand>()
 				.Subject.AttributeSpecifications.Should()
 				.ContainSingle(update => update.Name == "test" && update.Value == "true");
+		}
+
+		[Fact]
+		public void CreateSucceedsForNodeUpsertion()
+		{
+			var elementToUpsert = ResourceManager
+				.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.upsert-node-change.config", stream => stream.AsXmlDocument().CreateNavigator())
+				.SelectSingleNode("/configuration/system.serviceModel/extensions/behaviorExtensions/add");
+			var command = ConfigurationCommandFactory
+				.Create(elementToUpsert)
+				.Should().NotBeNull()
+				.And.BeOfType<ElementUpsertionCommand>().Subject;
+			const string parentElementSelector =
+				"/*[local-name()='configuration']/*[local-name()='system.serviceModel']/*[local-name()='extensions']/*[local-name()='behaviorExtensions']";
+			command.ConfigurationElementSelector.Should().Be(parentElementSelector);
+			var attributeSpecifications = new[] {
+				new AttributeSpecification { Name = "name", NamespaceUri = string.Empty, Value = "customBehavior" },
+				new AttributeSpecification { Name = "type", NamespaceUri = string.Empty, Value = "TypeValue" }
+			};
+			const string elementSelector = "*[local-name()='add' and (@name = 'customBehavior')]";
+			command.InsertionCommand.Should().BeEquivalentTo(
+				new ElementInsertionCommand(
+					parentElementSelector,
+					new ElementSpecification(
+						"add",
+						string.Empty,
+						attributeSpecifications,
+						elementSelector)));
+			command.UpdateCommand.Should().BeEquivalentTo(new ElementUpdateCommand($"{parentElementSelector}/{elementSelector}", attributeSpecifications));
 		}
 
 		[Fact]
