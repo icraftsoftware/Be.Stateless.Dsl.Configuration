@@ -26,9 +26,9 @@ using Be.Stateless.Dsl.Configuration.Xml.XPath;
 
 namespace Be.Stateless.Xml.Extensions
 {
-	public static class XmlNodeExtensions
+	internal static class XmlNodeExtensions
 	{
-		public static XmlElement SelectOrAppendElement(this XmlNode parentNode, XPathLocationStep locationStep)
+		internal static XmlElement SelectOrAppendElement(this XmlNode parentNode, XPathLocationStep locationStep)
 		{
 			if (parentNode == null) throw new ArgumentNullException(nameof(parentNode));
 			return (XmlElement) parentNode.SelectSingleNode(locationStep.Value) ?? parentNode.AppendElement(locationStep);

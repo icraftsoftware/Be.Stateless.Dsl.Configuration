@@ -17,18 +17,19 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Xml;
+using Microsoft.Win32;
 
-namespace Be.Stateless.IO.Extensions
+namespace Be.Stateless.Dsl.Configuration.Extensions
 {
-	public static class StreamExtensions
+	internal static class ClrBitnessExtensions
 	{
-		internal static XmlDocument AsXmlDocument(this Stream stream)
+		internal static RegistryView ToRegistryView(this ClrBitness bitness)
 		{
-			var document = new XmlDocument();
-			document.Load(stream ?? throw new ArgumentNullException(nameof(stream)));
-			return document;
+			return bitness switch {
+				ClrBitness.Bitness32 => RegistryView.Registry32,
+				ClrBitness.Bitness64 => RegistryView.Registry64,
+				_ => throw new ArgumentOutOfRangeException(nameof(bitness), bitness, null)
+			};
 		}
 	}
 }

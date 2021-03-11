@@ -16,26 +16,13 @@
 
 #endregion
 
-using FluentAssertions;
-using Xunit;
-
-namespace Be.Stateless.Dsl.Configuration.Resolver
+namespace Be.Stateless.Dsl.Configuration.Command
 {
-	public class FilesConfigurationFilesResolverStrategyFixture
+	internal static class CommandAction
 	{
-		[Theory]
-		[InlineData(@"file:\\c:\web.config")]
-		[InlineData(@"file:/c:\web.config")]
-		[InlineData(@"file://")]
-		public void CannotResolve(string moniker)
-		{
-			new FilesConfigurationFilesResolverStrategy().CanResolve(moniker).Should().BeFalse();
-		}
-
-		[Fact]
-		public void CanResolve()
-		{
-			new FilesConfigurationFilesResolverStrategy().CanResolve(@"file://c:\web.config").Should().BeTrue();
-		}
+		public const string DELETE = "delete";
+		public const string INSERT = "insert";
+		public const string UPDATE = "update";
+		public const string UPSERT = "upsert";
 	}
 }

@@ -17,15 +17,13 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Be.Stateless.Linq.Extensions
+namespace Be.Stateless.Dsl.Configuration.Resolver
 {
-	internal static class EnumerableExtensions
+	public interface IConfigurationFileResolverStrategy
 	{
-		public static bool Multiple<T>(this IEnumerable<T> source)
-		{
-			return source.Skip(1).Any();
-		}
+		bool CanResolve(string moniker);
+
+		IEnumerable<string> Resolve(string moniker);
 	}
 }

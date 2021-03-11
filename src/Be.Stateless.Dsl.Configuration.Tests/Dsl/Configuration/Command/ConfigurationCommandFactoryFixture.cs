@@ -25,7 +25,6 @@ using Be.Stateless.IO.Extensions;
 using Be.Stateless.Resources;
 using FluentAssertions;
 using Xunit;
-using static Be.Stateless.Unit.DelegateFactory;
 
 namespace Be.Stateless.Dsl.Configuration.Command
 {
@@ -34,7 +33,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		[Fact]
 		public void CreateFailedWhenActionIsMissing()
 		{
-			Action(
+			FluentActions.Invoking(
 					() => {
 						ConfigurationCommandFactory.Create(
 							ResourceManager

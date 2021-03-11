@@ -16,14 +16,26 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Resolver
 {
-	public interface IConfigurationFilesResolverStrategy
+	public sealed class ConfigurationFileResolver
 	{
-		bool CanResolve(string moniker);
+		public ConfigurationFileResolver(IEnumerable<IConfigurationFileResolverStrategy> resolverStrategies)
+		{
+			_resolverStrategies = resolverStrategies?.ToArray() ?? Array.Empty<IConfigurationFileResolverStrategy>();
+		}
 
-		IEnumerable<string> Resolve(string moniker);
+		public IEnumerable<string> Resolve(string moniker)
+		{
+			if (moniker.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(moniker), $"'{nameof(moniker)}' cannot be null or empty.");
+			return _resolverStrategies.Single(resolverStrategy => resolverStrategy.CanResolve(moniker)).Resolve(moniker);
+		}
+
+		private readonly IEnumerable<IConfigurationFileResolverStrategy> _resolverStrategies;
 	}
 }

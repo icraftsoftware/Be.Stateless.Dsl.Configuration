@@ -29,35 +29,35 @@ namespace Be.Stateless.Xml.XPath.Extensions
 {
 	internal static class XPathNavigatorExtensions
 	{
-		public static IEnumerable<AttributeSpecification> GetAttributeUpdates(this XPathNavigator navigator)
+		internal static IEnumerable<AttributeSpecification> GetAttributeUpdates(this XPathNavigator navigator)
 		{
-			return navigator.AsNamespaceScopedNavigator()
+			return navigator.AsDslNamespaceAffinitiveXPathNavigator()
 				.Select($"@*[namespace-uri()!='{Constants.NAMESPACE_URI}']")
 				.Cast<XPathNavigator>()
 				.Select(AttributeSpecificationFactory.Create);
 		}
 
-		public static string GetCommandType(this XPathNavigator navigator)
+		internal static string GetCommandAction(this XPathNavigator navigator)
 		{
-			return navigator.AsNamespaceScopedNavigator().SelectSingleNode($"@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.ACTION}")?.Value;
+			return navigator.AsDslNamespaceAffinitiveXPathNavigator().SelectSingleNode($"@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.ACTION}")?.Value;
 		}
 
-		public static IEnumerable<string> GetDiscriminants(this XPathNavigator navigator)
+		internal static IEnumerable<string> GetDiscriminants(this XPathNavigator navigator)
 		{
-			return navigator.AsNamespaceScopedNavigator()
+			return navigator.AsDslNamespaceAffinitiveXPathNavigator()
 					.SelectSingleNode($"@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.DISCRIMINANT}")?.Value
 					.Split(new[] { Constants.DISCRIMINANT_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries)
 				?? Enumerable.Empty<string>();
 		}
 
-		internal static NamespaceScopedXPathNavigator AsNamespaceScopedNavigator(this XPathNavigator navigator)
+		internal static NamespaceAffinitiveXPathNavigator AsDslNamespaceAffinitiveXPathNavigator(this XPathNavigator navigator)
 		{
-			return navigator is NamespaceScopedXPathNavigator namespaceManagedXPathNavigator
-				? namespaceManagedXPathNavigator
-				: new NamespaceScopedXPathNavigator(navigator, navigator.BuildNamespaceManager());
+			return navigator is NamespaceAffinitiveXPathNavigator namespaceAffinitiveXPathNavigator
+				? namespaceAffinitiveXPathNavigator
+				: new NamespaceAffinitiveXPathNavigator(navigator, navigator.BuildDslNamespaceManager());
 		}
 
-		private static XmlNamespaceManager BuildNamespaceManager(this XPathNavigator navigator)
+		private static XmlNamespaceManager BuildDslNamespaceManager(this XPathNavigator navigator)
 		{
 			var namespaceManager = navigator.GetNamespaceManager();
 			namespaceManager.AddNamespace(Constants.NAMESPACE_URI_PREFIX, Constants.NAMESPACE_URI);

@@ -18,15 +18,19 @@
 
 namespace Be.Stateless.Dsl.Configuration
 {
+	/// <summary>
+	/// Used to specify the targeted bitness of the .NET Framework.
+	/// </summary>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.build.utilities.dotnetframeworkarchitecture">DotNetFrameworkArchitecture Enum</seealso>
 	public enum ClrBitness
 	{
 		/// <summary>
-		/// Indicates the CLR bitness 32.
+		/// Indicates the 32-bit .NET Framework.
 		/// </summary>
 		Bitness32,
 
 		/// <summary>
-		/// Indicates the CLR bitness 64.
+		/// Indicates the 64-bit .NET Framework.
 		/// </summary>
 		Bitness64
 	}

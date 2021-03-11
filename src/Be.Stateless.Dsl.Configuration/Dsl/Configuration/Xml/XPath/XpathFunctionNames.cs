@@ -21,5 +21,6 @@ namespace Be.Stateless.Dsl.Configuration.Xml.XPath
 	internal static class XpathFunctionNames
 	{
 		public const string LOCAL_NAME = "local-name";
+		public const string NAMESPACE_URI = "namespace-uri";
 	}
 }

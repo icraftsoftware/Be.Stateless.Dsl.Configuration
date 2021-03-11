@@ -21,7 +21,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
 using Be.Stateless.Extensions;
-using Be.Stateless.Linq.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Command
 {
@@ -49,8 +48,9 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		{
 			var configurationElements = configurationDocument.SelectNodes(ConfigurationElementSelector)?.OfType<XmlElement>();
 			if (configurationElements == null || !configurationElements.Any())
-				throw new InvalidOperationException($"No configuration element found matching '{ConfigurationElementSelector}'.");
-			if (configurationElements.Multiple()) throw new InvalidOperationException($"Multiple configuration elements found matching '{ConfigurationElementSelector}'.");
+				throw new InvalidOperationException($"No configuration element matching '{ConfigurationElementSelector}' has been found.");
+			if (configurationElements.Skip(1).Any())
+				throw new InvalidOperationException($"More than one configuration element matching '{ConfigurationElementSelector}' have been found.");
 			return configurationElements.Single();
 		}
 

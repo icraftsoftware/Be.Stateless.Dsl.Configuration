@@ -53,23 +53,23 @@ namespace Be.Stateless.Dsl.Configuration
 
 		private void Write(ElementInsertionCommand command)
 		{
-			Write(CommandTypeNames.INSERT, $"{command.ConfigurationElementSelector}/{command.ElementSpecification.Selector}", command.ElementSpecification.AttributeUpdates);
+			Write(CommandAction.INSERT, $"{command.ConfigurationElementSelector}/{command.ElementSpecification.Selector}", command.ElementSpecification.AttributeUpdates);
 		}
 
 		private void Write(ElementUpdateCommand command)
 		{
-			Write(CommandTypeNames.UPDATE, $"{command.ConfigurationElementSelector}", command.AttributeSpecifications);
+			Write(CommandAction.UPDATE, $"{command.ConfigurationElementSelector}", command.AttributeSpecifications);
 		}
 
 		[SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
 		private void Write(ElementDeletionCommand command)
 		{
-			Write(CommandTypeNames.DELETE, $"{command.ConfigurationElementSelector}");
+			Write(CommandAction.DELETE, $"{command.ConfigurationElementSelector}");
 		}
 
 		private void Write(string action, string xpath, IEnumerable<AttributeSpecification> attributeUpdates = null)
 		{
-			var element = _configurationSpecificationDocument.CreatePath(xpath);
+			var element = _configurationSpecificationDocument.PatchDomAfterXPath(xpath);
 			element.AppendAttribute(XmlAttributeNames.ACTION, Constants.NAMESPACE_URI, Constants.NAMESPACE_URI_PREFIX, action);
 			foreach (var attributeUpdate in attributeUpdates ?? Enumerable.Empty<AttributeSpecification>()) attributeUpdate.Execute(element);
 		}

@@ -16,13 +16,12 @@
 
 #endregion
 
-using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
 namespace Be.Stateless.Dsl.Configuration.Resolver
 {
-	public class ClrConfigurationFilesResolverStrategyFixture
+	public class ClrConfigurationFileResolverStrategyFixture
 	{
 		[Theory]
 		[InlineData("v4.5:32bits:machine.config")]
@@ -33,7 +32,7 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 		[InlineData("global:")]
 		public void CannotResolve(string fileUri)
 		{
-			new ClrConfigurationFilesResolverStrategy().CanResolve(fileUri).Should().BeFalse();
+			new ClrConfigurationFileResolverStrategy().CanResolve(fileUri).Should().BeFalse();
 		}
 
 		[Theory]
@@ -42,23 +41,15 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 		[InlineData("global:clr4:machine.config")]
 		public void CanResolve(string fileUri)
 		{
-			new ClrConfigurationFilesResolverStrategy().CanResolve(fileUri).Should().BeTrue();
+			new ClrConfigurationFileResolverStrategy().CanResolve(fileUri).Should().BeTrue();
 		}
 
 		[Theory]
-		[MemberData(nameof(ValidMonikerResolution))]
+		[InlineData("global:clr4:32bits:machine.config", 1)]
+		[InlineData("global:clr4:machine.config", 2)]
 		public void ResolveSucceeds(string moniker, int expectedCount)
 		{
-			new ClrConfigurationFilesResolverStrategy().Resolve(moniker).Should().HaveCount(expectedCount);
-		}
-
-		public static IEnumerable<object[]> ValidMonikerResolution
-		{
-			get
-			{
-				yield return new object[] { "global:clr4:32bits:machine.config", 1 };
-				yield return new object[] { "global:clr4:machine.config", 2 };
-			}
+			new ClrConfigurationFileResolverStrategy().Resolve(moniker).Should().HaveCount(expectedCount);
 		}
 	}
 }

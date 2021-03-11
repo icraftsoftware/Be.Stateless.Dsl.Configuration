@@ -34,7 +34,7 @@ namespace Be.Stateless.Dsl.Configuration
 		[Fact]
 		public void WriteSucceeds()
 		{
-			var targetConfigurationFile = "c:\\web.config";
+			const string targetConfigurationFile = "c:\\web.config";
 			var configurationSpecification = new ConfigurationSpecification(
 				targetConfigurationFile,
 				new ConfigurationCommand[] {
@@ -61,7 +61,7 @@ namespace Be.Stateless.Dsl.Configuration
 			var document = new XmlDocument();
 			new ConfigurationSpecificationWriter(document).Write(configurationSpecification);
 
-			var mockedResolver = new Mock<IConfigurationFilesResolverStrategy>();
+			var mockedResolver = new Mock<IConfigurationFileResolverStrategy>();
 			mockedResolver.Setup(resolver => resolver.CanResolve(It.IsAny<string>())).Returns(true);
 			mockedResolver.Setup(resolver => resolver.Resolve(It.IsAny<string>())).Returns(new[] { targetConfigurationFile });
 			var specification = new ConfigurationSpecificationReader(document, new[] { mockedResolver.Object }).Read().Should().ContainSingle().Subject;

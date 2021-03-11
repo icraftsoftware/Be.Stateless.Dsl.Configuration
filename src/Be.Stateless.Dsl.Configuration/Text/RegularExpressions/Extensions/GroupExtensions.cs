@@ -17,28 +17,31 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Be.Stateless.Dsl.Configuration;
 
-namespace Be.Stateless.Text.RegularExpressions
+namespace Be.Stateless.Text.RegularExpressions.Extensions
 {
 	internal static class GroupExtensions
 	{
-		public static Version AsClrVersion(this Group value)
+		internal static Version AsClrVersion(this Group value)
 		{
 			if (!value.Success) return null;
 			var result = _clrMonikerPattern.Match(value.Value);
 			return !result.Success ? null : new Version(Convert.ToInt32(result.Groups["major"].Value), 0);
 		}
 
-		public static ClrBitness? AsClrBitness(this Group value)
+		internal static IEnumerable<ClrBitness> AsClrBitness(this Group value)
 		{
-			if (!value.Success) return null;
-			return value.Value switch {
-				"32bits" => ClrBitness.Bitness32,
-				"64bits" => ClrBitness.Bitness64,
-				_ => throw new ArgumentOutOfRangeException(nameof(value), value.Value, "This bitness is not supported.")
-			};
+			return !value.Success
+				? typeof(ClrBitness).GetEnumValues().OfType<ClrBitness>()
+				: value.Value switch {
+					"32bits" => new[] { ClrBitness.Bitness32 },
+					"64bits" => new[] { ClrBitness.Bitness64 },
+					_ => throw new ArgumentOutOfRangeException(nameof(value), value.Value, "Unexpected CLR bitness value.")
+				};
 		}
 
 		private static readonly Regex _clrMonikerPattern = new Regex(@"^clr(?<major>\d)");

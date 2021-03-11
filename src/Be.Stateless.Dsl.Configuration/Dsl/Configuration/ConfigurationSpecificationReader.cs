@@ -27,25 +27,24 @@ using Be.Stateless.Dsl.Configuration.Specification;
 using Be.Stateless.Dsl.Configuration.Xml;
 using Be.Stateless.IO.Extensions;
 using Be.Stateless.Xml.Extensions;
-using Be.Stateless.Xml.XPath.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration
 {
 	public sealed class ConfigurationSpecificationReader
 	{
-		public ConfigurationSpecificationReader(string filePath, IEnumerable<IConfigurationFilesResolverStrategy> configurationFileResolvers)
+		public ConfigurationSpecificationReader(string filePath, IEnumerable<IConfigurationFileResolverStrategy> configurationFileResolvers)
 			: this(filePath.AsXmlDocument(), configurationFileResolvers)
 		{
 			_filePath = filePath;
 		}
 
-		public ConfigurationSpecificationReader(XmlDocument configurationSpecificationDocument, IEnumerable<IConfigurationFilesResolverStrategy> configurationFileResolvers)
+		public ConfigurationSpecificationReader(XmlDocument configurationSpecificationDocument, IEnumerable<IConfigurationFileResolverStrategy> configurationFileResolvers)
 		{
 			_configurationSpecificationDocument = configurationSpecificationDocument ?? throw new ArgumentNullException(nameof(configurationSpecificationDocument));
-			_configurationFileResolvers = configurationFileResolvers?.ToArray() ?? Array.Empty<IConfigurationFilesResolverStrategy>();
+			_configurationFileResolvers = configurationFileResolvers?.ToArray() ?? Array.Empty<IConfigurationFileResolverStrategy>();
 		}
 
-		private bool IsUndo => _configurationSpecificationDocument.CreateNavigator().AsNamespaceScopedNavigator()
+		private bool IsUndo => _configurationSpecificationDocument.CreateDslNamespaceAffinitiveXPathNavigator()
 			.SelectSingleNode($"/*/@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.UNDO}")?.ValueAsBoolean ?? false;
 
 		public IEnumerable<ConfigurationSpecification> Read()
@@ -59,14 +58,13 @@ namespace Be.Stateless.Dsl.Configuration
 
 		private IEnumerable<ConfigurationCommand> ReadCommands()
 		{
-			return _configurationSpecificationDocument.CreateNavigator()
-				.AsNamespaceScopedNavigator()
+			return _configurationSpecificationDocument.CreateDslNamespaceAffinitiveXPathNavigator()
 				.Select($"//*[@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.ACTION}]")
 				.Cast<XPathNavigator>()
 				.Select(ConfigurationCommandFactory.Create);
 		}
 
-		private readonly IConfigurationFilesResolverStrategy[] _configurationFileResolvers;
+		private readonly IConfigurationFileResolverStrategy[] _configurationFileResolvers;
 		private readonly XmlDocument _configurationSpecificationDocument;
 		private readonly string _filePath;
 	}

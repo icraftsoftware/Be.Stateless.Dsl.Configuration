@@ -20,9 +20,9 @@ using System.Xml;
 
 namespace Be.Stateless.IO.Extensions
 {
-	public static class ConfigurationPathExtensions
+	internal static class ConfigurationPathExtensions
 	{
-		public static XmlDocument AsXmlDocument(this string filePath)
+		internal static XmlDocument AsXmlDocument(this string filePath)
 		{
 			var document = new XmlDocument();
 			document.Load(filePath);

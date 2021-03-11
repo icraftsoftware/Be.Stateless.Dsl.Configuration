@@ -22,7 +22,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
 using Be.Stateless.Dsl.Configuration.Xml;
-using Be.Stateless.Xml.XPath.Extensions;
+using Be.Stateless.Xml.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration
 {
@@ -35,7 +35,7 @@ namespace Be.Stateless.Dsl.Configuration
 
 		public IEnumerable<string> Extract()
 		{
-			return _document.CreateNavigator().AsNamespaceScopedNavigator()
+			return _document.CreateDslNamespaceAffinitiveXPathNavigator()
 				.Select($"/*/@{Constants.NAMESPACE_URI_PREFIX}:{XmlAttributeNames.FILES}")
 				.Cast<XPathNavigator>()
 				.Single()

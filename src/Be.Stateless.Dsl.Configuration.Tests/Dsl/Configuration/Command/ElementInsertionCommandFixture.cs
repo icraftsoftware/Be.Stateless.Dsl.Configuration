@@ -23,7 +23,6 @@ using Be.Stateless.IO.Extensions;
 using Be.Stateless.Resources;
 using FluentAssertions;
 using Xunit;
-using static Be.Stateless.Unit.DelegateFactory;
 
 namespace Be.Stateless.Dsl.Configuration.Command
 {
@@ -80,7 +79,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 			var command = new ElementInsertionCommand(
 				"/configuration",
 				new ElementSpecification("appSettings", null, null, "appSettings"));
-			Action(() => command.Execute(ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument())))
+			FluentActions.Invoking(() => command.Execute(ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument())))
 				.Should().Throw<InvalidOperationException>()
 				.WithMessage("The configuration element already exists at '/configuration/appSettings'.");
 		}

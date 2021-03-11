@@ -22,28 +22,28 @@ using System.Text.RegularExpressions;
 
 namespace Be.Stateless.Dsl.Configuration.Resolver
 {
-	public sealed class FilesConfigurationFilesResolverStrategy : IConfigurationFilesResolverStrategy
+	public sealed class ConfigurationFileResolverStrategy : IConfigurationFileResolverStrategy
 	{
-		private static bool CanResolve(string moniker, out Match result)
-		{
-			result = _filePathPattern.Match(moniker);
-			return result.Success;
-		}
-
-		#region IConfigurationFilesResolverStrategy Members
+		#region IConfigurationFileResolverStrategy Members
 
 		public bool CanResolve(string moniker)
 		{
-			return CanResolve(moniker, out _);
+			return TryResolve(moniker, out _);
 		}
 
 		public IEnumerable<string> Resolve(string moniker)
 		{
-			if (!CanResolve(moniker, out var result)) throw new ArgumentException($"The moniker '{moniker}' cannot be converted.", nameof(moniker));
-			return new[] { result.Groups["path"].Value };
+			if (!TryResolve(moniker, out var match)) throw new ArgumentException($"The moniker '{moniker}' cannot be converted.", nameof(moniker));
+			return new[] { match.Groups["path"].Value };
 		}
 
 		#endregion
+
+		private bool TryResolve(string moniker, out Match match)
+		{
+			match = _filePathPattern.Match(moniker);
+			return match.Success;
+		}
 
 		private static readonly Regex _filePathPattern = new Regex(@"^file://(?<path>.+)$");
 	}

@@ -21,9 +21,9 @@ using System.Xml;
 
 namespace Be.Stateless.Xml.Extensions
 {
-	public static class XmlElementExtensions
+	internal static class XmlElementExtensions
 	{
-		public static XmlAttribute AppendAttribute(this XmlElement element, string attributeName, string namespaceUri = null, string prefix = null, string value = null)
+		internal static XmlAttribute AppendAttribute(this XmlElement element, string attributeName, string namespaceUri = null, string prefix = null, string value = null)
 		{
 			var attribute = (element.OwnerDocument ?? throw new InvalidOperationException("The owner document is null."))
 				.CreateAttribute(prefix, attributeName, namespaceUri);

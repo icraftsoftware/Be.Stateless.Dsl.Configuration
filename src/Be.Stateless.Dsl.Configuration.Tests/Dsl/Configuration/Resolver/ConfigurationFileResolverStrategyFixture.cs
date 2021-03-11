@@ -16,20 +16,26 @@
 
 #endregion
 
-using System;
-using Microsoft.Win32;
+using FluentAssertions;
+using Xunit;
 
-namespace Be.Stateless.Dsl.Configuration
+namespace Be.Stateless.Dsl.Configuration.Resolver
 {
-	internal static class ClrBitnessExtensions
+	public class ConfigurationFileResolverStrategyFixture
 	{
-		public static RegistryView ToRegistryView(this ClrBitness bitness)
+		[Theory]
+		[InlineData(@"file:\\c:\web.config")]
+		[InlineData(@"file:/c:\web.config")]
+		[InlineData(@"file://")]
+		public void CannotResolve(string moniker)
 		{
-			return bitness switch {
-				ClrBitness.Bitness32 => RegistryView.Registry32,
-				ClrBitness.Bitness64 => RegistryView.Registry64,
-				_ => throw new ArgumentOutOfRangeException(nameof(bitness), bitness, null)
-			};
+			new ConfigurationFileResolverStrategy().CanResolve(moniker).Should().BeFalse();
+		}
+
+		[Fact]
+		public void CanResolve()
+		{
+			new ConfigurationFileResolverStrategy().CanResolve(@"file://c:\web.config").Should().BeTrue();
 		}
 	}
 }

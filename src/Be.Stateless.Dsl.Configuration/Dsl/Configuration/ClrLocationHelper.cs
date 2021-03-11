@@ -19,6 +19,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Be.Stateless.Dsl.Configuration.Extensions;
 using Microsoft.Win32;
 
 namespace Be.Stateless.Dsl.Configuration

@@ -24,30 +24,38 @@ using Be.Stateless.Dsl.Configuration;
 using Be.Stateless.Dsl.Configuration.Resolver;
 using Be.Stateless.Dsl.Configuration.Xml.XPath;
 using Be.Stateless.Extensions;
+using Be.Stateless.Xml.XPath;
 
 namespace Be.Stateless.Xml.Extensions
 {
-	public static class XmlDocumentExtensions
+	internal static class XmlDocumentExtensions
 	{
-		public static XmlElement CreatePath(this XmlDocument document, string xpath)
+		internal static NamespaceAffinitiveXPathNavigator CreateDslNamespaceAffinitiveXPathNavigator(this XmlDocument document)
 		{
-			if (xpath.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(xpath), $"'{nameof(xpath)}' cannot be null or empty.");
-			return (XmlElement) new XPathExpression(xpath)
-				.GetLocationSteps()
-				.Aggregate<XPathLocationStep, XmlNode>(document, (current, locationStep) => current.SelectOrAppendElement(locationStep));
+			var navigator = document.CreateNamespaceAffinitiveXPathNavigator();
+			navigator.NamespaceManager.AddNamespace(Constants.NAMESPACE_URI_PREFIX, Constants.NAMESPACE_URI);
+			return navigator;
 		}
 
-		public static IEnumerable<string> GetTargetConfigurationFiles(this XmlDocument document, IEnumerable<IConfigurationFilesResolverStrategy> configurationFileResolvers)
+		internal static IEnumerable<string> GetTargetConfigurationFiles(this XmlDocument document, IEnumerable<IConfigurationFileResolverStrategy> configurationFileResolvers)
 		{
 			var monikerExtractor = new ConfigurationFileMonikersExtractor(document);
-			var configurationFileResolver = new ConfigurationFilesResolver(
-				configurationFileResolvers ?? new IConfigurationFilesResolverStrategy[] {
-					new ClrConfigurationFilesResolverStrategy(), new FilesConfigurationFilesResolverStrategy()
+			var configurationFileResolver = new ConfigurationFileResolver(
+				configurationFileResolvers ?? new IConfigurationFileResolverStrategy[] {
+					new ClrConfigurationFileResolverStrategy(), new ConfigurationFileResolverStrategy()
 				});
 
 			return monikerExtractor.Extract()
 				.SelectMany(configurationFileResolver.Resolve)
 				.Distinct();
+		}
+
+		internal static XmlElement PatchDomAfterXPath(this XmlDocument document, string xpath)
+		{
+			if (xpath.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(xpath), $"'{nameof(xpath)}' cannot be null or empty.");
+			return (XmlElement) new XPathExpression(xpath)
+				.GetLocationSteps()
+				.Aggregate<XPathLocationStep, XmlNode>(document, (current, locationStep) => current.SelectOrAppendElement(locationStep));
 		}
 	}
 }

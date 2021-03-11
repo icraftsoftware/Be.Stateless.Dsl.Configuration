@@ -34,12 +34,12 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		protected override void BeginProcessing()
 		{
-			ResolvedFilePaths = _path.SelectMany(ResolvePath).ToArray();
+			ResolvedFilePaths = Path.SelectMany(ResolvePath).ToArray();
 		}
 
 		protected override void ProcessRecord()
 		{
-			var resolverStrategies = _defaultConfigurationFileResolverStrategies.Concat(ConfigurationFileResolvers ?? Enumerable.Empty<IConfigurationFilesResolverStrategy>());
+			var resolverStrategies = _defaultConfigurationFileResolverStrategies.Concat(ConfigurationFileResolvers ?? Enumerable.Empty<IConfigurationFileResolverStrategy>());
 			WriteObject(ResolvedFilePaths.SelectMany(filePath => new ConfigurationSpecificationReader(filePath, resolverStrategies).Read()), true);
 		}
 
@@ -48,32 +48,25 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[Parameter(Mandatory = false)]
-		public IEnumerable<IConfigurationFilesResolverStrategy> ConfigurationFileResolvers { get; set; }
+		public IEnumerable<IConfigurationFileResolverStrategy> ConfigurationFileResolvers { get; set; }
 
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Cmdlet parameter")]
 		[Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = nameof(LiteralPath))]
 		[Alias("PSPath")]
 		[ValidateNotNullOrEmpty]
 		public string[] LiteralPath
 		{
-			get => _path;
+			get => Path;
 			set
 			{
-				_path = value;
+				Path = value;
 				_suppressWildcardExpansion = true;
 			}
 		}
 
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = nameof(Path))]
 		[ValidateNotNullOrEmpty]
-		public string[] Path
-		{
-			get => _path;
-			set => _path = value;
-		}
+		public string[] Path { get; set; }
 
 		private string[] ResolvedFilePaths { get; set; }
 
@@ -82,10 +75,9 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 			return _suppressWildcardExpansion ? (IEnumerable<string>) new[] { GetUnresolvedProviderPathFromPSPath(path) } : GetResolvedProviderPathFromPSPath(path, out _);
 		}
 
-		private static readonly IEnumerable<IConfigurationFilesResolverStrategy> _defaultConfigurationFileResolverStrategies
-			= new IConfigurationFilesResolverStrategy[] { new ClrConfigurationFilesResolverStrategy(), new FilesConfigurationFilesResolverStrategy() };
+		private static readonly IEnumerable<IConfigurationFileResolverStrategy> _defaultConfigurationFileResolverStrategies
+			= new IConfigurationFileResolverStrategy[] { new ClrConfigurationFileResolverStrategy(), new ConfigurationFileResolverStrategy() };
 
-		private string[] _path;
 		private bool _suppressWildcardExpansion;
 	}
 }

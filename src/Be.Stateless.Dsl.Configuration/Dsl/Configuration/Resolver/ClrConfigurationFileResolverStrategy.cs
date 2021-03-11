@@ -21,44 +21,36 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Be.Stateless.Text.RegularExpressions;
+using Be.Stateless.Text.RegularExpressions.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Resolver
 {
-	public class ClrConfigurationFilesResolverStrategy : IConfigurationFilesResolverStrategy
+	public class ClrConfigurationFileResolverStrategy : IConfigurationFileResolverStrategy
 	{
-		private static bool CanResolve(string moniker, out Match result)
-		{
-			result = _globalPattern.Match(moniker);
-			return result.Success;
-		}
-
-		private static IEnumerable<string> GetPaths(Version version, ClrBitness? clrBitness)
-		{
-			var bitnesses = !clrBitness.HasValue
-				? Enum.GetValues(typeof(ClrBitness)).OfType<ClrBitness>()
-				: new[] { clrBitness.Value };
-			return bitnesses.Select(b => ClrLocationHelper.GetPath(version, b));
-		}
-
-		#region IConfigurationFilesResolverStrategy Members
+		#region IConfigurationFileResolverStrategy Members
 
 		public bool CanResolve(string moniker)
 		{
-			return CanResolve(moniker, out _);
+			return TryResolve(moniker, out _);
 		}
 
 		public IEnumerable<string> Resolve(string moniker)
 		{
-			if (!CanResolve(moniker, out var result)) throw new ArgumentException($"The moniker '{moniker}' cannot be resolved.", nameof(moniker));
-			var version = result.Groups["version"].AsClrVersion();
-			var bitness = result.Groups["bitness"].AsClrBitness();
-			return GetPaths(version, bitness)
-				.Select(path => Path.Combine(path, "Config", result.Groups["file"].Value))
+			if (!TryResolve(moniker, out var match)) throw new ArgumentException($"The CLR moniker '{moniker}' cannot be resolved.", nameof(moniker));
+			var version = match.Groups["version"].AsClrVersion();
+			var bitness = match.Groups["bitness"].AsClrBitness();
+			return bitness.Select(b => ClrLocationHelper.GetPath(version, b))
+				.Select(path => Path.Combine(path, "Config", match.Groups["file"].Value))
 				.Distinct();
 		}
 
 		#endregion
+
+		private bool TryResolve(string moniker, out Match match)
+		{
+			match = _globalPattern.Match(moniker);
+			return match.Success;
+		}
 
 		private static readonly Regex _globalPattern = new Regex(@"^global:(?<version>clr\d)(?::(?<bitness>(32|64)bits))?:(?<file>(machine|web)\.config)$");
 	}

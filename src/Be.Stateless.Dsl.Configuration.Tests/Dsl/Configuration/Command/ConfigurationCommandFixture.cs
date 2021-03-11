@@ -25,7 +25,6 @@ using FluentAssertions;
 using Moq;
 using Moq.Protected;
 using Xunit;
-using static Be.Stateless.Unit.DelegateFactory;
 
 namespace Be.Stateless.Dsl.Configuration.Command
 {
@@ -43,18 +42,18 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		public void ExecuteThrowsWhenConfigurationElementIsNotFound()
 		{
 			var mockedCommand = new Mock<ConfigurationCommand>("/test");
-			Function(
+			FluentActions.Invoking(
 					() => mockedCommand.Object.Execute(
 						ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument())))
 				.Should().Throw<InvalidOperationException>()
-				.WithMessage("No configuration element found matching '/test'.");
+				.WithMessage("No configuration element matching '/test' has been found.");
 		}
 
 		[Fact]
 		public void ExecuteThrowsWhenDocumentIsNull()
 		{
 			var mockedCommand = new Mock<ConfigurationCommand>("/");
-			Function(() => mockedCommand.Object.Execute((XmlDocument) null))
+			FluentActions.Invoking(() => mockedCommand.Object.Execute((XmlDocument) null))
 				.Should().Throw<ArgumentNullException>()
 				.Which.ParamName.Should().Be("configurationDocument");
 		}
@@ -63,11 +62,11 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		public void ExecuteThrowsWhenSeveralNodesAreFound()
 		{
 			var mockedCommand = new Mock<ConfigurationCommand>("/configuration/appSettings/add");
-			Function(
+			FluentActions.Invoking(
 					() => mockedCommand.Object.Execute(
 						ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument())))
 				.Should().Throw<InvalidOperationException>()
-				.WithMessage("Multiple configuration elements found matching '/configuration/appSettings/add'.");
+				.WithMessage("More than one configuration element matching '/configuration/appSettings/add' have been found.");
 		}
 	}
 }
