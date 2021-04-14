@@ -46,14 +46,9 @@ namespace Be.Stateless.Dsl.Configuration.Command
 			return new ElementInsertionCommand(
 				(configurationElement.ParentNode ?? throw new InvalidOperationException("The parent node is null.")).CreateNavigator().BuildAbsolutePath(XPathFormat.Name),
 				new ElementSpecification(
-					configurationElement.LocalName,
 					configurationElement.NamespaceURI,
-					configurationElement.Attributes.OfType<XmlAttribute>().Select(
-						attribute => new AttributeSpecification {
-							Name = attribute.Name,
-							NamespaceUri = attribute.NamespaceURI,
-							Value = attribute.Value
-						}),
+					configurationElement.LocalName,
+					configurationElement.Attributes.OfType<XmlAttribute>().Select(attribute => new AttributeSpecification(attribute.NamespaceURI, attribute.Name, attribute.Value)),
 					configurationElement.CreateNavigator().BuildCurrentNodeRelativePath(XPathFormat.Name)));
 		}
 
@@ -67,11 +62,10 @@ namespace Be.Stateless.Dsl.Configuration.Command
 			return new ElementUpdateCommand(
 				command.ConfigurationElementSelector,
 				command.AttributeSpecifications.Select(
-					specification => new AttributeSpecification {
-						Name = specification.Name,
-						NamespaceUri = specification.NamespaceUri,
-						Value = configurationElement.GetAttribute(specification.Name, specification.NamespaceUri)
-					}));
+					specification => new AttributeSpecification(
+						specification.NamespaceUri,
+						specification.Name,
+						configurationElement.GetAttribute(specification.Name, specification.NamespaceUri))));
 		}
 
 		private static ElementDeletionCommand CreateElementDeletionCommand(XPathNavigator navigator)
@@ -83,12 +77,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		{
 			return new ElementInsertionCommand(
 				navigator.SelectSingleNode("..").BuildAbsolutePath(),
-				new ElementSpecification(
-					navigator.LocalName,
-					navigator.NamespaceURI,
-					navigator.GetAttributeUpdates(),
-					navigator.BuildCurrentNodeRelativePath()
-				));
+				new ElementSpecification(navigator.NamespaceURI, navigator.LocalName, navigator.GetAttributeUpdates(), navigator.BuildCurrentNodeRelativePath()));
 		}
 
 		private static ElementUpdateCommand CreateElementUpdateCommand(XPathNavigator navigator)
@@ -102,10 +91,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		{
 			var parentNavigator = navigator.Clone();
 			parentNavigator.MoveToParent();
-			return new ElementUpsertionCommand(
-				parentNavigator.BuildAbsolutePath(),
-				CreateElementInsertionCommand(navigator),
-				CreateElementUpdateCommand(navigator));
+			return new ElementUpsertionCommand(parentNavigator.BuildAbsolutePath(), CreateElementInsertionCommand(navigator), CreateElementUpdateCommand(navigator));
 		}
 	}
 }

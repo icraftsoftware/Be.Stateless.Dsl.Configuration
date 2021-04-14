@@ -16,61 +16,26 @@
 
 #endregion
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
 using System.Management.Automation;
 using Be.Stateless.Dsl.Configuration.Command;
-using Be.Stateless.Dsl.Configuration.Resolver;
-using Be.Stateless.Dsl.Configuration.Specification;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Cmdlet.")]
 	[Cmdlet(VerbsCommon.Remove, "ConfigurationElement", SupportsShouldProcess = true)]
 	[OutputType(typeof(void))]
-	public class RemoveConfigurationElement : System.Management.Automation.Cmdlet
+	public class RemoveConfigurationElement : ConfigurationElementCmdlet
 	{
 		#region Base Class Member Overrides
 
-		[SuppressMessage("ReSharper", "InvertIf")]
-		protected override void ProcessRecord()
+		protected override string Action => $"Deleting configuration element at '{XPath}'";
+
+		protected override ConfigurationCommand CreateCommand()
 		{
-			var targetConfigurationFiles = TargetConfigurationFile
-				.Split(new[] { Constants.FILE_MONIKER_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries)
-				.SelectMany(ConfigurationFileResolver.Default.Resolve)
-				.Distinct();
-			var command = new ElementDeletionCommand(XPath);
-			foreach (var specification in targetConfigurationFiles.Select(f => new ConfigurationSpecification(f, new[] { command }, false)))
-			{
-				var result = specification.Apply();
-				WriteDebug("Result:{Environment.NewLine}{result.Configuration.OuterXml}");
-				if (ShouldProcess($"'{specification.TargetConfigurationFilePath}'", $"Deleting configuration element at '{XPath}'"))
-				{
-					WriteVerbose($"Configuration element at '{XPath}' is being deleted from '{specification.TargetConfigurationFilePath}'...");
-					using (var fileStream = new FileStream(specification.TargetConfigurationFilePath, FileMode.Truncate))
-					{
-						result.Configuration.Save(fileStream);
-					}
-					WriteVerbose($"Configuration element at '{XPath}' has been deleted from '{specification.TargetConfigurationFilePath}'.");
-				}
-			}
+			return new ElementDeletionCommand(XPath);
 		}
 
 		#endregion
-
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
-		[Alias("ConfigurationFile", "ConfigFile", "File")]
-		[Parameter(Mandatory = true)]
-		[ValidateNotNullOrEmpty]
-		public string TargetConfigurationFile { get; set; }
-
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
-		[Parameter(Mandatory = true)]
-		[ValidateNotNullOrEmpty]
-		public string XPath { get; set; }
 	}
 }

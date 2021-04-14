@@ -25,6 +25,7 @@ using Be.Stateless.IO.Extensions;
 using Be.Stateless.Resources;
 using FluentAssertions;
 using Xunit;
+using static FluentAssertions.FluentActions;
 
 namespace Be.Stateless.Dsl.Configuration.Command
 {
@@ -33,7 +34,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		[Fact]
 		public void CreateFailedWhenActionIsMissing()
 		{
-			FluentActions.Invoking(
+			Invoking(
 					() => {
 						ConfigurationCommandFactory.Create(
 							ResourceManager
@@ -117,16 +118,16 @@ namespace Be.Stateless.Dsl.Configuration.Command
 				"/*[local-name()='configuration']/*[local-name()='system.serviceModel']/*[local-name()='extensions']/*[local-name()='behaviorExtensions']";
 			command.ConfigurationElementSelector.Should().Be(parentElementSelector);
 			var attributeSpecifications = new[] {
-				new AttributeSpecification { Name = "name", NamespaceUri = string.Empty, Value = "customBehavior" },
-				new AttributeSpecification { Name = "type", NamespaceUri = string.Empty, Value = "TypeValue" }
+				new AttributeSpecification(string.Empty, "name", "customBehavior"),
+				new AttributeSpecification(string.Empty, "type", "TypeValue")
 			};
 			const string elementSelector = "*[local-name()='add' and (@name = 'customBehavior')]";
 			command.InsertionCommand.Should().BeEquivalentTo(
 				new ElementInsertionCommand(
 					parentElementSelector,
 					new ElementSpecification(
-						"add",
 						string.Empty,
+						"add",
 						attributeSpecifications,
 						elementSelector)));
 			command.UpdateCommand.Should().BeEquivalentTo(new ElementUpdateCommand($"{parentElementSelector}/{elementSelector}", attributeSpecifications));
@@ -143,11 +144,11 @@ namespace Be.Stateless.Dsl.Configuration.Command
 				new ElementInsertionCommand(
 					"/configuration/appSettings",
 					new ElementSpecification(
-						"add",
 						string.Empty,
+						"add",
 						new[] {
-							new AttributeSpecification { Name = "key", Value = "first_setting", NamespaceUri = string.Empty },
-							new AttributeSpecification { Name = "value", Value = "", NamespaceUri = string.Empty }
+							new AttributeSpecification(string.Empty, "key", "first_setting"),
+							new AttributeSpecification(string.Empty, "value", string.Empty)
 						},
 						"add")),
 				options => options.IncludingAllDeclaredProperties());
@@ -159,7 +160,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 			var command = ConfigurationCommandFactory.CreateUndoCommandForInsertion(
 				new ElementInsertionCommand(
 					"/configuration",
-					new ElementSpecification("appSettings", string.Empty, Enumerable.Empty<AttributeSpecification>(), "appSettings")));
+					new ElementSpecification(string.Empty, "appSettings", Enumerable.Empty<AttributeSpecification>(), "appSettings")));
 			command.Should().BeEquivalentTo(new ElementDeletionCommand("/configuration/appSettings"));
 		}
 
@@ -173,14 +174,14 @@ namespace Be.Stateless.Dsl.Configuration.Command
 				new ElementUpdateCommand(
 					"/configuration/appSettings/add[@key='first_setting']",
 					new[] {
-						new AttributeSpecification { Name = "value", Value = "test", NamespaceUri = string.Empty }
+						new AttributeSpecification(string.Empty, "value", "test")
 					}),
 				elementToUpdate);
 			command.Should().BeEquivalentTo(
 				new ElementUpdateCommand(
 					"/configuration/appSettings/add[@key='first_setting']",
 					new[] {
-						new AttributeSpecification { Name = "value", Value = "", NamespaceUri = string.Empty }
+						new AttributeSpecification(string.Empty, "value", string.Empty)
 					}));
 		}
 	}

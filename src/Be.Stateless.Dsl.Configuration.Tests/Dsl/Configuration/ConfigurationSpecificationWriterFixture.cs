@@ -40,20 +40,12 @@ namespace Be.Stateless.Dsl.Configuration
 				new ConfigurationCommand[] {
 					new ElementInsertionCommand(
 						"/*[local-name()='configuration']",
-						new ElementSpecification("appSettings", string.Empty, Enumerable.Empty<AttributeSpecification>(), "*[local-name()='appSettings']")),
+						new ElementSpecification(string.Empty, "appSettings", Enumerable.Empty<AttributeSpecification>(), "*[local-name()='appSettings']")),
 					new ElementUpdateCommand(
 						"/*[local-name()='configuration']/*[local-name()='appSettings']/*[local-name()='add' and (@key = 'first_setting')]",
 						new[] {
-							new AttributeSpecification {
-								Name = "key",
-								Value = "first_setting",
-								NamespaceUri = string.Empty
-							},
-							new AttributeSpecification {
-								Name = "value",
-								Value = "updated-value",
-								NamespaceUri = string.Empty
-							}
+							new AttributeSpecification(string.Empty, "key", "first_setting"),
+							new AttributeSpecification(string.Empty, "value", "updated-value")
 						}),
 					new ElementDeletionCommand("/*[local-name()='configuration']/*[local-name()='appSettings']/*[local-name()='add' and (@key = 'second_setting')]")
 				},

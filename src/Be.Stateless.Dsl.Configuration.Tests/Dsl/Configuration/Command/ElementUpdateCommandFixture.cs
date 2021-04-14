@@ -34,11 +34,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 			var command = new ElementUpdateCommand(
 				"/configuration",
 				new[] {
-					new AttributeSpecification {
-						Name = "test",
-						NamespaceUri = "urn:test",
-						Value = "value"
-					}
+					new AttributeSpecification("urn:test", "test", "value")
 				});
 			command.Execute(document);
 			document.SelectSingleNode("/configuration/@*[local-name() = 'test' and namespace-uri()='urn:test']")
@@ -53,10 +49,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 			var command = new ElementUpdateCommand(
 				"/configuration/appSettings/add[@key='first_setting']",
 				new[] {
-					new AttributeSpecification {
-						Name = "value",
-						Value = "updated-value"
-					}
+					new AttributeSpecification("value", "updated-value")
 				});
 			command.Execute(document);
 			document.SelectSingleNode("/configuration/appSettings/add[@key='first_setting']/@value")

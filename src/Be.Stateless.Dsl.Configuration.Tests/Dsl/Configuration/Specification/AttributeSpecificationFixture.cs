@@ -29,10 +29,7 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 		[InlineData("<configuration value=''/>")]
 		public void ApplySucceeds(string xmlContent)
 		{
-			var attributeUpdate = new AttributeSpecification {
-				Name = "value",
-				Value = "test"
-			};
+			var attributeUpdate = new AttributeSpecification("value", "test");
 			var document = new XmlDocument();
 			document.LoadXml(xmlContent);
 

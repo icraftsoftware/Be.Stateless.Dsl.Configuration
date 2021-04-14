@@ -26,19 +26,19 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 {
 	public class ElementSpecification
 	{
-		public ElementSpecification(
-			string name,
-			string namespaceUri,
-			IEnumerable<AttributeSpecification> attributeUpdates,
-			string selector)
+		public ElementSpecification(string name, IEnumerable<AttributeSpecification> attributeUpdates, string selector)
 		{
 			if (name.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(name), $"'{nameof(name)}' cannot be null or empty.");
 			if (selector.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(selector), $"'{nameof(selector)}' cannot be null or empty.");
-
 			Name = name;
-			NamespaceUri = namespaceUri;
 			AttributeUpdates = attributeUpdates?.ToArray() ?? Array.Empty<AttributeSpecification>();
 			Selector = selector;
+		}
+
+		public ElementSpecification(string namespaceUri, string name, IEnumerable<AttributeSpecification> attributeUpdates, string selector)
+			: this(name, attributeUpdates, selector)
+		{
+			NamespaceUri = namespaceUri ?? throw new ArgumentNullException(nameof(namespaceUri));
 		}
 
 		public AttributeSpecification[] AttributeUpdates { get; }
@@ -52,7 +52,9 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 		public XmlElement Execute(XmlDocument configurationDocument)
 		{
 			if (configurationDocument == null) throw new ArgumentNullException(nameof(configurationDocument));
-			var element = configurationDocument.CreateElement(null, Name, NamespaceUri);
+			var element = NamespaceUri == null
+				? configurationDocument.CreateElement(Name)
+				: configurationDocument.CreateElement(Name, NamespaceUri);
 			foreach (var attributeUpdate in AttributeUpdates) attributeUpdate.Execute(element);
 			return element;
 		}

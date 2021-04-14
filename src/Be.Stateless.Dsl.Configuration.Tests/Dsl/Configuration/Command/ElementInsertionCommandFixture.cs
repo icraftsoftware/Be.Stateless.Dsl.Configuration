@@ -23,6 +23,7 @@ using Be.Stateless.IO.Extensions;
 using Be.Stateless.Resources;
 using FluentAssertions;
 using Xunit;
+using static FluentAssertions.FluentActions;
 
 namespace Be.Stateless.Dsl.Configuration.Command
 {
@@ -31,9 +32,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		[Fact]
 		public void ExecuteSucceeds()
 		{
-			var command = new ElementInsertionCommand(
-				"/configuration",
-				new ElementSpecification("test", null, null, "test"));
+			var command = new ElementInsertionCommand("/configuration", new ElementSpecification("test", null, "test"));
 			var document = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument());
 			command.Execute(document);
 			document.SelectSingleNode("/configuration/test")
@@ -47,17 +46,9 @@ namespace Be.Stateless.Dsl.Configuration.Command
 				"/configuration",
 				new ElementSpecification(
 					"test",
-					null,
 					new[] {
-						new AttributeSpecification {
-							Name = "test",
-							NamespaceUri = "urn:test",
-							Value = "value"
-						},
-						new AttributeSpecification {
-							Name = "test",
-							Value = "value"
-						}
+						new AttributeSpecification("urn:test", "test", "value1"),
+						new AttributeSpecification(string.Empty, "test", "value2")
 					},
 					"test"));
 
@@ -67,19 +58,17 @@ namespace Be.Stateless.Dsl.Configuration.Command
 				.Should().NotBeNull();
 			document.SelectSingleNode("/configuration/test/@*[local-name() = 'test' and namespace-uri()='urn:test']")
 				.Should().NotBeNull()
-				.And.Subject.Value.Should().Be("value");
+				.And.Subject.Value.Should().Be("value1");
 			document.SelectSingleNode("/configuration/test/@test")
 				.Should().NotBeNull()
-				.And.Subject.Value.Should().Be("value");
+				.And.Subject.Value.Should().Be("value2");
 		}
 
 		[Fact]
 		public void ExecuteThrowsWhenElementAlreadyExists()
 		{
-			var command = new ElementInsertionCommand(
-				"/configuration",
-				new ElementSpecification("appSettings", null, null, "appSettings"));
-			FluentActions.Invoking(() => command.Execute(ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument())))
+			var command = new ElementInsertionCommand("/configuration", new ElementSpecification("appSettings", null, "appSettings"));
+			Invoking(() => command.Execute(ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument())))
 				.Should().Throw<InvalidOperationException>()
 				.WithMessage("The configuration element already exists at '/configuration/appSettings'.");
 		}

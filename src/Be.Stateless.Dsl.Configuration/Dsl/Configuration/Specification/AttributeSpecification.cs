@@ -16,27 +16,38 @@
 
 #endregion
 
+using System;
 using System.Xml;
+using Be.Stateless.Extensions;
 using Be.Stateless.Xml.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Specification
 {
 	public sealed class AttributeSpecification
 	{
-		public string Name { get; set; }
+		public AttributeSpecification(string name, string value)
+		{
+			if (name.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(name), $"'{nameof(name)}' cannot be null or empty.");
+			Name = name;
+			Value = value ?? throw new ArgumentNullException(nameof(value));
+		}
 
-		public string NamespaceUri { get; set; }
+		public AttributeSpecification(string namespaceUri, string name, string value) : this(name, value)
+		{
+			NamespaceUri = namespaceUri ?? throw new ArgumentNullException(nameof(namespaceUri));
+		}
 
-		public string Value { get; set; }
+		public string Name { get; }
+
+		public string NamespaceUri { get; }
+
+		public string Value { get; }
 
 		public void Execute(XmlElement configurationElement)
 		{
-			var attribute = configurationElement.Attributes[Name, NamespaceUri];
-			if (attribute == null)
-			{
-				attribute = configurationElement.AppendAttribute(Name, NamespaceUri);
-				configurationElement.Attributes.Append(attribute);
-			}
+			var attribute = NamespaceUri == null
+				? configurationElement.GetAttributeNode(Name) ?? configurationElement.AppendAttribute(Name)
+				: configurationElement.GetAttributeNode(Name, NamespaceUri) ?? configurationElement.AppendAttribute(Name, NamespaceUri);
 			attribute.Value = Value;
 		}
 	}

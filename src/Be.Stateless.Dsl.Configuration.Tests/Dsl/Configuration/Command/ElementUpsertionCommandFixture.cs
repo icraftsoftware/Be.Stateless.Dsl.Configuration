@@ -33,12 +33,8 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		{
 			var command = new ElementUpsertionCommand(
 				"/configuration",
-				new ElementInsertionCommand(
-					"/configuration",
-					new ElementSpecification("test", null, null, "test")),
-				new ElementUpdateCommand(
-					"/configuration/test",
-					Array.Empty<AttributeSpecification>()));
+				new ElementInsertionCommand("/configuration", new ElementSpecification("test", null, "test")),
+				new ElementUpdateCommand("/configuration/test", Array.Empty<AttributeSpecification>()));
 			var document = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument());
 			command.Execute(document);
 			document.SelectSingleNode("/configuration/test")
@@ -50,12 +46,8 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		{
 			var command = new ElementUpsertionCommand(
 				"/configuration",
-				new ElementInsertionCommand(
-					"/configuration",
-					new ElementSpecification("appSettings", null, null, "appSettings")),
-				new ElementUpdateCommand(
-					"/configuration/appSettings",
-					new[] { new AttributeSpecification { Name = "test", Value = "value" } }));
+				new ElementInsertionCommand("/configuration", new ElementSpecification("appSettings", null, "appSettings")),
+				new ElementUpdateCommand("/configuration/appSettings", new[] { new AttributeSpecification("test", "value") }));
 			var document = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument());
 			command.Execute(document);
 			document.SelectSingleNode("/configuration/appSettings[@test='value']")

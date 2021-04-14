@@ -38,7 +38,7 @@ namespace Be.Stateless.Dsl.Configuration
 						new[] {
 							new ElementInsertionCommand(
 								"/configuration",
-								new ElementSpecification("system.net", string.Empty, new AttributeSpecification[0], "system.net"))
+								new ElementSpecification(string.Empty, "system.net", new AttributeSpecification[0], "system.net"))
 						},
 						false))
 				.Process(wipConfiguration);

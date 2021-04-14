@@ -18,40 +18,28 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Management.Automation;
 using Be.Stateless.Dsl.Configuration.Specification;
-using Be.Stateless.Dsl.Configuration.Specification.Extensions;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "PowerShell CmdLet.")]
 	[Cmdlet(VerbsData.Merge, nameof(ConfigurationSpecification), SupportsShouldProcess = true)]
 	[OutputType(typeof(void))]
-	public class MergeConfigurationSpecification : System.Management.Automation.Cmdlet
+	public class MergeConfigurationSpecification : ConfigurationSpecificationCmdlet
 	{
 		#region Base Class Member Overrides
 
-		[SuppressMessage("ReSharper", "InvertIf")]
 		protected override void ProcessRecord()
 		{
 			foreach (var specification in Specification)
 			{
-				var result = specification.Apply();
-				WriteDebug("Result:{Environment.NewLine}{result.Configuration.OuterXml}");
-				if (ShouldProcess($"'{specification.TargetConfigurationFilePath}'", $"Merging '{specification.SpecificationSourceFilePath}'"))
-				{
-					WriteVerbose($"Configuration '{specification.SpecificationSourceFilePath}' is being merged into '{specification.TargetConfigurationFilePath}'...");
-					// ReSharper disable once StringLiteralTypo
-					var token = DateTime.UtcNow.ToString("yyyyMMddHHmmssfffffff");
-					if (CreateBackup) File.Copy(specification.TargetConfigurationFilePath, $"{specification.TargetConfigurationFilePath}.{token}.bak");
-					using (var fileStream = new FileStream(specification.TargetConfigurationFilePath, FileMode.Truncate))
-					{
-						result.Configuration.Save(fileStream);
-					}
-					if (CreateUndo) result.UndoConfigurationSpecification.AsXmlDocument().Save($"{specification.SpecificationSourceFilePath}.{token}.undo");
-					WriteVerbose($"Configuration '{specification.SpecificationSourceFilePath}' has been merged into '{specification.TargetConfigurationFilePath}'.");
-				}
+				var token = DateTime.UtcNow.ToString(TOKEN_FORMAT);
+				ProcessConfigurationSpecification(
+					$"Merging '{specification.SpecificationSourceFilePath}'",
+					specification,
+					CreateBackup ? $"{specification.TargetConfigurationFilePath}.{token}.bak" : null,
+					CreateUndo ? $"{specification.SpecificationSourceFilePath}.{token}.undo" : null);
 			}
 		}
 
@@ -72,5 +60,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		[Parameter(Mandatory = true, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, Position = 1)]
 		[ValidateNotNullOrEmpty]
 		public ConfigurationSpecification[] Specification { get; set; }
+
+		private const string TOKEN_FORMAT = "yyyyMMddHHmmssfffffff";
 	}
 }

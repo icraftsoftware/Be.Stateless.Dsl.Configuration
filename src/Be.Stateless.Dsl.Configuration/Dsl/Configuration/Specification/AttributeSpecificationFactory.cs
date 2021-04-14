@@ -28,12 +28,7 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 			if (navigator == null) throw new ArgumentNullException(nameof(navigator));
 			if (navigator.NodeType != XPathNodeType.Attribute)
 				throw new ArgumentException($"The navigator's current node must be an attribute, but it is a '{navigator.NodeType}'.", nameof(navigator));
-
-			return new AttributeSpecification {
-				Name = navigator.LocalName,
-				NamespaceUri = navigator.NamespaceURI,
-				Value = navigator.Value
-			};
+			return new AttributeSpecification(navigator.NamespaceURI, navigator.LocalName, navigator.Value);
 		}
 	}
 }

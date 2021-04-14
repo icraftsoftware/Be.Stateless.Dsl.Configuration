@@ -16,49 +16,26 @@
 
 #endregion
 
-using System;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
 using System.Management.Automation;
+using Be.Stateless.Collections.Extensions;
 using Be.Stateless.Dsl.Configuration.Command;
-using Be.Stateless.Dsl.Configuration.Resolver;
-using Be.Stateless.Dsl.Configuration.Specification;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Cmdlet.")]
 	[Cmdlet(VerbsCommon.Set, "ConfigurationElement", SupportsShouldProcess = true)]
 	[OutputType(typeof(void))]
-	public class SetConfigurationElement : System.Management.Automation.Cmdlet
+	public class SetConfigurationElement : ConfigurationElementCmdlet
 	{
 		#region Base Class Member Overrides
 
-		[SuppressMessage("ReSharper", "InvertIf")]
-		protected override void ProcessRecord()
+		protected override string Action => $"Updating configuration element at '{XPath}'";
+
+		protected override ConfigurationCommand CreateCommand()
 		{
-			var targetConfigurationFiles = TargetConfigurationFile
-				.Split(new[] { Constants.FILE_MONIKER_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries)
-				.SelectMany(ConfigurationFileResolver.Default.Resolve)
-				.Distinct();
-			var command = new ElementUpdateCommand(
-				XPath,
-				Attributes.Keys.Cast<string>().Select(name => new AttributeSpecification { Name = name, Value = (string) Attributes[name] }));
-			foreach (var specification in targetConfigurationFiles.Select(f => new ConfigurationSpecification(f, new[] { command }, false)))
-			{
-				var result = specification.Apply();
-				WriteDebug("Result:{Environment.NewLine}{result.Configuration.OuterXml}");
-				if (ShouldProcess($"'{specification.TargetConfigurationFilePath}'", $"Updating configuration element at '{XPath}'"))
-				{
-					WriteVerbose($"Configuration element at '{XPath}' is being updated in '{specification.TargetConfigurationFilePath}'...");
-					using (var fileStream = new FileStream(specification.TargetConfigurationFilePath, FileMode.Truncate))
-					{
-						result.Configuration.Save(fileStream);
-					}
-					WriteVerbose($"Configuration element at '{XPath}' has been updated in '{specification.TargetConfigurationFilePath}'.");
-				}
-			}
+			return new ElementUpdateCommand(XPath, Attributes.AsAttributeSpecifications());
 		}
 
 		#endregion
@@ -69,18 +46,5 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		[Parameter(Mandatory = false)]
 		[ValidateNotNullOrEmpty]
 		public Hashtable Attributes { get; set; }
-
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
-		[Alias("ConfigurationFile", "ConfigFile", "File")]
-		[Parameter(Mandatory = true)]
-		[ValidateNotNullOrEmpty]
-		public string TargetConfigurationFile { get; set; }
-
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
-		[Parameter(Mandatory = true)]
-		[ValidateNotNullOrEmpty]
-		public string XPath { get; set; }
 	}
 }
