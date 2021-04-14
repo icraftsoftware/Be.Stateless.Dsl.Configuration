@@ -27,6 +27,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "PowerShell CmdLet.")]
 	[Cmdlet(VerbsData.Merge, nameof(ConfigurationSpecification), SupportsShouldProcess = true)]
+	[OutputType(typeof(void))]
 	public class MergeConfigurationSpecification : System.Management.Automation.Cmdlet
 	{
 		#region Base Class Member Overrides
@@ -37,12 +38,10 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 			foreach (var specification in Specification)
 			{
 				var result = specification.Apply();
-				if (ShouldProcess(
-					$"Merging '{specification.SpecificationSourceFilePath}' on target '{specification.TargetConfigurationFilePath}'. Result:{Environment.NewLine}{result.Configuration.OuterXml}",
-					string.Empty,
-					string.Empty))
+				WriteDebug("Result:{Environment.NewLine}{result.Configuration.OuterXml}");
+				if (ShouldProcess($"'{specification.TargetConfigurationFilePath}'", $"Merging '{specification.SpecificationSourceFilePath}'"))
 				{
-					WriteVerbose($"Merging configuration '{specification.SpecificationSourceFilePath}' into '{specification.TargetConfigurationFilePath}'");
+					WriteVerbose($"Configuration '{specification.SpecificationSourceFilePath}' is being merged into '{specification.TargetConfigurationFilePath}'...");
 					// ReSharper disable once StringLiteralTypo
 					var token = DateTime.UtcNow.ToString("yyyyMMddHHmmssfffffff");
 					if (CreateBackup) File.Copy(specification.TargetConfigurationFilePath, $"{specification.TargetConfigurationFilePath}.{token}.bak");
@@ -51,7 +50,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 						result.Configuration.Save(fileStream);
 					}
 					if (CreateUndo) result.UndoConfigurationSpecification.AsXmlDocument().Save($"{specification.SpecificationSourceFilePath}.{token}.undo");
-					WriteVerbose($"'{specification.TargetConfigurationFilePath}' has been updated.");
+					WriteVerbose($"Configuration '{specification.SpecificationSourceFilePath}' has been merged into '{specification.TargetConfigurationFilePath}'.");
 				}
 			}
 		}

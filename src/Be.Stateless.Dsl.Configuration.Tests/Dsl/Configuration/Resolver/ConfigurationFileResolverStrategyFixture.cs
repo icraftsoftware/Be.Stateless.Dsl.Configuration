@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Reflection;
 using FluentAssertions;
 using Xunit;
 
@@ -24,9 +25,8 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 	public class ConfigurationFileResolverStrategyFixture
 	{
 		[Theory]
-		[InlineData(@"file:\\c:\web.config")]
-		[InlineData(@"file:/c:\web.config")]
-		[InlineData(@"file://")]
+		[InlineData(@"c:\web.config")]
+		[InlineData(@"c:/web.config")]
 		public void CannotResolve(string moniker)
 		{
 			new ConfigurationFileResolverStrategy().CanResolve(moniker).Should().BeFalse();
@@ -35,7 +35,13 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 		[Fact]
 		public void CanResolve()
 		{
-			new ConfigurationFileResolverStrategy().CanResolve(@"file://c:\web.config").Should().BeTrue();
+			new ConfigurationFileResolverStrategy().CanResolve(Assembly.GetExecutingAssembly().Location).Should().BeTrue();
+		}
+
+		[Fact]
+		public void Resolve()
+		{
+			new ConfigurationFileResolverStrategy().Resolve(Assembly.GetExecutingAssembly().Location).Should().BeEquivalentTo(Assembly.GetExecutingAssembly().Location);
 		}
 	}
 }

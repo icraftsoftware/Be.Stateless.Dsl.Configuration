@@ -26,42 +26,25 @@ namespace Be.Stateless.Dsl.Configuration
 {
 	public class ConfigurationSpecificationProcessor
 	{
-		#region Nested Type: Result
-
-		public class Result
-		{
-			internal Result(XmlDocument configuration, ConfigurationSpecification undoConfigurationSpecification)
-			{
-				Configuration = configuration;
-				UndoConfigurationSpecification = undoConfigurationSpecification;
-			}
-
-			public XmlDocument Configuration { get; }
-
-			public ConfigurationSpecification UndoConfigurationSpecification { get; }
-		}
-
-		#endregion
-
 		public ConfigurationSpecificationProcessor(ConfigurationSpecification configurationSpecification)
 		{
 			_configurationSpecification = configurationSpecification;
 		}
 
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Assert that the enumeration is not null.")]
-		public Result Process()
+		public ConfigurationSpecificationResult Process()
 		{
 			return Process(_configurationSpecification.TargetConfigurationFilePath.AsXmlDocument());
 		}
 
-		internal Result Process(XmlDocument wipConfiguration)
+		internal ConfigurationSpecificationResult Process(XmlDocument wipConfiguration)
 		{
 			var commands = _configurationSpecification.IsUndo ? _configurationSpecification.Commands.Reverse() : _configurationSpecification.Commands;
 			var undoConfigurationSpecification = new ConfigurationSpecification(
 				_configurationSpecification.TargetConfigurationFilePath,
 				commands.Select(command => command.Execute(wipConfiguration)).ToArray(),
 				true);
-			return new Result(wipConfiguration, undoConfigurationSpecification);
+			return new ConfigurationSpecificationResult(wipConfiguration, undoConfigurationSpecification);
 		}
 
 		private readonly ConfigurationSpecification _configurationSpecification;

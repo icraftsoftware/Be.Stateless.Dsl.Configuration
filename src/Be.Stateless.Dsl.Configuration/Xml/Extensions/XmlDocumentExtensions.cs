@@ -39,12 +39,12 @@ namespace Be.Stateless.Xml.Extensions
 
 		internal static IEnumerable<string> GetTargetConfigurationFiles(this XmlDocument document, IEnumerable<IConfigurationFileResolverStrategy> configurationFileResolvers)
 		{
-			var monikerExtractor = new ConfigurationFileMonikersExtractor(document);
 			var configurationFileResolver = new ConfigurationFileResolver(
 				configurationFileResolvers ?? new IConfigurationFileResolverStrategy[] {
 					new ClrConfigurationFileResolverStrategy(), new ConfigurationFileResolverStrategy()
 				});
 
+			var monikerExtractor = new ConfigurationFileMonikersExtractor(document);
 			return monikerExtractor.Extract()
 				.SelectMany(configurationFileResolver.Resolve)
 				.Distinct();

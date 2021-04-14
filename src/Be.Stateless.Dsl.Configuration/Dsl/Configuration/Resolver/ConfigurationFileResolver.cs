@@ -25,6 +25,11 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 {
 	public sealed class ConfigurationFileResolver
 	{
+		public static ConfigurationFileResolver Default { get; } = new ConfigurationFileResolver(
+			new IConfigurationFileResolverStrategy[] {
+				new ClrConfigurationFileResolverStrategy(), new ConfigurationFileResolverStrategy()
+			});
+
 		public ConfigurationFileResolver(IEnumerable<IConfigurationFileResolverStrategy> resolverStrategies)
 		{
 			_resolverStrategies = resolverStrategies?.ToArray() ?? Array.Empty<IConfigurationFileResolverStrategy>();

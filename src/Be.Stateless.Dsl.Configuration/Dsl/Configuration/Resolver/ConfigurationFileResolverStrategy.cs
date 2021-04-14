@@ -18,7 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Be.Stateless.Dsl.Configuration.Resolver
 {
@@ -28,23 +28,15 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 
 		public bool CanResolve(string moniker)
 		{
-			return TryResolve(moniker, out _);
+			return File.Exists(moniker);
 		}
 
 		public IEnumerable<string> Resolve(string moniker)
 		{
-			if (!TryResolve(moniker, out var match)) throw new ArgumentException($"The moniker '{moniker}' cannot be converted.", nameof(moniker));
-			return new[] { match.Groups["path"].Value };
+			if (!File.Exists(moniker)) throw new ArgumentException($"The configuration file '{moniker}' cannot be found.", nameof(moniker));
+			return new[] { moniker };
 		}
 
 		#endregion
-
-		private bool TryResolve(string moniker, out Match match)
-		{
-			match = _filePathPattern.Match(moniker);
-			return match.Success;
-		}
-
-		private static readonly Regex _filePathPattern = new Regex(@"^file://(?<path>.+)$");
 	}
 }

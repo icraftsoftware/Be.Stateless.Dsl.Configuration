@@ -44,12 +44,20 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 			new ClrConfigurationFileResolverStrategy().CanResolve(fileUri).Should().BeTrue();
 		}
 
-		[Theory]
-		[InlineData("global:clr4:32bits:machine.config", 1)]
-		[InlineData("global:clr4:machine.config", 2)]
-		public void ResolveSucceeds(string moniker, int expectedCount)
+		[Fact]
+		public void ResolveMultipleFiles()
 		{
-			new ClrConfigurationFileResolverStrategy().Resolve(moniker).Should().HaveCount(expectedCount);
+			new ClrConfigurationFileResolverStrategy().Resolve("global:clr4:machine.config")
+				.Should().BeEquivalentTo(
+					@"C:\Windows\Microsoft.NET\Framework\v4.0.30319\Config\machine.config",
+					@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\machine.config");
+		}
+
+		[Fact]
+		public void ResolveSingleFile()
+		{
+			new ClrConfigurationFileResolverStrategy().Resolve("global:clr4:32bits:machine.config")
+				.Should().BeEquivalentTo(@"C:\Windows\Microsoft.NET\Framework\v4.0.30319\Config\machine.config");
 		}
 	}
 }

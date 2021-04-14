@@ -37,8 +37,8 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 
 			Name = name;
 			NamespaceUri = namespaceUri;
-			Selector = selector;
 			AttributeUpdates = attributeUpdates?.ToArray() ?? Array.Empty<AttributeSpecification>();
+			Selector = selector;
 		}
 
 		public AttributeSpecification[] AttributeUpdates { get; }

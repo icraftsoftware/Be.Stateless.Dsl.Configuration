@@ -37,7 +37,6 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 				attribute = configurationElement.AppendAttribute(Name, NamespaceUri);
 				configurationElement.Attributes.Append(attribute);
 			}
-
 			attribute.Value = Value;
 		}
 	}

@@ -41,5 +41,10 @@ namespace Be.Stateless.Dsl.Configuration.Specification
 		public string SpecificationSourceFilePath { get; }
 
 		public string TargetConfigurationFilePath { get; }
+
+		public ConfigurationSpecificationResult Apply()
+		{
+			return new ConfigurationSpecificationProcessor(this).Process();
+		}
 	}
 }

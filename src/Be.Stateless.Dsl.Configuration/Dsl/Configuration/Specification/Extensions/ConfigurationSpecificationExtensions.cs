@@ -20,15 +20,9 @@ using System.Xml;
 
 namespace Be.Stateless.Dsl.Configuration.Specification.Extensions
 {
-	public static class ConfigurationSpecificationExtensions
+	internal static class ConfigurationSpecificationExtensions
 	{
-		public static ConfigurationSpecificationProcessor.Result Apply(this ConfigurationSpecification specification)
-		{
-			var processor = new ConfigurationSpecificationProcessor(specification);
-			return processor.Process();
-		}
-
-		public static XmlDocument AsXmlDocument(this ConfigurationSpecification specification)
+		internal static XmlDocument AsXmlDocument(this ConfigurationSpecification specification)
 		{
 			var document = new XmlDocument();
 			var writer = new ConfigurationSpecificationWriter(document);

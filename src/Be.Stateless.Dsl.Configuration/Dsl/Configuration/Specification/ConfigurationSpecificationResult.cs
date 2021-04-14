@@ -16,13 +16,20 @@
 
 #endregion
 
-namespace Be.Stateless.Dsl.Configuration
+using System.Xml;
+
+namespace Be.Stateless.Dsl.Configuration.Specification
 {
-	internal static class Constants
+	public class ConfigurationSpecificationResult
 	{
-		internal const char DISCRIMINANT_SEPARATOR = ' ';
-		internal const char FILE_MONIKER_SEPARATOR = '|';
-		internal const string NAMESPACE_URI = "urn:schemas.stateless.be:dsl:configuration:annotations:2020";
-		internal const string NAMESPACE_URI_PREFIX = "config";
+		internal ConfigurationSpecificationResult(XmlDocument configuration, ConfigurationSpecification undoConfigurationSpecification)
+		{
+			Configuration = configuration;
+			UndoConfigurationSpecification = undoConfigurationSpecification;
+		}
+
+		public XmlDocument Configuration { get; }
+
+		public ConfigurationSpecification UndoConfigurationSpecification { get; }
 	}
 }
