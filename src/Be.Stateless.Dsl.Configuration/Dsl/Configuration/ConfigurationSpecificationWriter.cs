@@ -43,7 +43,7 @@ namespace Be.Stateless.Dsl.Configuration
 				XmlAttributeNames.FILES,
 				Constants.NAMESPACE_URI,
 				Constants.NAMESPACE_URI_PREFIX,
-				$"file://{configurationSpecification.TargetConfigurationFilePath}");
+				configurationSpecification.TargetConfigurationFilePath);
 			_configurationSpecificationDocument.DocumentElement.AppendAttribute(
 				XmlAttributeNames.UNDO,
 				Constants.NAMESPACE_URI,

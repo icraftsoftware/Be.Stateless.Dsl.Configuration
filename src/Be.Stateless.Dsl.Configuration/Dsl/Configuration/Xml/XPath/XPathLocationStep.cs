@@ -70,7 +70,7 @@ namespace Be.Stateless.Dsl.Configuration.Xml.XPath
 		private const string ATTRIBUTE_VALUE_GROUP = "attributeValue";
 		private const string NAME_GROUP = "name";
 
-		private static readonly Regex _xpathLocationStepPattern
-			= new Regex(@"^(?:\*|(?:(?<prefix>\w+):)?(?<name>\w+))(?:\[(?:\(?\@?(?<attributeName>[\w-]+)(?:\(\))?\s?=\s?'(?<attributeValue>[^']*)'(?:and|or|\s|\))*)+\])?$");
+		private static readonly Regex _xpathLocationStepPattern =
+			new(@"^(?:\*|(?:(?<prefix>\w+):)?(?<name>\w+))(?:\[(?:\(?\@?(?<attributeName>[\w-]+)(?:\(\))?\s?=\s?'(?<attributeValue>[^']*)'(?:and|or|\s|\))*)+\])?$");
 	}
 }

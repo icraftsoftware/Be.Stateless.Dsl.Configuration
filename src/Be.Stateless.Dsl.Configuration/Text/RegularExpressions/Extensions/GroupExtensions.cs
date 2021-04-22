@@ -44,6 +44,6 @@ namespace Be.Stateless.Text.RegularExpressions.Extensions
 				};
 		}
 
-		private static readonly Regex _clrMonikerPattern = new Regex(@"^clr(?<major>\d)");
+		private static readonly Regex _clrMonikerPattern = new(@"^clr(?<major>\d)");
 	}
 }

@@ -38,7 +38,7 @@ namespace Be.Stateless.Dsl.Configuration.Xml.XPath
 		}
 
 		private const string LOCATION_STEP_GROUP_NAME = "step";
-		private static readonly Regex _xpathPattern = new Regex($@"^(?:/(?<{LOCATION_STEP_GROUP_NAME}>(?:\*|\w+)(?:\[[^/]+\])?))+$");
+		private static readonly Regex _xpathPattern = new($@"^(?:/(?<{LOCATION_STEP_GROUP_NAME}>(?:\*|\w+)(?:\[[^/]+\])?))+$");
 		private readonly string _value;
 	}
 }

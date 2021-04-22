@@ -72,7 +72,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		private IEnumerable<string> ResolvePath(string path)
 		{
-			return _suppressWildcardExpansion ? (IEnumerable<string>) new[] { GetUnresolvedProviderPathFromPSPath(path) } : GetResolvedProviderPathFromPSPath(path, out _);
+			return _suppressWildcardExpansion ? new[] { GetUnresolvedProviderPathFromPSPath(path) } : GetResolvedProviderPathFromPSPath(path, out _);
 		}
 
 		private static readonly IEnumerable<IConfigurationFileResolverStrategy> _defaultConfigurationFileResolverStrategies

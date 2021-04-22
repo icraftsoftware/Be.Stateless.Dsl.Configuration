@@ -52,6 +52,6 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 			return match.Success;
 		}
 
-		private static readonly Regex _globalPattern = new Regex(@"^global:(?<version>clr\d)(?::(?<bitness>(32|64)bits))?:(?<file>(machine|web)\.config)$");
+		private static readonly Regex _globalPattern = new(@"^global:(?<version>clr\d)(?::(?<bitness>(32|64)bits))?:(?<file>(machine|web)\.config)$");
 	}
 }
