@@ -15,11 +15,20 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+   <PropertyGroup>
+      <GeneratePackageOnBuild Condition=" '$(GeneratePackageOnBuild)' == '' ">false</GeneratePackageOnBuild>
+      <IsPackable>true</IsPackable>
+      <PackageId>$(AssemblyName)</PackageId>
+      <PackageDescription>$(Description)</PackageDescription>
+      <!--<PackageIconUrl>icon url prop</PackageIconUrl>-->
+      <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+      <!--<PackageReleaseNotes>release notes prop</PackageReleaseNotes>-->
+      <PackageTags>dsl configuration</PackageTags>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
