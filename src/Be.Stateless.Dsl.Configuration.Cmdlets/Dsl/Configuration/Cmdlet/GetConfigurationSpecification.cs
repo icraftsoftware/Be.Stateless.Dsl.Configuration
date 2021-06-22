@@ -48,7 +48,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[Parameter(Mandatory = false)]
-		public IEnumerable<IConfigurationFileResolverStrategy> ConfigurationFileResolvers { get; set; }
+		public IConfigurationFileResolverStrategy[] ConfigurationFileResolvers { get; set; }
 
 		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Cmdlet parameter")]
 		[Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = nameof(LiteralPath))]
