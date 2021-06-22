@@ -6,6 +6,11 @@
 
 Configuration DSL library and PowerShell commands for general purpose configuration file edition.
 
+## NuGet Packages
+
+[![NuGet Version](https://img.shields.io/nuget/v/Be.Stateless.Dsl.Configuration.svg?label=Be.Stateless.Dsl.Configuration&style=flat)](https://www.nuget.org/packages/Be.Stateless.Dsl.Configuration/)
+
+
 ## Module Installation
 
 Notice that to be able to install this PowerShell module right from the PowerShell Gallery you will need to trust the certificate that was used to sign it. Run the following PowerShell commands (they merely download and install the certificate's public key in the 'Trusted People' store underneath the 'Local Machine' certifcate store):
