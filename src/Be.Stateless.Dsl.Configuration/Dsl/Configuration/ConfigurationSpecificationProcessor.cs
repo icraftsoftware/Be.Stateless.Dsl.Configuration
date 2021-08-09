@@ -44,7 +44,7 @@ namespace Be.Stateless.Dsl.Configuration
 				_configurationSpecification.TargetConfigurationFilePath,
 				commands.Select(command => command.Execute(wipConfiguration)).ToArray(),
 				true);
-			return new ConfigurationSpecificationResult(wipConfiguration, undoConfigurationSpecification);
+			return new(wipConfiguration, undoConfigurationSpecification);
 		}
 
 		private readonly ConfigurationSpecification _configurationSpecification;

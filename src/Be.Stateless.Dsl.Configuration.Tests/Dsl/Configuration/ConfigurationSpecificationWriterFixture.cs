@@ -40,7 +40,7 @@ namespace Be.Stateless.Dsl.Configuration
 				new ConfigurationCommand[] {
 					new ElementInsertionCommand(
 						"/*[local-name()='configuration']",
-						new ElementSpecification(string.Empty, "appSettings", Enumerable.Empty<AttributeSpecification>(), "*[local-name()='appSettings']")),
+						new(string.Empty, "appSettings", Enumerable.Empty<AttributeSpecification>(), "*[local-name()='appSettings']")),
 					new ElementUpdateCommand(
 						"/*[local-name()='configuration']/*[local-name()='appSettings']/*[local-name()='add' and (@key = 'first_setting')]",
 						new[] {

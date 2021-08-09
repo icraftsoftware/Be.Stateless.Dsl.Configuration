@@ -21,7 +21,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using Be.Stateless.Collections.Extensions;
 using Be.Stateless.Dsl.Configuration.Command;
-using Be.Stateless.Dsl.Configuration.Specification;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
@@ -38,7 +37,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		{
 			return new ElementInsertionCommand(
 				XPath,
-				new ElementSpecification(ElementName, Attributes.AsAttributeSpecifications(), ElementName + Attributes.AsAttributeDiscriminatingPredicate()));
+				new(ElementName, Attributes.AsAttributeSpecifications(), ElementName + Attributes.AsAttributeDiscriminatingPredicate()));
 		}
 
 		#endregion

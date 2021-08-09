@@ -35,11 +35,12 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 			foreach (var specification in Specification)
 			{
 				var token = DateTime.UtcNow.ToString(TOKEN_FORMAT);
-				ProcessConfigurationSpecification(
+				var result = ProcessConfigurationSpecification(
 					$"Merging '{specification.SpecificationSourceFilePath}'",
 					specification,
 					CreateBackup ? $"{specification.TargetConfigurationFilePath}.{token}.bak" : null,
 					CreateUndo ? $"{specification.SpecificationSourceFilePath}.{token}.undo" : null);
+				if (PassThru) WriteObject(result);
 			}
 		}
 
@@ -54,6 +55,11 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
 		[Parameter]
 		public SwitchParameter CreateUndo { get; set; }
+
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
+		[Parameter]
+		public SwitchParameter PassThru { get; set; }
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]

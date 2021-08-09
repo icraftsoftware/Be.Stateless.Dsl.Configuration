@@ -125,7 +125,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 			command.InsertionCommand.Should().BeEquivalentTo(
 				new ElementInsertionCommand(
 					parentElementSelector,
-					new ElementSpecification(
+					new(
 						string.Empty,
 						"add",
 						attributeSpecifications,
@@ -143,7 +143,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 			command.Should().BeEquivalentTo(
 				new ElementInsertionCommand(
 					"/configuration/appSettings",
-					new ElementSpecification(
+					new(
 						string.Empty,
 						"add",
 						new[] {
@@ -158,9 +158,9 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		public void CreateUndoCommandSucceedsForInsertion()
 		{
 			var command = ConfigurationCommandFactory.CreateUndoCommandForInsertion(
-				new ElementInsertionCommand(
+				new(
 					"/configuration",
-					new ElementSpecification(string.Empty, "appSettings", Enumerable.Empty<AttributeSpecification>(), "appSettings")));
+					new(string.Empty, "appSettings", Enumerable.Empty<AttributeSpecification>(), "appSettings")));
 			command.Should().BeEquivalentTo(new ElementDeletionCommand("/configuration/appSettings"));
 		}
 
@@ -171,7 +171,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 				.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument())
 				.SelectSingleNode("/configuration/appSettings/add[@key='first_setting']") as XmlElement;
 			var command = ConfigurationCommandFactory.CreateUndoCommandForUpdate(
-				new ElementUpdateCommand(
+				new(
 					"/configuration/appSettings/add[@key='first_setting']",
 					new[] {
 						new AttributeSpecification(string.Empty, "value", "test")

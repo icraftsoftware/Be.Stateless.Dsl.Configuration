@@ -16,7 +16,10 @@
 
 #endregion
 
+using System;
+using System.Linq;
 using System.Reflection;
+using System.Xml;
 using Be.Stateless.Dsl.Configuration.Command;
 using Be.Stateless.Dsl.Configuration.Specification;
 using Be.Stateless.IO.Extensions;
@@ -33,12 +36,12 @@ namespace Be.Stateless.Dsl.Configuration
 		{
 			var wipConfiguration = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument());
 			var result = new ConfigurationSpecificationProcessor(
-					new ConfigurationSpecification(
+					new(
 						"non-existent-file",
 						new[] {
 							new ElementInsertionCommand(
 								"/configuration",
-								new ElementSpecification(string.Empty, "system.net", new AttributeSpecification[0], "system.net"))
+								new(string.Empty, "system.net", Array.Empty<AttributeSpecification>(), "system.net"))
 						},
 						false))
 				.Process(wipConfiguration);
@@ -50,7 +53,7 @@ namespace Be.Stateless.Dsl.Configuration
 		{
 			var wipConfiguration = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-modified.config", stream => stream.AsXmlDocument());
 			var result = new ConfigurationSpecificationProcessor(
-					new ConfigurationSpecification(
+					new(
 						"non-existent-file",
 						new[] {
 							new ElementDeletionCommand("/configuration/system.net"),
@@ -60,7 +63,7 @@ namespace Be.Stateless.Dsl.Configuration
 						},
 						true))
 				.Process(wipConfiguration);
-			result.Configuration.SelectNodes("/configuration/*").Should().BeEmpty();
+			result.Configuration.SelectNodes("/configuration/*")!.Cast<XmlNode>().Should().BeEmpty();
 		}
 	}
 }

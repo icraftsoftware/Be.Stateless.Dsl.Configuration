@@ -33,7 +33,7 @@ namespace Be.Stateless.Dsl.Configuration.Xml.XPath
 				var attributeName = result.Groups[ATTRIBUTE_NAME_GROUP].Captures[index].Value;
 				if (attributeName == XpathFunctionNames.LOCAL_NAME) continue;
 
-				yield return new AttributeSpecification(attributeName, result.Groups[ATTRIBUTE_VALUE_GROUP].Captures[index].Value);
+				yield return new(attributeName, result.Groups[ATTRIBUTE_VALUE_GROUP].Captures[index].Value);
 			}
 		}
 

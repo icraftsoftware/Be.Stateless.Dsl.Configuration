@@ -1,14 +1,14 @@
 # Be.Stateless.Dsl.Configuration
 
 [![Build Status](https://dev.azure.com/icraftsoftware/be.stateless/_apis/build/status/Be.Stateless.Dsl.Configuration%20Manual%20Release?branchName=master)](https://dev.azure.com/icraftsoftware/be.stateless/_build/latest?definitionId=79&branchName=master)
-[![GitHub Release](https://img.shields.io/github/v/release/icraftsoftware/Be.Stateless.Dsl.Configuration?label=Release)](https://github.com/icraftsoftware/Be.Stateless.Dsl.Configuration/releases/latest)
-[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/Dsl.Configuration.svg?style=flat)](https://www.powershellgallery.com/packages/Dsl.Configuration/)
+[![GitHub Release](https://img.shields.io/github/v/release/icraftsoftware/Be.Stateless.Dsl.Configuration?label=Release&logo=github)](https://github.com/icraftsoftware/Be.Stateless.Dsl.Configuration/releases/latest)
+[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/Dsl.Configuration.svg?style=flat&logo=powershell)](https://www.powershellgallery.com/packages/Dsl.Configuration)
 
 Configuration DSL library and PowerShell commands for general purpose configuration file edition.
 
 ## NuGet Packages
 
-[![NuGet Version](https://img.shields.io/nuget/v/Be.Stateless.Dsl.Configuration.svg?label=Be.Stateless.Dsl.Configuration&style=flat)](https://www.nuget.org/packages/Be.Stateless.Dsl.Configuration/)
+[![NuGet Version](https://img.shields.io/nuget/v/Be.Stateless.Dsl.Configuration.svg?label=Be.Stateless.Dsl.Configuration&style=flat&logo=nuget)](https://www.nuget.org/packages/Be.Stateless.Dsl.Configuration/)
 
 
 ## Module Installation

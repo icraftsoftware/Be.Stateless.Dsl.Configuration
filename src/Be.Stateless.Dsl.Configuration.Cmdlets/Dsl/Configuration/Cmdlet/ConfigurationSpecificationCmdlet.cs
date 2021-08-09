@@ -18,6 +18,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Xml;
 using Be.Stateless.Dsl.Configuration.Specification;
 using Be.Stateless.Dsl.Configuration.Specification.Extensions;
 using Be.Stateless.Extensions;
@@ -27,23 +28,23 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 	public abstract class ConfigurationSpecificationCmdlet : System.Management.Automation.Cmdlet
 	{
 		[SuppressMessage("ReSharper", "InvertIf")]
-		protected void ProcessConfigurationSpecification(
+		protected XmlDocument ProcessConfigurationSpecification(
 			string action,
-			ConfigurationSpecification configurationSpecifications,
+			ConfigurationSpecification configurationSpecification,
 			string backupConfigurationFilePath = null,
 			string undoConfigurationSpecificationFilePath = null)
 		{
-			var result = configurationSpecifications.Apply();
-			WriteDebug("Result:{Environment.NewLine}{result.Configuration.OuterXml}");
-			if (ShouldProcess($"'{configurationSpecifications.TargetConfigurationFilePath}'", action))
+			var result = configurationSpecification.Apply();
+			if (ShouldProcess($"'{configurationSpecification.TargetConfigurationFilePath}'", action))
 			{
-				backupConfigurationFilePath.IfNotNullOrEmpty(p => File.Copy(configurationSpecifications.TargetConfigurationFilePath, p));
-				using (var fileStream = new FileStream(configurationSpecifications.TargetConfigurationFilePath, FileMode.Truncate))
+				backupConfigurationFilePath.IfNotNullOrEmpty(p => File.Copy(configurationSpecification.TargetConfigurationFilePath, p));
+				using (var fileStream = new FileStream(configurationSpecification.TargetConfigurationFilePath, FileMode.Truncate))
 				{
 					result.Configuration.Save(fileStream);
 				}
 				undoConfigurationSpecificationFilePath.IfNotNullOrEmpty(p => result.UndoConfigurationSpecification.AsXmlDocument().Save(p));
 			}
+			return result.Configuration;
 		}
 	}
 }

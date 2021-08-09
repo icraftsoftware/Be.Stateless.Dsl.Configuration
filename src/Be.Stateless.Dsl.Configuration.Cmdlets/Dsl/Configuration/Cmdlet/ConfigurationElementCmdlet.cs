@@ -48,7 +48,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		#endregion
 
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[Alias("ConfigurationFile", "ConfigFile", "File")]
+		[Alias("ConfigurationFile", "ConfigFile", "File", "Target")]
 		[Parameter(Mandatory = true)]
 		[ValidateNotNullOrEmpty]
 		public string TargetConfigurationFile { get; set; }

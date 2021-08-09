@@ -32,7 +32,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		[Fact]
 		public void ExecuteSucceeds()
 		{
-			var command = new ElementInsertionCommand("/configuration", new ElementSpecification("test", null, "test"));
+			var command = new ElementInsertionCommand("/configuration", new("test", null, "test"));
 			var document = ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument());
 			command.Execute(document);
 			document.SelectSingleNode("/configuration/test")
@@ -44,7 +44,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		{
 			var command = new ElementInsertionCommand(
 				"/configuration",
-				new ElementSpecification(
+				new(
 					"test",
 					new[] {
 						new AttributeSpecification("urn:test", "test", "value1"),
@@ -67,7 +67,7 @@ namespace Be.Stateless.Dsl.Configuration.Command
 		[Fact]
 		public void ExecuteThrowsWhenElementAlreadyExists()
 		{
-			var command = new ElementInsertionCommand("/configuration", new ElementSpecification("appSettings", null, "appSettings"));
+			var command = new ElementInsertionCommand("/configuration", new("appSettings", null, "appSettings"));
 			Invoking(() => command.Execute(ResourceManager.Load(Assembly.GetExecutingAssembly(), "Be.Stateless.Resources.web-original.config", stream => stream.AsXmlDocument())))
 				.Should().Throw<InvalidOperationException>()
 				.WithMessage("The configuration element already exists at '/configuration/appSettings'.");

@@ -51,8 +51,8 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		public IConfigurationFileResolverStrategy[] ConfigurationFileResolvers { get; set; }
 
 		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Cmdlet parameter")]
-		[Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = nameof(LiteralPath))]
 		[Alias("PSPath")]
+		[Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = nameof(LiteralPath))]
 		[ValidateNotNullOrEmpty]
 		public string[] LiteralPath
 		{

@@ -54,7 +54,7 @@ namespace Be.Stateless.Xml.XPath.Extensions
 		{
 			return navigator is NamespaceAffinitiveXPathNavigator namespaceAffinitiveXPathNavigator
 				? namespaceAffinitiveXPathNavigator
-				: new NamespaceAffinitiveXPathNavigator(navigator, navigator.BuildDslNamespaceManager());
+				: new(navigator, navigator.BuildDslNamespaceManager());
 		}
 
 		private static XmlNamespaceManager BuildDslNamespaceManager(this XPathNavigator navigator)
