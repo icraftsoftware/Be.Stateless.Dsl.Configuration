@@ -32,7 +32,6 @@
    AliasesToExport       = @()
    CmdletsToExport       = @(
       'Add-ConfigurationElement',
-      'Get-ConfigurationSpecification',
       'Merge-ConfigurationSpecification',
       'Remove-ConfigurationElement',
       'Set-ConfigurationElement'

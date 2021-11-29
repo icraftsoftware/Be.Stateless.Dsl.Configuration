@@ -17,34 +17,78 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
 using System.Management.Automation;
-using Be.Stateless.Dsl.Configuration.Specification;
+using System.Xml.Linq;
+using Be.Stateless.Dsl.Configuration.Resolver;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
+	/// <summary>
+	/// Merges specification file(s) to one ore more configuration files.
+	/// </summary>
+	/// <example>
+	/// <code>
+	/// PS> Merge-ConfigurationSpecification -Path ./machine.config
+	/// </code>
+	/// </example>
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "PowerShell CmdLet.")]
-	[Cmdlet(VerbsData.Merge, nameof(ConfigurationSpecification), SupportsShouldProcess = true)]
+	[Cmdlet(VerbsData.Merge, "ConfigurationSpecification", SupportsShouldProcess = true)]
 	[OutputType(typeof(void))]
-	public class MergeConfigurationSpecification : ConfigurationSpecificationCmdlet
+	public class MergeConfigurationSpecification : PSCmdlet
 	{
 		#region Base Class Member Overrides
 
+		protected override void BeginProcessing()
+		{
+			ResolvedFilePaths = Path.SelectMany(ResolvePath).ToArray();
+		}
+
 		protected override void ProcessRecord()
 		{
-			foreach (var specification in Specification)
+			var resolverStrategies = _defaultConfigurationFileResolverStrategies.Concat(ConfigurationFileResolvers).ToArray();
+			foreach (var specificationFilePath in ResolvedFilePaths)
 			{
-				var token = DateTime.UtcNow.ToString(TOKEN_FORMAT);
-				var result = ProcessConfigurationSpecification(
-					$"Merging '{specification.SpecificationSourceFilePath}'",
-					specification,
-					CreateBackup ? $"{specification.TargetConfigurationFilePath}.{token}.bak" : null,
-					CreateUndo ? $"{specification.SpecificationSourceFilePath}.{token}.undo" : null);
-				if (PassThru) WriteObject(result);
+				Specification specification = XDocument.Load(specificationFilePath);
+				foreach (var configurationFilePath in specification.GetTargetConfigurationFiles(resolverStrategies))
+				{
+					var token = DateTime.UtcNow.ToString(TOKEN_FORMAT);
+					Configuration configuration = XDocument.Load(configurationFilePath);
+					var result = configuration.Apply(specification);
+					if (result.Configuration.IsDirty && ShouldProcess($"'{configurationFilePath}'", $"Merging '{specificationFilePath}'"))
+					{
+						if (CreateBackup)
+						{
+							var backupFilePath = $"{configurationFilePath}.{token}.bak";
+							File.Copy(configurationFilePath, backupFilePath);
+							result.InverseSpecification.BackupFilePath = backupFilePath;
+						}
+						if (CreateUndo)
+						{
+							result.InverseSpecification.SetTargetConfigurationFiles(configurationFilePath);
+							result.InverseSpecification.Save($"{specificationFilePath}.{token}.undo");
+						}
+						result.Configuration.Save(configurationFilePath);
+						if (File.Exists(specification.BackupFilePath)) File.Delete(specification.BackupFilePath);
+					}
+					if (PassThru) WriteObject(result);
+				}
 			}
 		}
 
 		#endregion
+
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Cmdlet parameter")]
+		[Parameter(Mandatory = false)]
+		public IConfigurationFileResolverStrategy[] ConfigurationFileResolvers
+		{
+			get => _configurationFileResolvers ?? Array.Empty<IConfigurationFileResolverStrategy>();
+			set => _configurationFileResolvers = value;
+		}
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
@@ -56,17 +100,42 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		[Parameter]
 		public SwitchParameter CreateUndo { get; set; }
 
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Cmdlet parameter")]
+		[Alias("PSPath")]
+		[Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = nameof(LiteralPath))]
+		[ValidateNotNullOrEmpty]
+		public string[] LiteralPath
+		{
+			get => Path;
+			set
+			{
+				Path = value;
+				_suppressWildcardExpansion = true;
+			}
+		}
+
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
 		[Parameter]
 		public SwitchParameter PassThru { get; set; }
 
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[Parameter(Mandatory = true, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, Position = 1)]
+		[Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = nameof(Path))]
 		[ValidateNotNullOrEmpty]
-		public ConfigurationSpecification[] Specification { get; set; }
+		public string[] Path { get; set; }
+
+		private string[] ResolvedFilePaths { get; set; }
+
+		private IEnumerable<string> ResolvePath(string path)
+		{
+			return _suppressWildcardExpansion ? new[] { GetUnresolvedProviderPathFromPSPath(path) } : GetResolvedProviderPathFromPSPath(path, out _);
+		}
 
 		private const string TOKEN_FORMAT = "yyyyMMddHHmmssfffffff";
+
+		private static readonly IEnumerable<IConfigurationFileResolverStrategy> _defaultConfigurationFileResolverStrategies
+			= new IConfigurationFileResolverStrategy[] { new ClrConfigurationFileResolverStrategy(), new ConfigurationFileResolverStrategy() };
+
+		private IConfigurationFileResolverStrategy[] _configurationFileResolvers;
+		private bool _suppressWildcardExpansion;
 	}
 }

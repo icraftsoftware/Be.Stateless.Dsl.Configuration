@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Be.Stateless.Dsl.Configuration.Extensions;
@@ -26,6 +27,7 @@ namespace Be.Stateless.Dsl.Configuration
 {
 	public static class ClrLocationHelper
 	{
+		[SuppressMessage("ReSharper", "ConvertToUsingDeclaration")]
 		private static string GetInstallationRootPath(ClrBitness bitness)
 		{
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, bitness.ToRegistryView()))

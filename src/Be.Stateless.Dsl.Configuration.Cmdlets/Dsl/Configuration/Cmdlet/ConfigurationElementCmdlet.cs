@@ -18,17 +18,18 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Management.Automation;
-using Be.Stateless.Dsl.Configuration.Command;
+using System.Xml.Linq;
+using Be.Stateless.Dsl.Configuration.Action;
 using Be.Stateless.Dsl.Configuration.Resolver;
-using Be.Stateless.Dsl.Configuration.Specification;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
 	[SuppressMessage("ReSharper", "MemberCanBeProtected.Global", Justification = "Cmdlet parameter")]
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
-	public abstract class ConfigurationElementCmdlet : ConfigurationSpecificationCmdlet
+	public abstract class ConfigurationElementCmdlet : System.Management.Automation.Cmdlet
 	{
 		#region Base Class Member Overrides
 
@@ -36,12 +37,19 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		protected override void ProcessRecord()
 		{
 			var targetConfigurationFiles = TargetConfigurationFile
-				.Split(new[] { Constants.FILE_MONIKER_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries)
 				.SelectMany(ConfigurationFileResolver.Default.Resolve)
 				.Distinct();
-			foreach (var specification in targetConfigurationFiles.Select(f => new ConfigurationSpecification(f, new[] { CreateCommand() }, false)))
+
+			var action = CreateAction();
+			foreach (var configurationFilePath in targetConfigurationFiles)
 			{
-				ProcessConfigurationSpecification(Action, specification);
+				var configuration = XDocument.Load(configurationFilePath);
+				action.Execute(configuration);
+				if (ShouldProcess($"'{configurationFilePath}'", Action))
+				{
+					using var fileStream = new FileStream(configurationFilePath, FileMode.Truncate);
+					configuration.Save(fileStream);
+				}
 			}
 		}
 
@@ -51,7 +59,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		[Alias("ConfigurationFile", "ConfigFile", "File", "Target")]
 		[Parameter(Mandatory = true)]
 		[ValidateNotNullOrEmpty]
-		public string TargetConfigurationFile { get; set; }
+		public string[] TargetConfigurationFile { get; set; }
 
 		[Parameter(Mandatory = true)]
 		[ValidateNotNullOrEmpty]
@@ -59,6 +67,6 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		protected abstract string Action { get; }
 
-		protected abstract ConfigurationCommand CreateCommand();
+		protected abstract ConfigurationElementAction CreateAction();
 	}
 }

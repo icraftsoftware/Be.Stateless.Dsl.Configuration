@@ -16,27 +16,19 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace Be.Stateless.Dsl.Configuration.Resolver
+namespace Be.Stateless.Dsl.Configuration
 {
-	public sealed class ConfigurationFileResolverStrategy : IConfigurationFileResolverStrategy
+	public class SpecificationApplicationResult
 	{
-		#region IConfigurationFileResolverStrategy Members
-
-		public bool CanResolve(string moniker)
+		internal SpecificationApplicationResult(Configuration inputConfiguration, Specification specification)
 		{
-			return File.Exists(moniker);
+			// clone configuration and specification to be side-effect free
+			Configuration = inputConfiguration.Clone();
+			InverseSpecification = specification.Clone();
 		}
 
-		public IEnumerable<string> Resolve(string moniker)
-		{
-			if (!File.Exists(moniker)) throw new ArgumentException($"The configuration file '{moniker}' cannot be found.", nameof(moniker));
-			return new[] { moniker };
-		}
+		public Configuration Configuration { get; }
 
-		#endregion
+		public Specification InverseSpecification { get; }
 	}
 }

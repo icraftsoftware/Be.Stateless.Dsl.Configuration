@@ -18,10 +18,23 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
-using Be.Stateless.Dsl.Configuration.Command;
+using Be.Stateless.Dsl.Configuration.Action;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
+	/// <summary>
+	/// Removes an existing configuration element.
+	/// </summary>
+	/// <example>
+	/// <code>
+	/// PS> Remove-ConfigurationElement -TargetConfigurationFile global:machine.config -XPath "/configuration/appSettings/add[@key='setting1']"
+	/// </code>
+	/// </example>
+	/// <example>
+	/// <code>
+	/// PS> Remove-ConfigurationElement -TargetConfigurationFile global:machine.config -XPath '/configuration/element'
+	/// </code>
+	/// </example>
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Cmdlet.")]
 	[Cmdlet(VerbsCommon.Remove, "ConfigurationElement", SupportsShouldProcess = true)]
 	[OutputType(typeof(void))]
@@ -31,9 +44,9 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		protected override string Action => $"Deleting configuration element at '{XPath}'";
 
-		protected override ConfigurationCommand CreateCommand()
+		protected override ConfigurationElementAction CreateAction()
 		{
-			return new ElementDeletionCommand(XPath);
+			return new ConfigurationElementDeletionAction(XPath);
 		}
 
 		#endregion

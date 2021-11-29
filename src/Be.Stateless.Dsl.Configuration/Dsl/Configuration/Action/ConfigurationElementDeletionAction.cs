@@ -17,24 +17,20 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Xml.Linq;
 
-namespace Be.Stateless.Dsl.Configuration.Resolver
+namespace Be.Stateless.Dsl.Configuration.Action
 {
-	public sealed class ConfigurationFileResolverStrategy : IConfigurationFileResolverStrategy
+	public class ConfigurationElementDeletionAction : ConfigurationElementAction
 	{
-		#region IConfigurationFileResolverStrategy Members
+		public ConfigurationElementDeletionAction(string configurationElementSelector) : base(configurationElementSelector) { }
 
-		public bool CanResolve(string moniker)
-		{
-			return File.Exists(moniker);
-		}
+		#region Base Class Member Overrides
 
-		public IEnumerable<string> Resolve(string moniker)
+		protected internal override void Execute(XElement configurationElement)
 		{
-			if (!File.Exists(moniker)) throw new ArgumentException($"The configuration file '{moniker}' cannot be found.", nameof(moniker));
-			return new[] { moniker };
+			if (configurationElement.HasElements) throw new InvalidOperationException($"The configuration element '{ConfigurationElementSelector}' has at least one child element.");
+			configurationElement.Remove();
 		}
 
 		#endregion

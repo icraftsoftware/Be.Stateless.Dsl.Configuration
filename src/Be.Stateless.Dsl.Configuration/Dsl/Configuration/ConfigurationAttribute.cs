@@ -17,26 +17,39 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Xml.Linq;
 
-namespace Be.Stateless.Dsl.Configuration.Resolver
+namespace Be.Stateless.Dsl.Configuration
 {
-	public sealed class ConfigurationFileResolverStrategy : IConfigurationFileResolverStrategy
+	public class ConfigurationAttribute
 	{
-		#region IConfigurationFileResolverStrategy Members
+		#region Operators
 
-		public bool CanResolve(string moniker)
+		public static implicit operator XAttribute(ConfigurationAttribute configurationAttribute)
 		{
-			return File.Exists(moniker);
-		}
-
-		public IEnumerable<string> Resolve(string moniker)
-		{
-			if (!File.Exists(moniker)) throw new ArgumentException($"The configuration file '{moniker}' cannot be found.", nameof(moniker));
-			return new[] { moniker };
+			return configurationAttribute.Attribute;
 		}
 
 		#endregion
+
+		internal ConfigurationAttribute(XAttribute attribute)
+		{
+			Attribute = attribute ?? throw new ArgumentNullException(nameof(attribute));
+		}
+
+		public XName Name => Attribute.Name;
+
+		public string Value
+		{
+			get => Attribute.Value;
+			set => Attribute.Value = value;
+		}
+
+		private XAttribute Attribute { get; }
+
+		public void Remove()
+		{
+			Attribute.Remove();
+		}
 	}
 }
