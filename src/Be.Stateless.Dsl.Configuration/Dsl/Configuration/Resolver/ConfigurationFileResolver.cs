@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Be.Stateless.Extensions;
 
@@ -28,6 +29,7 @@ namespace Be.Stateless.Dsl.Configuration.Resolver
 		public static ConfigurationFileResolver Default { get; } = new(
 			new IConfigurationFileResolverStrategy[] { new ClrConfigurationFileResolverStrategy(), new ConfigurationFileResolverStrategy() });
 
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 		public ConfigurationFileResolver(IEnumerable<IConfigurationFileResolverStrategy> resolverStrategies)
 		{
 			_resolverStrategies = resolverStrategies?.ToArray() ?? Array.Empty<IConfigurationFileResolverStrategy>();

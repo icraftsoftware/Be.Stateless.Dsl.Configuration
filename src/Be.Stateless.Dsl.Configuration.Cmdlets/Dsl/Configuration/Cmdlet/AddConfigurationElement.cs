@@ -20,10 +20,23 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using Be.Stateless.Collections.Extensions;
-using Be.Stateless.Dsl.Configuration.Command;
+using Be.Stateless.Dsl.Configuration.Action;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
+	/// <summary>
+	/// Adds a configuration element.
+	/// </summary>
+	/// <example>
+	/// <code>
+	/// PS> Add-ConfigurationElement -TargetConfigurationFile global:machine.config -XPath '/configuration/appSettings' -ElementName 'add' -Attributes @{ key = 'setting1'; value = 'value1' }
+	/// </code>
+	/// </example>
+	/// <example>
+	/// <code>
+	/// PS> Add-ConfigurationElement -TargetConfigurationFile global:machine.config -XPath '/configuration' -ElementName 'element' -Attributes @{ '{urn:custom:namespace}attribute' = 'setting1' }
+	/// </code>
+	/// </example>
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Cmdlet.")]
 	[Cmdlet(VerbsCommon.Add, "ConfigurationElement", SupportsShouldProcess = true)]
 	[OutputType(typeof(void))]
@@ -33,11 +46,9 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		protected override string Action => $"Appending configuration element at '{XPath}'";
 
-		protected override ConfigurationCommand CreateCommand()
+		protected override ConfigurationElementAction CreateAction()
 		{
-			return new ElementInsertionCommand(
-				XPath,
-				new(ElementName, Attributes.AsAttributeSpecifications(), ElementName + Attributes.AsAttributeDiscriminatingPredicate()));
+			return new ConfigurationElementInsertionAction(XPath, ElementName, Attributes?.AsXAttributes());
 		}
 
 		#endregion

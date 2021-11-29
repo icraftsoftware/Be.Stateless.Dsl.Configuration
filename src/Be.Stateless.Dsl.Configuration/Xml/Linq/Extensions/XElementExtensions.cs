@@ -16,27 +16,20 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
-namespace Be.Stateless.Dsl.Configuration.Resolver
+namespace Be.Stateless.Xml.Linq.Extensions
 {
-	public sealed class ConfigurationFileResolverStrategy : IConfigurationFileResolverStrategy
+	public static class XElementExtensions
 	{
-		#region IConfigurationFileResolverStrategy Members
-
-		public bool CanResolve(string moniker)
+		public static string XPath(this XElement element)
 		{
-			return File.Exists(moniker);
+			if (element == null) return string.Empty;
+			var position = element.ElementsBeforeSelf().Any() || element.ElementsAfterSelf().Any()
+				? $"[{element.ElementsBeforeSelf().Count() + 1}]"
+				: string.Empty;
+			return $"{element.Parent.XPath()}/{element.Name}{position}";
 		}
-
-		public IEnumerable<string> Resolve(string moniker)
-		{
-			if (!File.Exists(moniker)) throw new ArgumentException($"The configuration file '{moniker}' cannot be found.", nameof(moniker));
-			return new[] { moniker };
-		}
-
-		#endregion
 	}
 }

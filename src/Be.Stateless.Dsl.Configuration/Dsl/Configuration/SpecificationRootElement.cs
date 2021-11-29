@@ -16,25 +16,21 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Xml.Linq;
 
-namespace Be.Stateless.Dsl.Configuration.Resolver
+namespace Be.Stateless.Dsl.Configuration
 {
-	public sealed class ConfigurationFileResolverStrategy : IConfigurationFileResolverStrategy
+	public class SpecificationRootElement : SpecificationElement
 	{
-		#region IConfigurationFileResolverStrategy Members
+		internal SpecificationRootElement(XElement rootElement) : base(rootElement) { }
 
-		public bool CanResolve(string moniker)
-		{
-			return File.Exists(moniker);
-		}
+		#region Base Class Member Overrides
 
-		public IEnumerable<string> Resolve(string moniker)
+		public override IEnumerable<SpecificationElement> SpecificationElements()
 		{
-			if (!File.Exists(moniker)) throw new ArgumentException($"The configuration file '{moniker}' cannot be found.", nameof(moniker));
-			return new[] { moniker };
+			// update is the only operation that ensures that both configuration's and specification's root elements match
+			return new[] { new SpecificationElement(Element) { Operation = Specification.Annotations.Operation.UPDATE } };
 		}
 
 		#endregion

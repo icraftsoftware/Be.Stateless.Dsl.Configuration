@@ -16,23 +16,22 @@
 
 #endregion
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Be.Stateless.Dsl.Configuration.Specification;
+using System.Xml.Linq;
 
 namespace Be.Stateless.Collections.Extensions
 {
 	internal static class HashtableExtensions
 	{
-		internal static string AsAttributeDiscriminatingPredicate(this Hashtable attributes)
+		internal static IEnumerable<XAttribute> AsXAttributes(this Hashtable attributes)
 		{
-			return attributes.AsAttributeSpecifications().Aggregate(string.Empty, (k, attr) => $"{k}[@{attr.Name}='{attr.Value}']");
-		}
-
-		internal static IEnumerable<AttributeSpecification> AsAttributeSpecifications(this Hashtable attributes)
-		{
-			return attributes?.Keys.Cast<string>().Select(name => new AttributeSpecification(name, attributes[name]?.ToString())) ?? Enumerable.Empty<AttributeSpecification>();
+			return attributes.Keys.Cast<string>().Select(
+				name => new XAttribute(
+					name,
+					attributes[name]?.ToString() ?? throw new ArgumentNullException(nameof(attributes), $"The value of attribute '{name}' is null.")));
 		}
 	}
 }

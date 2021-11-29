@@ -20,10 +20,23 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using Be.Stateless.Collections.Extensions;
-using Be.Stateless.Dsl.Configuration.Command;
+using Be.Stateless.Dsl.Configuration.Action;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
 {
+	/// <summary>
+	/// Set the attributes of an existing configuration element.
+	/// </summary>
+	/// <example>
+	/// <code>
+	/// PS> Set-ConfigurationElement -TargetConfigurationFile global:machine.config -XPath "/configuration/appSettings/add[@key='setting1']" -Attributes @{ value = 'value1' }
+	/// </code>
+	/// </example>
+	/// <example>
+	/// <code>
+	/// PS> Set-ConfigurationElement -TargetConfigurationFile global:machine.config -XPath '/configuration/element' -Attributes @{ '{urn:custom:namespace}attribute' = 'setting1' }
+	/// </code>
+	/// </example>
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Cmdlet.")]
 	[Cmdlet(VerbsCommon.Set, "ConfigurationElement", SupportsShouldProcess = true)]
 	[OutputType(typeof(void))]
@@ -33,9 +46,9 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		protected override string Action => $"Updating configuration element at '{XPath}'";
 
-		protected override ConfigurationCommand CreateCommand()
+		protected override ConfigurationElementAction CreateAction()
 		{
-			return new ElementUpdateCommand(XPath, Attributes.AsAttributeSpecifications());
+			return new ConfigurationElementUpdateAction(XPath, Attributes.AsXAttributes());
 		}
 
 		#endregion
