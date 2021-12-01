@@ -40,7 +40,7 @@
    VariablesToExport     = @()
    PrivateData           = @{
       PSData = @{
-         Tags       = @('Configuration', 'XML')
+         Tags       = @('be.stateless.be', 'icraftsoftware', 'Configuration', 'XML')
          LicenseUri = 'https://github.com/icraftsoftware/Be.Stateless.Dsl.Configuration/blob/master/LICENSE'
          ProjectUri = 'https://github.com/icraftsoftware/Be.Stateless.Dsl.Configuration'
       }

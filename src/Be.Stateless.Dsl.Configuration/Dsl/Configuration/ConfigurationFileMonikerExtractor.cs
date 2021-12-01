@@ -33,15 +33,19 @@ namespace Be.Stateless.Dsl.Configuration
 		/// <summary>
 		/// Extracts the file monikers from the attribute <c>{urn:schemas.stateless.be:dsl:configuration:annotations:2020}files</c>. This attribute must be present on the root element.
 		/// </summary>
-		/// <returns>The list of distinct file moniker.</returns>
+		/// <returns>
+		/// The list of distinct file moniker.
+		/// </returns>
 		/// <exception cref="InvalidOperationException">When the attribute is not set on the root element.</exception>
-		/// <remarks>The attribute value is split for the separators defined in <see cref="Specification.Annotations.SEPARATORS"/>.</remarks>
+		/// <remarks>
+		/// Multiple files can be separated by a <c>|</c> character.
+		/// </remarks>
 		public IEnumerable<string> Extract()
 		{
 			var filesAttribute = _document.Root?.Attribute(Specification.Annotations.Attributes.TARGET_CONFIGURATION_FILES)
 				?? throw new InvalidOperationException(
 					$"The attribute '{Specification.Annotations.Attributes.TARGET_CONFIGURATION_FILES}' does not exist on the root element '{_document.Root?.Name}'");
-			return filesAttribute.Value.Split(Specification.Annotations.SEPARATORS, StringSplitOptions.RemoveEmptyEntries).Distinct();
+			return filesAttribute.Value.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
 		}
 
 		private readonly XDocument _document;

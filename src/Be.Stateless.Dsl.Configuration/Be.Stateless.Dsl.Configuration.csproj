@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Be.Stateless.Extensions" Version="2.0.21308.30406" />
+    <PackageReference Include="Be.Stateless.Extensions" Version="2.0.21343.20798" />
     <PackageReference Include="Be.Stateless.Xml" Version="2.0.21281.40683" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>

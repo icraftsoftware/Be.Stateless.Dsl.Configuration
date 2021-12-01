@@ -29,8 +29,7 @@ namespace Be.Stateless.Dsl.Configuration
 		[Fact]
 		public void ExtractFailed()
 		{
-			Invoking(
-					() => new ConfigurationFileMonikerExtractor(XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}'/>")).Extract())
+			Invoking(() => new ConfigurationFileMonikerExtractor(XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}'/>")).Extract())
 				.Should().ThrowExactly<InvalidOperationException>()
 				.WithMessage($"The attribute '{{{Specification.Annotations.NAMESPACE}}}targetConfigurationFiles' does not exist on the root element 'configuration'");
 		}
@@ -47,9 +46,11 @@ namespace Be.Stateless.Dsl.Configuration
 		public void ExtractSucceedsForSeveralMonikers()
 		{
 			new ConfigurationFileMonikerExtractor(
-					XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='moniker,moniker1|moniker moniker2'/>"))
+					XDocument.Parse(
+						$"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' "
+						+ @"config:targetConfigurationFiles='c:\program files\moniker|c:\file\moniker|moniker'/>"))
 				.Extract()
-				.Should().BeEquivalentTo("moniker", "moniker1", "moniker2");
+				.Should().BeEquivalentTo(@"c:\program files\moniker", @"c:\file\moniker", "moniker");
 		}
 
 		[Fact]
