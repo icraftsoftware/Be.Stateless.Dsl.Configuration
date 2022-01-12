@@ -1,0 +1,16 @@
+﻿trigger:
+  - master
+  - dev/*
+
+resources:
+  repositories:
+    - repository: pipelineTemplateRepository
+      type: github
+      name: icraftsoftware/Be.Stateless.Build.Agent.Yaml.Pipeline.Templates
+      endpoint: github.com_icraftsoftware
+
+extends:
+  template: Pipelines/net/continuous-integration.yml@pipelineTemplateRepository
+  parameters:
+    Major: 2
+    Minor: 1

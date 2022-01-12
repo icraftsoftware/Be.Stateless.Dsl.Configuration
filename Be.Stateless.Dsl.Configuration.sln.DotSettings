@@ -1,5 +1,5 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	
+
 	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue">Copyright © 2012 - $CURRENT_YEAR$ François Chabot &amp; Emmanuel Benitez&#xD;
 &#xD;
 Licensed under the Apache License, Version 2.0 (the "License");&#xD;
@@ -19,9 +19,6 @@ limitations under the License.</s:String>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BA964262A0AF4383CA347F576B329E/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BA964262A0AF4383CA347F576B329E/AbsolutePath/@EntryValue">C:\Files\Projects\be.stateless\Be.Stateless.Dsl.Configurations\.settings\CodeEditing.FileHeader.DotSettings</s:String>
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BA964262A0AF4383CA347F576B329E/RelativePath/@EntryValue">..\.settings\CodeEditing.FileHeader.DotSettings</s:String>
-	
-	
-	
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BE7D199CA1354A80B47EB3D1D3D762/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BE7D199CA1354A80B47EB3D1D3D762/AbsolutePath/@EntryValue">C:\Files\Projects\be.stateless\ApplyConfigChanges\.settings\CodeInspection.DotSettings</s:String>
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=83BE7D199CA1354A80B47EB3D1D3D762/RelativePath/@EntryValue">..\.settings\CodeInspection.DotSettings</s:String>
@@ -35,16 +32,16 @@ limitations under the License.</s:String>
 	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File5826118902490142B09279AF0AAC2157/RelativePriority/@EntryValue">5</s:Double>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File83BA964262A0AF4383CA347F576B329E/@KeyIndexDefined">True</s:Boolean>
 	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File83BA964262A0AF4383CA347F576B329E/RelativePriority/@EntryValue">2</s:Double>
-	
-	
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File83BE7D199CA1354A80B47EB3D1D3D762/@KeyIndexDefined">True</s:Boolean>
 	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File83BE7D199CA1354A80B47EB3D1D3D762/RelativePriority/@EntryValue">3</s:Double>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileAFA76DDA8BAA4442A379826AA69E7217/@KeyIndexDefined">True</s:Boolean>
 	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileAFA76DDA8BAA4442A379826AA69E7217/RelativePriority/@EntryValue">4</s:Double>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileB721FBDA949C8D449D83E70EEFF5F842/@KeyIndexDefined">True</s:Boolean>
 	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileB721FBDA949C8D449D83E70EEFF5F842/RelativePriority/@EntryValue">1</s:Double>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Affinitive/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Benitez/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Bitness/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=bitnesses/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Chabot/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Cmdlets/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Fran_00E7ois/@EntryIndexedValue">True</s:Boolean>
