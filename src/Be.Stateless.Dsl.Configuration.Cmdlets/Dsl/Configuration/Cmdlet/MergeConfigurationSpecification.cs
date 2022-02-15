@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2021 François Chabot & Emmanuel Benitez
+// Copyright © 2012 - 2022 François Chabot & Emmanuel Benitez
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,10 +52,11 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 			var resolverStrategies = _defaultConfigurationFileResolverStrategies.Concat(ConfigurationFileResolvers).ToArray();
 			foreach (var specificationFilePath in ResolvedFilePaths)
 			{
+				var specificationToken = DateTime.UtcNow.ToString(TOKEN_FORMAT);
 				Specification specification = XDocument.Load(specificationFilePath);
 				foreach (var configurationFilePath in specification.GetTargetConfigurationFiles(resolverStrategies))
 				{
-					var token = DateTime.UtcNow.ToString(TOKEN_FORMAT);
+					var token = $"{specificationToken}.{Guid.NewGuid():N}";
 					Configuration configuration = XDocument.Load(configurationFilePath);
 					var result = configuration.Apply(specification);
 					if (result.Configuration.IsDirty && ShouldProcess($"'{configurationFilePath}'", $"Merging '{specificationFilePath}'"))
@@ -130,7 +131,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 			return _suppressWildcardExpansion ? new[] { GetUnresolvedProviderPathFromPSPath(path) } : GetResolvedProviderPathFromPSPath(path, out _);
 		}
 
-		private const string TOKEN_FORMAT = "yyyyMMddHHmmssfffffff";
+		private const string TOKEN_FORMAT = "yyyyMMddHHmmss";
 
 		private static readonly IEnumerable<IConfigurationFileResolverStrategy> _defaultConfigurationFileResolverStrategies
 			= new IConfigurationFileResolverStrategy[] { new ClrConfigurationFileResolverStrategy(), new ConfigurationFileResolverStrategy() };
