@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2021 François Chabot & Emmanuel Benitez
+// Copyright © 2012 - 2022 François Chabot & Emmanuel Benitez
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -216,7 +216,7 @@ namespace Be.Stateless.Dsl.Configuration
 						else
 						{
 							// edge case happening when the SpecificationElement specifies only a subset of the attributes of
-                            // the satisfying ConfigurationElement; generally, attributes will be updated though 
+							// the satisfying ConfigurationElement; generally, attributes will be updated though
 							childSpecificationElement.Operation = Operation.NONE;
 						}
 						break;

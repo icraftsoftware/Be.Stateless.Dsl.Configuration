@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Be.Stateless.Dsl.Configurat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Be.Stateless.Dsl.Configuration.Tests", "src\Be.Stateless.Dsl.Configuration.Tests\Be.Stateless.Dsl.Configuration.Tests.csproj", "{E5244538-A04A-4806-BA72-566EDCDD3C1A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Be.Stateless.Dsl.Configuration.Cmdlets", "src\Be.Stateless.Dsl.Configuration.Cmdlets\Be.Stateless.Dsl.Configuration.Cmdlets.csproj", "{8A3D1301-F4CF-4596-B668-DF61521809CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dsl.Configuration", "src\Dsl.Configuration\Dsl.Configuration.Cmdlets.csproj", "{8A3D1301-F4CF-4596-B668-DF61521809CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
