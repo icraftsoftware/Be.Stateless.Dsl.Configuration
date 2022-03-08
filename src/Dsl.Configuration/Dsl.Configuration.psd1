@@ -17,7 +17,7 @@
 #endregion
 
 @{
-   RootModule            = 'Be.Stateless.Dsl.Configuration.Cmdlets.dll'
+   RootModule            = 'bin\Be.Stateless.Dsl.Configuration.Cmdlets.dll'
    ModuleVersion         = '2.1.0.0'
    GUID                  = '99128609-dd5b-43d7-b834-6bc0ca537f02'
    Author                = 'François Chabot'
@@ -43,6 +43,7 @@
          Tags       = @('be.stateless.be', 'icraftsoftware', 'Configuration', 'XML')
          LicenseUri = 'https://github.com/icraftsoftware/Be.Stateless.Dsl.Configuration/blob/master/LICENSE'
          ProjectUri = 'https://github.com/icraftsoftware/Be.Stateless.Dsl.Configuration'
+         Prerelease = 'preview'
       }
    }
 }

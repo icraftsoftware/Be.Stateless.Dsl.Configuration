@@ -11,13 +11,17 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/icraftsoftware/Be.Stateless.Dsl.Configuration</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <!-- embed source files that are not tracked by the source control manager in the PDB -->
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <PropertyGroup>
     <DebugType>none</DebugType>
     <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishDir>$(MSBuildThisFileDirectory)..\Dsl.Configuration\bin</PublishDir>
+    <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -31,6 +35,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Dsl.Configuration.psd1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Be.Stateless.Extensions" Version="2.1.22025.20499" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -40,18 +50,18 @@
     <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <ExcludedPackages>
+      Microsoft.PowerShell.5.1.ReferenceAssemblies
+    </ExcludedPackages>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Update="Microsoft.PowerShell.5.1.ReferenceAssemblies" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Update="$(ExcludedPackages)" PrivateAssets="all" IncludeAssets="compile" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Be.Stateless.Dsl.Configuration\Be.Stateless.Dsl.Configuration.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Dsl.Configuration.psd1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -10,7 +10,7 @@ resources:
       endpoint: github.com_icraftsoftware
 
 extends:
-  template: Pipelines/net/continuous-integration.yml@pipelineTemplateRepository
+  template: Pipelines/pwsh/continuous-integration.yml@pipelineTemplateRepository
   parameters:
     Major: 2
     Minor: 1
