@@ -18,9 +18,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Management.Automation;
 using System.Xml.Linq;
+using Be.Stateless.Collections.Generic.Extensions;
 using Be.Stateless.Dsl.Configuration.Action;
 using Be.Stateless.Dsl.Configuration.Resolver;
 
@@ -35,12 +35,8 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		[SuppressMessage("ReSharper", "InvertIf")]
 		protected override void ProcessRecord()
 		{
-			var targetConfigurationFiles = TargetConfigurationFile
-				.SelectMany(ConfigurationFileResolver.Default.Resolve)
-				.Distinct();
-
 			var action = CreateAction();
-			foreach (var configurationFilePath in targetConfigurationFiles)
+			foreach (var configurationFilePath in TargetConfigurationFile.Resolve(ConfigurationFileResolvers))
 			{
 				var configuration = XDocument.Load(configurationFilePath);
 				action.Execute(configuration);
@@ -53,6 +49,11 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		}
 
 		#endregion
+
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
+		[Parameter(Mandatory = false)]
+		public IConfigurationFileResolverStrategy[] ConfigurationFileResolvers { get; set; }
 
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
 		[Alias("ConfigurationFile", "ConfigFile", "File", "Target")]

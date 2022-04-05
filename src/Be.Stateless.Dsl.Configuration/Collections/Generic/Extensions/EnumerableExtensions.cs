@@ -16,27 +16,16 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.IO;
+using Be.Stateless.Dsl.Configuration.Resolver;
 
-namespace Be.Stateless.Dsl.Configuration.Resolver
+namespace Be.Stateless.Collections.Generic.Extensions
 {
-	public sealed class ConfigurationFileResolverStrategy : IConfigurationFileResolverStrategy
+	internal static class EnumerableExtensions
 	{
-		#region IConfigurationFileResolverStrategy Members
-
-		public bool CanResolve(string moniker)
+		internal static IEnumerable<string> Resolve(this IEnumerable<string> monikers, params IConfigurationFileResolverStrategy[] configurationFileResolvers)
 		{
-			return File.Exists(moniker);
+			return new CompositeConfigurationFileResolverStrategy(configurationFileResolvers).Resolve(monikers);
 		}
-
-		public IEnumerable<string> Resolve(string moniker)
-		{
-			if (!File.Exists(moniker)) throw new ArgumentException($"The configuration file '{moniker}' does not exist.", nameof(moniker));
-			return new[] { moniker };
-		}
-
-		#endregion
 	}
 }

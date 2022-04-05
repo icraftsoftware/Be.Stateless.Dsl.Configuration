@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2021 François Chabot & Emmanuel Benitez
+// Copyright © 2012 - 2022 François Chabot & Emmanuel Benitez
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ using System.Linq;
 using Be.Stateless.Dsl.Configuration.Extensions;
 using Microsoft.Win32;
 
-namespace Be.Stateless.Dsl.Configuration
+namespace Be.Stateless.Dsl.Configuration.Resolver
 {
 	public static class ClrLocationHelper
 	{
@@ -32,8 +32,7 @@ namespace Be.Stateless.Dsl.Configuration
 		{
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, bitness.ToRegistryView()))
 			{
-				using (var installRootKey = baseKey.OpenSubKey(NET_FRAMEWORK_REGISTRY_KEY_NAME)
-					?? throw new InvalidOperationException($"The key '{NET_FRAMEWORK_REGISTRY_KEY_NAME}' does not exist."))
+				using (var installRootKey = baseKey.OpenSubKey(NET_FRAMEWORK_REGISTRY_KEY_NAME) ?? throw new InvalidOperationException($"The key '{NET_FRAMEWORK_REGISTRY_KEY_NAME}' does not exist."))
 				{
 					return installRootKey.GetValue("InstallRoot") as string;
 				}
@@ -44,14 +43,11 @@ namespace Be.Stateless.Dsl.Configuration
 		{
 			var installationRootPath = GetInstallationRootPath(bitness);
 			if (!Directory.Exists(installationRootPath)) throw new DirectoryNotFoundException($"The installation root path '{installationRootPath}' is not found.");
-
-			var searchDirectoryPattern = $"v{version.Major}.{version.Minor}*";
-			var directories = Directory.GetDirectories(installationRootPath, searchDirectoryPattern, SearchOption.TopDirectoryOnly)
-				.OrderBy(d => d, StringComparer.OrdinalIgnoreCase);
-
-			return directories.Single();
+			return Directory.GetDirectories(installationRootPath, $"v{version.Major}.{version.Minor}*", SearchOption.TopDirectoryOnly)
+				.OrderBy(d => d, StringComparer.OrdinalIgnoreCase)
+				.Single();
 		}
 
-		private const string NET_FRAMEWORK_REGISTRY_KEY_NAME = "SOFTWARE\\Microsoft\\.NETFramework";
+		private const string NET_FRAMEWORK_REGISTRY_KEY_NAME = @"SOFTWARE\Microsoft\.NETFramework";
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2021 François Chabot & Emmanuel Benitez
+// Copyright © 2012 - 2022 François Chabot & Emmanuel Benitez
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -116,17 +116,28 @@ namespace Be.Stateless.Dsl.Configuration
 			return new(new(Document));
 		}
 
-		internal IEnumerable<string> GetTargetConfigurationFiles(IEnumerable<IConfigurationFileResolverStrategy> configurationFileResolvers = null)
+		/// <summary>
+		/// Read the value of the mandatory root's <c>targetConfigurationFiles</c> attribute, i.e.
+		/// <c>{urn:schemas.stateless.be:dsl:configuration:annotations:2020}targetConfigurationFiles</c>.
+		/// </summary>
+		/// <returns>
+		/// The list of distinct target configuration files, possibly monikers.
+		/// </returns>
+		/// <exception cref="InvalidOperationException">
+		/// When the attribute is not present at the root element.
+		/// </exception>
+		/// <remarks>
+		/// Multiple files can be separated by a <c>|</c> character.
+		/// </remarks>
+		/// <seealso cref="IConfigurationFileResolverStrategy"/>
+		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+		internal IEnumerable<string> GetTargetConfigurationFiles()
 		{
-			var configurationFileResolver = new ConfigurationFileResolver(
-				configurationFileResolvers ?? new IConfigurationFileResolverStrategy[] {
-					new ClrConfigurationFileResolverStrategy(), new ConfigurationFileResolverStrategy()
-				});
-
-			var monikerExtractor = new ConfigurationFileMonikerExtractor(Document);
-			return monikerExtractor.Extract()
-				.SelectMany(configurationFileResolver.Resolve)
+			var targetConfigurationFiles = Document.Root?.Attribute(Annotations.Attributes.TARGET_CONFIGURATION_FILES)?
+				.Value.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
 				.Distinct();
+			if (targetConfigurationFiles?.Any() != true) throw new InvalidOperationException($"The attribute '{Annotations.Attributes.TARGET_CONFIGURATION_FILES}' is missing or empty.");
+			return targetConfigurationFiles;
 		}
 
 		public void Save(string path)

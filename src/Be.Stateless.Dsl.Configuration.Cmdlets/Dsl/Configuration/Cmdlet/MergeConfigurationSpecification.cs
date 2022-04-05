@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Xml.Linq;
+using Be.Stateless.Collections.Generic.Extensions;
 using Be.Stateless.Dsl.Configuration.Resolver;
 
 namespace Be.Stateless.Dsl.Configuration.Cmdlet
@@ -49,12 +50,11 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		protected override void ProcessRecord()
 		{
-			var resolverStrategies = _defaultConfigurationFileResolverStrategies.Concat(ConfigurationFileResolvers).ToArray();
 			foreach (var specificationFilePath in ResolvedFilePaths)
 			{
 				var specificationToken = DateTime.UtcNow.ToString(TOKEN_FORMAT);
 				Specification specification = XDocument.Load(specificationFilePath);
-				foreach (var configurationFilePath in specification.GetTargetConfigurationFiles(resolverStrategies))
+				foreach (var configurationFilePath in specification.GetTargetConfigurationFiles().Resolve(ConfigurationFileResolvers))
 				{
 					var token = $"{specificationToken}.{Guid.NewGuid():N}";
 					Configuration configuration = XDocument.Load(configurationFilePath);
@@ -82,14 +82,10 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		#endregion
 
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
-		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Cmdlet parameter")]
 		[Parameter(Mandatory = false)]
-		public IConfigurationFileResolverStrategy[] ConfigurationFileResolvers
-		{
-			get => _configurationFileResolvers ?? Array.Empty<IConfigurationFileResolverStrategy>();
-			set => _configurationFileResolvers = value;
-		}
+		public IConfigurationFileResolverStrategy[] ConfigurationFileResolvers { get; set; }
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
@@ -132,11 +128,6 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		}
 
 		private const string TOKEN_FORMAT = "yyyyMMddHHmmss";
-
-		private static readonly IEnumerable<IConfigurationFileResolverStrategy> _defaultConfigurationFileResolverStrategies
-			= new IConfigurationFileResolverStrategy[] { new ClrConfigurationFileResolverStrategy(), new ConfigurationFileResolverStrategy() };
-
-		private IConfigurationFileResolverStrategy[] _configurationFileResolvers;
 		private bool _suppressWildcardExpansion;
 	}
 }

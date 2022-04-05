@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2021 François Chabot & Emmanuel Benitez
+// Copyright © 2012 - 2022 François Chabot & Emmanuel Benitez
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
-namespace Be.Stateless.Dsl.Configuration
+namespace Be.Stateless.Dsl.Configuration.Resolver
 {
 	public class ClrLocationHelperFixture
 	{
@@ -29,16 +29,14 @@ namespace Be.Stateless.Dsl.Configuration
 		[MemberData(nameof(ValidFrameworkVersions))]
 		public void GetPathSucceedsFor32Bits(Version version)
 		{
-			ClrLocationHelper.GetPath(version, ClrBitness.Bitness32).Should()
-				.MatchRegex(@"C:\\Windows\\Microsoft.NET\\Framework\\v4\.0\.\d*");
+			ClrLocationHelper.GetPath(version, ClrBitness.Bitness32).Should().MatchRegex(@"C:\\Windows\\Microsoft.NET\\Framework\\v4\.0\.\d*");
 		}
 
 		[Theory]
 		[MemberData(nameof(ValidFrameworkVersions))]
 		public void GetPathSucceedsFor64Bits(Version version)
 		{
-			ClrLocationHelper.GetPath(version, ClrBitness.Bitness64).Should()
-				.MatchRegex(@"C:\\Windows\\Microsoft.NET\\Framework64\\v4\.0\.\d*");
+			ClrLocationHelper.GetPath(version, ClrBitness.Bitness64).Should().MatchRegex(@"C:\\Windows\\Microsoft.NET\\Framework64\\v4\.0\.\d*");
 		}
 
 		public static IEnumerable<object[]> ValidFrameworkVersions

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2021 François Chabot & Emmanuel Benitez
+// Copyright © 2012 - 2022 François Chabot & Emmanuel Benitez
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,11 +17,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
-using Be.Stateless.Dsl.Configuration.Resolver;
 using FluentAssertions;
-using Moq;
 using Xunit;
 using static FluentAssertions.FluentActions;
 
@@ -32,58 +29,56 @@ namespace Be.Stateless.Dsl.Configuration
 		[Fact]
 		public void GetBackupFilePathSucceeds()
 		{
-			Specification specification = XDocument.Parse(
-				$"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='moniker' config:backupConfigurationFile='backup'/>");
+			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:backupConfigurationFile='backup' />");
 			specification.BackupFilePath.Should().Be("backup");
 		}
 
 		[Fact]
 		public void GetBackupFilePathSucceedsWhenAttributeIsMissing()
 		{
-			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='moniker' />");
+			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' />");
 			specification.BackupFilePath.Should().BeNullOrEmpty();
 		}
 
 		[Fact]
-		public void GetTargetConfigurationFilesSucceeds()
-		{
-			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='moniker'/>");
-			var resolverStrategyMock = new Mock<IConfigurationFileResolverStrategy>();
-			resolverStrategyMock.Setup(strategy => strategy.CanResolve(It.IsAny<string>())).Returns(true);
-			resolverStrategyMock.Setup(strategy => strategy.Resolve(It.IsAny<string>())).Returns((Func<string, IEnumerable<string>>) (moniker => new[] { moniker }));
-			specification.GetTargetConfigurationFiles(new[] { resolverStrategyMock.Object }).Should().BeEquivalentTo("moniker");
-		}
-
-		[Fact]
-		public void GetTargetConfigurationFilesSucceedsWhenFilesAttributeIsEmpty()
-		{
-			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles=''/>");
-			specification.GetTargetConfigurationFiles(Array.Empty<IConfigurationFileResolverStrategy>()).Should().BeEmpty();
-		}
-
-		[Fact]
-		public void GetTargetConfigurationFilesSucceedsWhenFilesAttributeIsMissing()
-		{
-			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}'/>");
-			Invoking(() => specification.GetTargetConfigurationFiles(Array.Empty<IConfigurationFileResolverStrategy>())).Should().ThrowExactly<InvalidOperationException>();
-		}
-
-		[Theory]
-		[InlineData((string) null)]
-		[InlineData("")]
-		[InlineData(" ")]
-		public void RemoveBackupFilePathSucceeds(string value)
+		public void GetTargetConfigurationFilesSucceedsForSeveralMonikers()
 		{
 			Specification specification = XDocument.Parse(
-				$"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='moniker' config:backupConfigurationFile='backup'/>");
-			specification.BackupFilePath = value;
-			((XDocument) specification).Root!.Attribute(Specification.Annotations.Attributes.BACKUP_CONFIGURATION_FILE).Should().BeNull();
+				@$"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='c:\program files\moniker|c:\file\moniker|moniker'/>");
+			specification.GetTargetConfigurationFiles()
+				.Should().BeEquivalentTo(@"c:\program files\moniker", @"c:\file\moniker", "moniker");
+		}
+
+		[Fact]
+		public void GetTargetConfigurationFilesSucceedsForSingleMoniker()
+		{
+			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='moniker'/>");
+			specification.GetTargetConfigurationFiles()
+				.Should().BeEquivalentTo("moniker");
+		}
+
+		[Fact]
+		public void GetTargetConfigurationFilesThrowsWhenEmpty()
+		{
+			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles=''/>");
+			Invoking(() => specification.GetTargetConfigurationFiles())
+				.Should().ThrowExactly<InvalidOperationException>()
+				.WithMessage($"The attribute '{Specification.Annotations.Attributes.TARGET_CONFIGURATION_FILES}' is missing or empty.");
+		}
+
+		[Fact]
+		public void GetTargetConfigurationFilesThrowsWhenMissing()
+		{
+			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}'/>");
+			Invoking(() => specification.GetTargetConfigurationFiles())
+				.Should().ThrowExactly<InvalidOperationException>()
+				.WithMessage($"The attribute '{Specification.Annotations.Attributes.TARGET_CONFIGURATION_FILES}' is missing or empty.");
 		}
 
 		[Fact]
 		public void SetBackupFilePathSucceeds()
 		{
-			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='moniker'/>");
+			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' />");
 			const string specificationBackupFilePath = "backup-file-path";
 			specification.BackupFilePath = specificationBackupFilePath;
 			((XDocument) specification).Root!.Attribute(Specification.Annotations.Attributes.BACKUP_CONFIGURATION_FILE)!.Value.Should().Be(specificationBackupFilePath);
@@ -93,18 +88,29 @@ namespace Be.Stateless.Dsl.Configuration
 		[InlineData((string) null)]
 		[InlineData("")]
 		[InlineData(" ")]
-		public void SetFilesMonikerFailed(string value)
+		public void SetBackupFilePathToNullSucceeds(string value)
 		{
-			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='moniker'/>");
-			Invoking(() => specification.SetTargetConfigurationFiles(value)).Should().ThrowExactly<ArgumentNullException>().WithParameterName("moniker");
+			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' />");
+			specification.BackupFilePath = value;
+			((XDocument) specification).Root!.Attribute(Specification.Annotations.Attributes.BACKUP_CONFIGURATION_FILE).Should().BeNull();
 		}
 
 		[Fact]
-		public void SetFilesMonikerSucceeds()
+		public void SetTargetConfigurationFilesSucceeds()
 		{
-			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' config:targetConfigurationFiles='moniker'/>");
+			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' />");
 			specification.SetTargetConfigurationFiles("new-moniker");
 			((XDocument) specification).Root!.Attribute(Specification.Annotations.Attributes.TARGET_CONFIGURATION_FILES)!.Value.Should().Be("new-moniker");
+		}
+
+		[Theory]
+		[InlineData((string) null)]
+		[InlineData("")]
+		[InlineData(" ")]
+		public void SetTargetConfigurationFilesThrows(string value)
+		{
+			Specification specification = XDocument.Parse($"<configuration xmlns:config='{Specification.Annotations.NAMESPACE}' />");
+			Invoking(() => specification.SetTargetConfigurationFiles(value)).Should().ThrowExactly<ArgumentNullException>().WithParameterName("moniker");
 		}
 	}
 }
