@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2021 François Chabot & Emmanuel Benitez
+// Copyright © 2012 - 2022 François Chabot & Emmanuel Benitez
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,12 +29,12 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 	/// </summary>
 	/// <example>
 	/// <code>
-	/// PS> Add-ConfigurationElement -TargetConfigurationFile global:machine.config -XPath '/configuration/appSettings' -ElementName 'add' -Attributes @{ key = 'setting1'; value = 'value1' }
+	/// PS> Add-ConfigurationElement -TargetConfigurationFile global:clr4:machine.config -XPath /configuration/appSettings -ElementName add -Attribute @{ key = 'setting'; value = 'value' }
 	/// </code>
 	/// </example>
 	/// <example>
 	/// <code>
-	/// PS> Add-ConfigurationElement -TargetConfigurationFile global:machine.config -XPath '/configuration' -ElementName 'element' -Attributes @{ '{urn:custom:namespace}attribute' = 'setting1' }
+	/// PS> Add-ConfigurationElement -TargetConfigurationFile global:clr4:machine.config -XPath /configuration -ElementName element -Attribute @{ '{urn:custom:namespace}setting' = 'value' }
 	/// </code>
 	/// </example>
 	[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "Cmdlet.")]
@@ -48,7 +48,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		protected override ConfigurationElementAction CreateAction()
 		{
-			return new ConfigurationElementInsertionAction(XPath, ElementName, Attributes?.AsXAttributes());
+			return new ConfigurationElementInsertionAction(XPath, ElementName, Attribute?.AsXAttributes());
 		}
 
 		#endregion
@@ -56,9 +56,10 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		[SuppressMessage("ReSharper", "CollectionNeverUpdated.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
+		[Alias("Attributes")]
 		[Parameter(Mandatory = false)]
 		[ValidateNotNullOrEmpty]
-		public Hashtable Attributes { get; set; }
+		public Hashtable Attribute { get; set; }
 
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]

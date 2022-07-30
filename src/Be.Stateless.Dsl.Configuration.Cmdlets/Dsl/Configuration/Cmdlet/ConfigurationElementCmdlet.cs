@@ -36,7 +36,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 		protected override void ProcessRecord()
 		{
 			var action = CreateAction();
-			foreach (var configurationFilePath in TargetConfigurationFile.Resolve(ConfigurationFileResolvers))
+			foreach (var configurationFilePath in TargetConfigurationFile.Resolve(ConfigurationFileResolver))
 			{
 				var configuration = XDocument.Load(configurationFilePath);
 				action.Execute(configuration);
@@ -52,8 +52,9 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
+		[Alias("ConfigurationFileResolvers")]
 		[Parameter(Mandatory = false)]
-		public IConfigurationFileResolverStrategy[] ConfigurationFileResolvers { get; set; }
+		public IConfigurationFileResolverStrategy[] ConfigurationFileResolver { get; set; }
 
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
 		[Alias("ConfigurationFile", "ConfigFile", "File", "Target")]

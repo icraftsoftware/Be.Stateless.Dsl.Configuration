@@ -54,7 +54,7 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 			{
 				var specificationToken = DateTime.UtcNow.ToString(TOKEN_FORMAT);
 				Specification specification = XDocument.Load(specificationFilePath);
-				foreach (var configurationFilePath in specification.GetTargetConfigurationFiles().Resolve(ConfigurationFileResolvers))
+				foreach (var configurationFilePath in specification.GetTargetConfigurationFiles().Resolve(ConfigurationFileResolver))
 				{
 					var token = $"{specificationToken}.{Guid.NewGuid():N}";
 					Configuration configuration = XDocument.Load(configurationFilePath);
@@ -84,8 +84,9 @@ namespace Be.Stateless.Dsl.Configuration.Cmdlet
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
+		[Alias("ConfigurationFileResolvers")]
 		[Parameter(Mandatory = false)]
-		public IConfigurationFileResolverStrategy[] ConfigurationFileResolvers { get; set; }
+		public IConfigurationFileResolverStrategy[] ConfigurationFileResolver { get; set; }
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Cmdlet parameter")]
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Cmdlet parameter")]
